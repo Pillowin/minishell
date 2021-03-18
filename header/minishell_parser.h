@@ -1,27 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/08 10:56:57 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/14 21:33:13 by agautier         ###   ########.fr       */
+/*   Created: 2021/03/16 18:57:46 by agautier          #+#    #+#             */
+/*   Updated: 2021/03/16 19:03:18 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef MINISHELL_PARSER_H
+# define MINISHELL_PARSER_H
 
 /*
-**	man strlen
+**	parser.c
 */
+void	parse_tokens(t_list *tokens);
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
+#endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguiteer <gguiteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 16:07:26 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/14 19:2:06 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/14 19:2:06 by aagtetrer        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,21 +52,60 @@ t_token	*lexer_get_token(t_lexer *lexer)
 }
 
 /*
-**	command = bonjour ||; >> < toto bonjour
 **	- Sauter les espaces
 **	- Recuperer le token courrant
 **	- Sauter les espaces
 **	- Recuperer le token suivant
+**
+**	- Compter le nombre de token
+**	- Creer une liste avec tous les tokens
+**
+**	- Verifier les erreurs ? // TODO:
+**
+**	- Creer un arbre a partir des priorites et en regroupant les tokens (ranger en préfix ?)
+**
+**	echo antoine > toto gautier | wc -w
+**
+**	t_command[0] = "echo"
+**	t_command[1] = "antoine"
+**	t_command[2] = "gautier"
+**
+**	t_redir[0] = "> toto"
+**
+**	PIPE
+**
+**	t_command[0] = "wc"
+**	t_command[1] = "-w"
+**
+**	- On le trie par priorite pour obtenir
+**	
+**	PIPE
+**
+**	t_redir[0] = "> toto"
+**
+**	t_command[0] = "echo"
+**	t_command[1] = "antoine"
+**	t_command[2] = "gautier"
+**
+**	t_command[0] = "wc"
+**	t_command[1] = "-w"
+**
 */
 
 void	lexer(char *av)
 {
-	t_lexer	*lexer;
+	t_lexer			*lexer;
+	t_list			*tokens;
 
 	lexer = lexer_init(av);
+	tokens = NULL;
 	while (lexer->i < lexer->str_len)
 	{
 		lexer_skip_spaces(lexer);
-		token_print(lexer_get_token(lexer));
+		ft_list_push_back(&tokens, lexer_get_token(lexer));
 	}
+	ft_list_foreach(tokens, &token_print); // TODO: remove
+	printf("\n");
+	// TODO: parcourir la liste a la recherche de token dans l'ordre des priorites
+	parse_tokens(tokens);
 }

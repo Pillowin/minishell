@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_btree.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/08 10:56:57 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/14 21:33:13 by agautier         ###   ########.fr       */
+/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
+/*   Updated: 2021/03/16 19:01:48 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef FT_BTREE_H
+# define FT_BTREE_H
 
-/*
-**	man strlen
-*/
+# include <stdlib.h>
 
-size_t	ft_strlen(const char *s)
+typedef struct	s_btree
 {
-	size_t	i;
+	struct s_btree	*left;
+	struct s_btree	*right;
+	void			*item;
+}				t_btree;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
+t_btree			*btree_create_node(void *item);
+void			btree_apply_prefix(t_btree *root, void (*applyf)(void *));
+
+void			btree_free(t_btree **root);
+
+#endif

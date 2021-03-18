@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   my_list_foreach_if.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/08 10:56:57 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/14 21:33:13 by agautier         ###   ########.fr       */
+/*   Created: 2021/03/16 18:51:10 by agautier          #+#    #+#             */
+/*   Updated: 2021/03/16 18:51:17 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_list.h"
 
 /*
-**	man strlen
+**	Applique une fonction donnée en paramètre à la valeur contenue dans
+**	certains éléments de la liste.
 */
 
-size_t	ft_strlen(const char *s)
+void	my_list_foreach_if(t_list *begin_list, void (*f)(t_list *, void *,
+		unsigned int), void *data_ref, int (*cmp)())
 {
-	size_t	i;
+	t_list			*list;
+	unsigned int	i;
 
+	list = begin_list;
 	i = 0;
-	while (s[i])
+	while (list)
+	{
+		if (!cmp(list->data, data_ref))
+			(*f)(begin_list, list->data, i);
+		list = list->next;
 		i++;
-	return (i);
+	}
 }

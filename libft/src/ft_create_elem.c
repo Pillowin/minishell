@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_create_elem.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/08 10:56:57 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/14 21:33:13 by agautier         ###   ########.fr       */
+/*   Created: 2021/02/28 15:18:11 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/03/04 19:07:54 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_list.h"
 
 /*
-**	man strlen
+**	Crée un nouvel élément de type t_list.
 */
 
-size_t	ft_strlen(const char *s)
+t_list	*ft_create_elem(void *data)
 {
-	size_t	i;
+	t_list	*list;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+	list = (t_list *)malloc(sizeof(*list));
+	if (!list)
+		return (NULL);
+	list->data = data;
+	list->next = NULL;
+	return (list);
 }

@@ -6,16 +6,25 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 12:52:43 by agautier          #+#    #+#              #
-#    Updated: 2021/03/14 16:24:20 by agautier         ###   ########.fr        #
+#    Updated: 2021/03/16 18:50:34 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	libft.a
 SRC		=	$(addprefix src/, \
 				ft_isalnum.c \
-				ft_calloc.c\
-				ft_strlen.c)
-
+				ft_calloc.c \
+				ft_strlen.c \
+				ft_create_elem.c \
+				\
+				ft_list_push_back.c \
+				ft_list_foreach.c \
+				ft_list_at.c \
+				my_list_foreach_if.c \
+				\
+				btree_create_node.c \
+				btree_apply_prefix.c \
+				btree_free.c)
 OBJ		=	$(SRC:.c=.o)
 HEADER	=	header
 CC		=	gcc
