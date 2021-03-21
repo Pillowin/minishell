@@ -6,7 +6,7 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 12:52:43 by agautier          #+#    #+#              #
-#    Updated: 2021/03/16 18:50:34 by agautier         ###   ########.fr        #
+#    Updated: 2021/03/21 18:38:26 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ SRC		=	$(addprefix src/, \
 				ft_calloc.c \
 				ft_strlen.c \
 				ft_create_elem.c \
+				ft_free.c \
 				\
 				ft_list_push_back.c \
 				ft_list_foreach.c \

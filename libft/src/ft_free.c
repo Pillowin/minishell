@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ggeeteer <ggeeteer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 14:48:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/14 19:58:50 by ggeeteer         ###   ########.fr       */
+/*   Created: 2019/12/06 17:27:51 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/11 14:22:23 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int argc, char *argv[])
+/*
+**	Free un pointeur et le met a NULL.
+*/
+
+int	ft_free(void *ptr)
 {
-	if (argc == 2)
-	{
-		printf("Command is : %s\n\n", argv[1]);
-		lexer(argv[1]);
-	}
-	else
-		printf("Usage : ./minishell \"command\"\n");
-	return (EXIT_SUCCESS);
+	free(ptr);
+	ptr = NULL;
+	return (0);
 }

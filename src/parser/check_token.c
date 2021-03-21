@@ -6,11 +6,16 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 18:06:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/16 20:06:02 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/21 19:41:53 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+**	TODO: error func
+**	TODO: toujours \n de present ? Si non ca segv
+*/
 
 /*
 **	Accepted syntax :
@@ -28,31 +33,22 @@ void	check_semi(t_list *tokens, void *data, unsigned int i)
 	t_token	*prev;
 	t_token	*next;
 
-	printf("check_semi\n");
-	printf("i = %u\n", i);
-	if (!i)	// TODO: check if list_at(i+1) segv or no need because \n ?
+	if (!i)
 	{
-		printf("bash: syntax error near unexpected token `;'\n");	// TODO: err func
+		printf("bash: syntax error near unexpected token `;'\n");
 		return ;
 	}
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	curr = (t_token *)data;
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	printf("prev : ");
-	token_print(prev);
-	printf("curr : ");
-	token_print(curr);
-	printf("next : ");
-	token_print(next);
-	
-	if (prev->e_type != TOKEN_WORD)
+	if (prev->type != TOKEN_WORD)
 	{
-		printf("bash: syntax error near unexpected token `;'\n");	// TODO: err func
+		printf("bash: syntax error near unexpected token `;'\n");
 		return ;
 	}
-	if (next->e_type == TOKEN_PIPE || next->e_type == TOKEN_SEMI)
+	if (next->type == TOKEN_PIPE || next->type == TOKEN_SEMI)
 	{
-		printf("bash: syntax error near unexpected token `;'\n");	// TODO: err func
+		printf("bash: syntax error near unexpected token `;'\n");
 		return ;
 	}
 }
@@ -71,31 +67,22 @@ void	check_pipe(t_list *tokens, void *data, unsigned int i)
 	t_token	*prev;
 	t_token	*next;
 
-	printf("check_pipe\n");
-	printf("i = %u\n", i);
-	if (!i)	// TODO: check if list_at(i+1) segv or no need because \n ?
+	if (!i)
 	{
-		printf("bash: syntax error near unexpected token `|'\n");	// TODO: err func
+		printf("bash: syntax error near unexpected token `|'\n");
 		return ;
 	}
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	curr = (t_token *)data;
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	printf("prev : ");
-	token_print(prev);
-	printf("curr : ");
-	token_print(curr);
-	printf("next : ");
-	token_print(next);
-	
-	if (prev->e_type != TOKEN_WORD)
+	if (prev->type != TOKEN_WORD)
 	{
-		printf("bash: syntax error near unexpected token `|'\n");	// TODO: err func
+		printf("bash: syntax error near unexpected token `|'\n");
 		return ;
 	}
-	if (next->e_type == TOKEN_PIPE || next->e_type == TOKEN_SEMI || next->e_type == TOKEN_NEWLINE)
+	if (next->type == TOKEN_PIPE || next->type == TOKEN_SEMI || next->type == TOKEN_NEWLINE)
 	{
-		printf("bash: syntax error near unexpected token `|'\n");	// TODO: err func
+		printf("bash: syntax error near unexpected token `|'\n");
 		return ;
 	}
 }
@@ -110,11 +97,25 @@ void	check_pipe(t_list *tokens, void *data, unsigned int i)
 
 void	check_dgreat(t_list *tokens, void *data, unsigned int i)
 {
-	(void)tokens;
-	(void)data;
-	(void)i;
-	//TODO: vérifier les erreurs possible
-	printf("check_dgreat\n");
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*next;
+
+	prev = NULL;
+	if (i)
+		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
+	curr = (t_token *)data;
+	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
+	if (prev && (prev->type == TOKEN_GREAT || prev->type == TOKEN_DGREAT || prev->type == TOKEN_LESS))
+	{
+		printf("bash: syntax error near unexpected token `>>'\n");
+		return ;
+	}
+	if (next->type != TOKEN_WORD)
+	{
+		printf("bash: syntax error near unexpected token `>>'\n");
+		return ;
+	}
 }
 
 /*
@@ -127,11 +128,25 @@ void	check_dgreat(t_list *tokens, void *data, unsigned int i)
 
 void	check_great(t_list *tokens, void *data, unsigned int i)
 {
-	(void)tokens;
-	(void)data;
-	(void)i;
-	//TODO: vérifier les erreurs possible
-	printf("check_great\n");
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*next;
+
+	prev = NULL;
+	if (i)
+		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
+	curr = (t_token *)data;
+	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
+	if (prev && (prev->type == TOKEN_GREAT || prev->type == TOKEN_DGREAT || prev->type == TOKEN_LESS))
+	{
+		printf("bash: syntax error near unexpected token `>'\n");
+		return ;
+	}
+	if (next->type != TOKEN_WORD)
+	{
+		printf("bash: syntax error near unexpected token `>'\n");
+		return ;
+	}
 }
 
 /*
@@ -144,9 +159,23 @@ void	check_great(t_list *tokens, void *data, unsigned int i)
 
 void	check_less(t_list *tokens, void *data, unsigned int i)
 {
-	(void)tokens;
-	(void)data;
-	(void)i;
-	//TODO: vérifier les erreurs possible
-	printf("check_less\n");
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*next;
+
+	prev = NULL;
+	if (i)
+		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
+	curr = (t_token *)data;
+	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
+	if (prev && (prev->type == TOKEN_GREAT || prev->type == TOKEN_DGREAT || prev->type == TOKEN_LESS))
+	{
+		printf("bash: syntax error near unexpected token `<'\n");
+		return ;
+	}
+	if (next->type != TOKEN_WORD)
+	{
+		printf("bash: syntax error near unexpected token `<'\n");
+		return ;
+	}
 }

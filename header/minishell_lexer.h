@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 16:11:07 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/16 18:58:23 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/21 19:09:32 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,24 @@ typedef struct s_lexer
 	unsigned int	i;
 }	t_lexer;
 
+typedef enum
+{
+	TOKEN_UNKNOW = 0,
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_LESS,
+	TOKEN_GREAT,
+	TOKEN_DGREAT,
+	TOKEN_SEMI,
+	TOKEN_NEWLINE,
+	TOKEN_REDIR,
+	TOKEN_COMMAND
+}	t_tok_type;
+
 typedef struct s_token
 {
-	enum
-	{
-		TOKEN_UNKNOW = 0,
-		TOKEN_WORD,
-		TOKEN_PIPE,
-		TOKEN_LESS,
-		TOKEN_GREAT,
-		TOKEN_DGREAT,
-		TOKEN_SEMI,
-		TOKEN_NEWLINE
-	}	e_type;
-	char	*data;
+	t_tok_type	type;
+	char		**data;
 }	t_token;
 
 /*
@@ -52,7 +56,7 @@ t_token	*lexer_get_token(t_lexer *lexer);
 /*
 **	token.c
 */
-t_token	*token_init(int type, char *data);
+t_token	*token_init(int type, char **data);
 char	*token_type_to_str(int type);
 void	token_print(void *token);
 

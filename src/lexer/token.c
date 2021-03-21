@@ -6,23 +6,33 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:48:29 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/15 17:05:42 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/21 20:18:13 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*token_init(int type, char *data)
+/*
+**	Alloc, init and return a new t_token.
+*/
+
+t_token	*token_init(int type, char **data)
 {
 	t_token	*token;
 
 	token = (t_token *)ft_calloc(1, sizeof(*token));
 	if (!token)
 		return (NULL);
+	token->type = type;
 	token->data = data;
-	token->e_type = type;
 	return (token);
 }
+
+/*
+**	Return string corresponding to token type.
+**
+**	TODO: make prettier
+*/
 
 char	*token_type_to_str(int type)
 {
@@ -40,14 +50,36 @@ char	*token_type_to_str(int type)
 		return ("TOKEN_SEMI");
 	if (type == TOKEN_NEWLINE)
 		return ("TOKEN_NEWLINE");
+	if (type == TOKEN_REDIR)
+		return ("TOKEN_REDIR");
+	if (type == TOKEN_COMMAND)
+		return ("TOKEN_COMMAND");
 	return ("TOKEN_UNKNOW");
 }
+
+/*
+**	Print t_token infos.
+**
+**	TODO: if !token err func instead of printf
+*/
 
 void	token_print(void *token)
 {
 	t_token	*tok;
+	int		i;
 
+	if (!token)
+	{
+		printf("token = NULL\n");
+		return ;
+	}
 	tok = (t_token *)token;
-	printf("token = %s\t", token_type_to_str(tok->e_type));
-	printf("%s\n", tok->data);
+	printf("token = %s\t", token_type_to_str(tok->type));
+	i = 0;
+	while ((tok->data)[i])
+	{
+		printf("%s ", (tok->data)[i]);
+		i++;
+	}
+	printf("\n");
 }

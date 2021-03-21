@@ -5,12 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 19:56:37 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/14 21:33:10 by agautier         ###   ########.fr       */
+/*   Created: 2021/03/21 19:38:21 by agautier          #+#    #+#             */
+/*   Updated: 2021/03/21 19:54:28 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+**	Increment cursor while current char is a space.
+**	(to skip spaces between word)
+*/
+
+void	lexer_skip_spaces(t_lexer *lexer)
+{
+	while (lexer->str[lexer->i] == ' ')
+		lexer->i += 1;
+	lexer->c = lexer->str[lexer->i];
+}
+
+/*
+**	Advance cursor of len.
+*/
 
 void	lexer_advance(t_lexer *lexer, unsigned int len)
 {
@@ -25,12 +41,21 @@ void	lexer_advance(t_lexer *lexer, unsigned int len)
 	}
 }
 
+/*
+**	Create and return t_token from next TOKEN_WORD after cursor,
+**	then position the cursor after the word.
+*/
+
 t_token	*lexer_advance_word(t_lexer *lexer)
 {
+	char	**data;
 	char	*str;
 	int		str_len;
 	int		i;
 
+	data = (char **)ft_calloc(1 + 1, sizeof(*data));
+	if (!data)
+		return (NULL);
 	str_len = 0;
 	while (lexer->str[lexer->i + str_len] != ' '
 		&& lexer->str[lexer->i + str_len] != '\n')
@@ -38,6 +63,7 @@ t_token	*lexer_advance_word(t_lexer *lexer)
 	str = (char *)ft_calloc(str_len + 1, sizeof(*str));
 	if (!str)
 		return (NULL);
+	*data = str;
 	i = 0;
 	while (i < str_len)
 	{
@@ -45,27 +71,39 @@ t_token	*lexer_advance_word(t_lexer *lexer)
 		i++;
 	}
 	lexer_advance(lexer, str_len);
-	return (token_init(TOKEN_WORD, str));
+	return (token_init(TOKEN_WORD, data));
 }
+
+/*
+**	Create and return t_token from next token after cursor,
+**	then position the cursor after the token.
+**
+**	TODO: Optimize ? Because specific case for >> is ugly
+*/
 
 t_token	*lexer_advance_current(t_lexer *lexer, int type)
 {
-	char	*data;
+	char	**data;
 	t_token	*token;
 
+	data = (char **)ft_calloc(1 + 1, sizeof(*data));
+	if (!data)
+		return (NULL);
 	if (type == TOKEN_DGREAT)
 	{
-		data = (char *)ft_calloc(3, sizeof(char));
-		data[0] = '>';
-		data[1] = '>';
-		data[2] = '\0';
+		*data = (char *)ft_calloc(2 + 1, sizeof(**data));
+		if (!*data)
+			return (NULL);
+		(*data)[0] = '>';
+		(*data)[1] = '>';
 		lexer_advance(lexer, 2);
 	}
 	else
 	{
-		data = (char *)ft_calloc(2, sizeof(char));
-		data[0] = lexer->c;
-		data[1] = '\0';
+		*data = (char *)ft_calloc(1 + 1, sizeof(**data));
+		if (!*data)
+			return (NULL);
+		(*data)[0] = lexer->c;
 		lexer_advance(lexer, 1);
 	}
 	token = token_init(type, data);

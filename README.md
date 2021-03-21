@@ -2,14 +2,26 @@
 Aussi mignon qu'un vrai shell
 L’objectif de ce projet est de créer un simple shell. Ca sera votre propre petit bash, ou zsh. Vous en apprendrez beaucoup sur les process et les file descriptors.
 
-## TODO
+## Tree rule
+Parcours en prefix
 
-### Lexer
-- 
+Priorites :
+- SEMI
+- PIPE
+- DGREAT GREAT LESS
+- WORD
+
+Regles de creation d'arbre :
+- Semi : tout ce qui est a gauche va a gauche && tout ce qui est a droite va a droite
+- Pipe : tout ce qui est a gauche va a gauche && tout ce qui est a droite va a droite
+- Redir : tout ce qui est a gauche va a droite && tout ce qui est a droite va a gauche
+- Command : a la suite en prefix
+
+## TODO
 
 ### Parser
 - Create tree
-- Travel tree
+- $ ' " \
 
 ### Expansion
 - Handle double quotes
