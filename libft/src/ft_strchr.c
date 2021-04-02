@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 14:48:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:29:4 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/04 14:22:55 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/11 13:58:59 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/*
+**	man strchr
+*/
 
-// echo "Je \ suis ant\"oine"
-
-int	main(void)
+char	*ft_strchr(const char *s, int c)
 {
-	char buf[4096];
-	unsigned int i;
+	int		i;
 
 	i = 0;
-	while (i < 4096)
+	while (s[i])
 	{
-		buf[i] = '\0';
+		if (s[i] == c)
+			return ((char *)&s[i]);
 		i++;
 	}
-	ft_putstr("prompt>");
-	if (read(STDIN_FILENO, buf, 4096) > 0)
-		lexer(buf);
-	else
-	{
-		printf(" tu c pa fer d pro gramme idiot bete de moche\n");
-		return (EXIT_FAILURE);
-	}
-	// read sur stdin
-	return (EXIT_SUCCESS);
+	if (s[i] == c)
+		return ((char *)&s[i]);
+	return (0);
 }

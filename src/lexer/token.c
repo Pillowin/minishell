@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:48:29 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/21 20:18:13 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/02 13:04:42 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,35 @@ t_token	*token_init(int type, char **data)
 
 char	*token_type_to_str(int type)
 {
-	if (type == TOKEN_WORD)
-		return ("TOKEN_WORD");
-	if (type == TOKEN_PIPE)
-		return ("TOKEN_PIPE");
-	if (type == TOKEN_LESS)
-		return ("TOKEN_LESS");
-	if (type == TOKEN_GREAT)
-		return ("TOKEN_GREAT");
-	if (type == TOKEN_DGREAT)
-		return ("TOKEN_DGREAT");
-	if (type == TOKEN_SEMI)
-		return ("TOKEN_SEMI");
-	if (type == TOKEN_NEWLINE)
-		return ("TOKEN_NEWLINE");
-	if (type == TOKEN_REDIR)
-		return ("TOKEN_REDIR");
-	if (type == TOKEN_COMMAND)
-		return ("TOKEN_COMMAND");
-	return ("TOKEN_UNKNOW");
+	if (type == TOK_WORD)
+		return ("TOK_WORD");
+	if (type == TOK_PIPE)
+		return ("TOK_PIPE");
+	if (type == TOK_LESS)
+		return ("TOK_LESS");
+	if (type == TOK_GREAT)
+		return ("TOK_GREAT");
+	if (type == TOK_DGREAT)
+		return ("TOK_DGREAT");
+	if (type == TOK_SEMI)
+		return ("TOK_SEMI");
+	if (type == TOK_DQUOTE)
+		return ("TOK_DQUOTE");
+	if (type == TOK_QUOTE)
+		return ("TOK_QUOTE");
+	if (type == TOK_NEWLINE)
+		return ("TOK_NEWLINE");
+	if (type == TOK_REDIR)
+		return ("TOK_REDIR");
+	if (type == TOK_BSLASH)
+		return ("TOK_BSLASH");
+	if (type == TOK_SPACE)
+		return ("TOK_SPACE");
+	if (type == TOK_DOLLAR)
+		return ("TOK_DOLLAR");
+	if (type == TOK_COMMAND)
+		return ("TOK_COMMAND");
+	return ("TOK_UNKNOW");
 }
 
 /*
@@ -75,11 +85,21 @@ void	token_print(void *token)
 	}
 	tok = (t_token *)token;
 	printf("token = %s\t", token_type_to_str(tok->type));
+	if (!tok->type)
+	{
+		printf("\t%p\n", tok);
+		return ;
+	}
 	i = 0;
 	while ((tok->data)[i])
 	{
-		printf("%s ", (tok->data)[i]);
+		if (!(tok->data)[i])
+		{
+			printf("\t%p\n", tok);
+			return ;
+		}
+		printf("`%s`    ", (tok->data)[i]);
 		i++;
 	}
-	printf("\n");
+	printf("\t%p\n", tok);
 }

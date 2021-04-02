@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 14:48:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:29:4 by agautier         ###   ########.fr       */
+/*   Created: 2019/09/03 20:14:47 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/10 13:49:28 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/*
+**	Reproduit à l’identique le fonctionnement de la fonction strcmp
+**	(man strcmp).
+*/
 
-// echo "Je \ suis ant\"oine"
-
-int	main(void)
+int	ft_strcmp(char *s1, char *s2)
 {
-	char buf[4096];
-	unsigned int i;
+	int i;
 
 	i = 0;
-	while (i < 4096)
+	while (s1[i] != '\0' || s2[i] != '\0')
 	{
-		buf[i] = '\0';
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
 		i++;
 	}
-	ft_putstr("prompt>");
-	if (read(STDIN_FILENO, buf, 4096) > 0)
-		lexer(buf);
-	else
-	{
-		printf(" tu c pa fer d pro gramme idiot bete de moche\n");
-		return (EXIT_FAILURE);
-	}
-	// read sur stdin
-	return (EXIT_SUCCESS);
+	return (0);
 }

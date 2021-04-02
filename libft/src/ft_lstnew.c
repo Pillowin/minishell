@@ -1,38 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 14:48:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:29:4 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/08 16:02:47 by agautier          #+#    #+#             */
+/*   Updated: 2021/03/29 18:30:06 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-// echo "Je \ suis ant\"oine"
+/*
+**	Alloue (avec malloc(3)) et renvoie un nouvel élément.
+**	la variable data est initialisée à l’aide de la valeur du paramètre
+**	data.
+**	La variable ’next’ est initialisée à NULL.
+*/
 
-int	main(void)
+t_list	*ft_lstnew(void *data)
 {
-	char buf[4096];
-	unsigned int i;
+	t_list	*list;
 
-	i = 0;
-	while (i < 4096)
-	{
-		buf[i] = '\0';
-		i++;
-	}
-	ft_putstr("prompt>");
-	if (read(STDIN_FILENO, buf, 4096) > 0)
-		lexer(buf);
-	else
-	{
-		printf(" tu c pa fer d pro gramme idiot bete de moche\n");
-		return (EXIT_FAILURE);
-	}
-	// read sur stdin
-	return (EXIT_SUCCESS);
+	list = (t_list *)malloc((sizeof(*list)));
+	if (!list)
+		return (NULL);
+	list->data = data;
+	list->next = 0;
+	return (list);
 }

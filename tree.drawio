@@ -10,7 +10,7 @@
                 <mxCell id="lntMmmNjdpIhoGcwGcDj-33" style="edgeStyle=orthogonalEdgeStyle;curved=0;rounded=1;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-2" target="lntMmmNjdpIhoGcwGcDj-13">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="ulk52OMEHFEX0CLhAPHe-2" value="TOKEN_PIPE&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF66B3;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
+                <mxCell id="ulk52OMEHFEX0CLhAPHe-2" value="TOK_PIPE&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF66B3;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
                     <mxGeometry x="735" y="320" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="ulk52OMEHFEX0CLhAPHe-3" value="&lt;font style=&quot;font-size: 27px&quot;&gt;&lt;font color=&quot;#b3ff66&quot; style=&quot;font-size: 27px&quot;&gt;ls -l&lt;/font&gt; &lt;font color=&quot;#ff66b3&quot; style=&quot;font-size: 27px&quot;&gt;|&lt;/font&gt; &lt;font color=&quot;#b3ff66&quot; style=&quot;font-size: 27px&quot;&gt;grep grw&lt;/font&gt; &lt;font color=&quot;#ff66b3&quot; style=&quot;font-size: 27px&quot;&gt;|&lt;/font&gt; &lt;font color=&quot;#b3ff66&quot; style=&quot;font-size: 27px&quot;&gt;wc -l&lt;/font&gt; &lt;font color=&quot;#66ffff&quot; style=&quot;font-size: 27px&quot;&gt;&amp;gt; lsfile&lt;/font&gt; &lt;font color=&quot;#ff6666&quot; style=&quot;font-size: 27px&quot;&gt;;&lt;/font&gt; &lt;font color=&quot;#66ffff&quot; style=&quot;font-size: 27px&quot;&gt;&amp;lt; lsfile&lt;/font&gt; &lt;font color=&quot;#b3ff66&quot; style=&quot;font-size: 27px&quot;&gt;cat&lt;/font&gt; &lt;font color=&quot;#ff66b3&quot; style=&quot;font-size: 27px&quot;&gt;|&lt;/font&gt; &lt;font color=&quot;#b3ff66&quot; style=&quot;font-size: 27px&quot;&gt;rev&lt;/font&gt; &lt;font color=&quot;#66ffff&quot; style=&quot;font-size: 27px&quot;&gt;&amp;gt; itit &amp;gt; utut &amp;gt;&amp;gt; otot&lt;/font&gt; &lt;font color=&quot;#ff6666&quot; style=&quot;font-size: 27px&quot;&gt;;&lt;/font&gt; &lt;font color=&quot;#b3ff66&quot; style=&quot;font-size: 27px&quot;&gt;diff otot toto&lt;/font&gt;&lt;font style=&quot;font-size: 27px&quot;&gt;&lt;font color=&quot;#66ffff&quot; style=&quot;font-size: 27px&quot;&gt; &amp;gt;&amp;gt; diff&lt;/font&gt;&lt;br&gt;&lt;/font&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
@@ -40,7 +40,7 @@
                 <mxCell id="lntMmmNjdpIhoGcwGcDj-35" style="edgeStyle=orthogonalEdgeStyle;curved=0;rounded=1;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-4" target="lntMmmNjdpIhoGcwGcDj-0">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="ulk52OMEHFEX0CLhAPHe-4" value="TOKEN_PIPE&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF66B3;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
+                <mxCell id="ulk52OMEHFEX0CLhAPHe-4" value="TOK_PIPE&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF66B3;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
                     <mxGeometry x="100" y="220" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="lntMmmNjdpIhoGcwGcDj-25" style="edgeStyle=orthogonalEdgeStyle;curved=0;rounded=1;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-5" target="lntMmmNjdpIhoGcwGcDj-10">
@@ -49,7 +49,7 @@
                 <mxCell id="lntMmmNjdpIhoGcwGcDj-36" style="edgeStyle=orthogonalEdgeStyle;curved=0;rounded=1;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-5" target="lntMmmNjdpIhoGcwGcDj-1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="ulk52OMEHFEX0CLhAPHe-5" value="TOKEN_PIPE&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF66B3;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
+                <mxCell id="ulk52OMEHFEX0CLhAPHe-5" value="TOK_PIPE&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF66B3;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
                     <mxGeometry x="190" y="320" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="lntMmmNjdpIhoGcwGcDj-15" style="edgeStyle=orthogonalEdgeStyle;curved=0;rounded=1;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-6" target="ulk52OMEHFEX0CLhAPHe-4">
@@ -58,7 +58,7 @@
                 <mxCell id="ulk52OMEHFEX0CLhAPHe-13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-6" target="ulk52OMEHFEX0CLhAPHe-7">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="ulk52OMEHFEX0CLhAPHe-6" value="TOKEN_SEMI&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF6666;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
+                <mxCell id="ulk52OMEHFEX0CLhAPHe-6" value="TOK_SEMI&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF6666;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
                     <mxGeometry x="518" y="120" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="lntMmmNjdpIhoGcwGcDj-24" style="edgeStyle=orthogonalEdgeStyle;curved=0;rounded=1;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-7" target="ulk52OMEHFEX0CLhAPHe-2">
@@ -67,7 +67,7 @@
                 <mxCell id="ulk52OMEHFEX0CLhAPHe-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="ulk52OMEHFEX0CLhAPHe-1" source="ulk52OMEHFEX0CLhAPHe-7" target="lntMmmNjdpIhoGcwGcDj-11">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="ulk52OMEHFEX0CLhAPHe-7" value="TOKEN_SEMI&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF6666;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
+                <mxCell id="ulk52OMEHFEX0CLhAPHe-7" value="TOK_SEMI&lt;br&gt;t_token" style="whiteSpace=wrap;html=1;strokeColor=#FF6666;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">
                     <mxGeometry x="855" y="220" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="lntMmmNjdpIhoGcwGcDj-8" value="&lt;font style=&quot;font-size: 16px&quot;&gt;rev&lt;br&gt;t_command&lt;/font&gt;" style="whiteSpace=wrap;html=1;strokeColor=#B3FF66;rounded=1;" vertex="1" parent="ulk52OMEHFEX0CLhAPHe-1">

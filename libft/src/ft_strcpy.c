@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 14:48:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:29:4 by agautier         ###   ########.fr       */
+/*   Created: 2019/08/31 21:49:17 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/10 13:29:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/*
+**	Reproduit à l’identique le fonctionnement de la fonction strcpy
+**	(man strcpy).
+*/
 
-// echo "Je \ suis ant\"oine"
-
-int	main(void)
+char	*ft_strcpy(char *dest, char *src)
 {
-	char buf[4096];
-	unsigned int i;
+	int i;
 
 	i = 0;
-	while (i < 4096)
+	while (src[i] != '\0')
 	{
-		buf[i] = '\0';
+		dest[i] = src[i];
 		i++;
 	}
-	ft_putstr("prompt>");
-	if (read(STDIN_FILENO, buf, 4096) > 0)
-		lexer(buf);
-	else
-	{
-		printf(" tu c pa fer d pro gramme idiot bete de moche\n");
-		return (EXIT_FAILURE);
-	}
-	// read sur stdin
-	return (EXIT_SUCCESS);
+	dest[i] = '\0';
+	return (dest);
 }

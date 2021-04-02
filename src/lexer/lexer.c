@@ -32,26 +32,37 @@ t_lexer	*lexer_init(char *str)
 
 /*
 **	Create and return t_token from next token found after cursor.
+**
+**	TODO: make prettier
 */
 
 t_token	*lexer_get_token(t_lexer *lexer)
 {
 	if (lexer->str_len > lexer->i + 1 && lexer->c == '>'
 		&& lexer->str[lexer->i + 1] == '>')
-		return (lexer_advance_current(lexer, TOKEN_DGREAT));
+		return (lexer_advance_current(lexer, TOK_DGREAT));
+	if (lexer->c == ' ')
+		return (lexer_advance_current(lexer, TOK_SPACE));
 	if (lexer->c == '|')
-		return (lexer_advance_current(lexer, TOKEN_PIPE));
+		return (lexer_advance_current(lexer, TOK_PIPE));
 	if (lexer->c == '<')
-		return (lexer_advance_current(lexer, TOKEN_LESS));
+		return (lexer_advance_current(lexer, TOK_LESS));
 	if (lexer->c == '>')
-		return (lexer_advance_current(lexer, TOKEN_GREAT));
+		return (lexer_advance_current(lexer, TOK_GREAT));
 	if (lexer->c == ';')
-		return (lexer_advance_current(lexer, TOKEN_SEMI));
+		return (lexer_advance_current(lexer, TOK_SEMI));
+	if (lexer->c == '"')
+		return (lexer_advance_current(lexer, TOK_DQUOTE));
+	if (lexer->c == '\'')
+		return (lexer_advance_current(lexer, TOK_QUOTE));
+	if (lexer->c == '\\')
+		return (lexer_advance_current(lexer, TOK_BSLASH));
+	if (lexer->c == '$')
+		return (lexer_advance_current(lexer, TOK_DOLLAR));
 	if (lexer->c == '\n')
-		return (lexer_advance_current(lexer, TOKEN_NEWLINE));
+		return (lexer_advance_current(lexer, TOK_NEWLINE));
 	return (lexer_advance_word(lexer));
 }
-
 /*
 **	Entry point for parsing.
 **
@@ -67,13 +78,10 @@ void	lexer(char *av)
 	lexer = lexer_init(av);
 	tokens = NULL;
 	while (lexer->i < lexer->str_len)
-	{
-		lexer_skip_spaces(lexer);
 		ft_list_push_back(&tokens, lexer_get_token(lexer));
-	}
 	ft_list_foreach(tokens, &token_print);
-	printf("\n");
-	parse_tokens(tokens);
+	parse_tokens(&tokens);
+	printf("------------------------------------------------\n\n");
 	ft_list_foreach(tokens, &token_print);
 	printf("\n");
 }

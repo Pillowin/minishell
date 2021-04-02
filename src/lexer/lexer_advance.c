@@ -6,23 +6,11 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 19:38:21 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/21 19:54:28 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:40:10 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-**	Increment cursor while current char is a space.
-**	(to skip spaces between word)
-*/
-
-void	lexer_skip_spaces(t_lexer *lexer)
-{
-	while (lexer->str[lexer->i] == ' ')
-		lexer->i += 1;
-	lexer->c = lexer->str[lexer->i];
-}
 
 /*
 **	Advance cursor of len.
@@ -57,8 +45,8 @@ t_token	*lexer_advance_word(t_lexer *lexer)
 	if (!data)
 		return (NULL);
 	str_len = 0;
-	while (lexer->str[lexer->i + str_len] != ' '
-		&& lexer->str[lexer->i + str_len] != '\n')
+	while (!ft_is_end_word(lexer->str[lexer->i + str_len])
+		&& !ft_is_token(lexer->str[lexer->i + str_len]))
 		str_len++;
 	str = (char *)ft_calloc(str_len + 1, sizeof(*str));
 	if (!str)
@@ -71,7 +59,7 @@ t_token	*lexer_advance_word(t_lexer *lexer)
 		i++;
 	}
 	lexer_advance(lexer, str_len);
-	return (token_init(TOKEN_WORD, data));
+	return (token_init(TOK_WORD, data));
 }
 
 /*
@@ -89,7 +77,7 @@ t_token	*lexer_advance_current(t_lexer *lexer, int type)
 	data = (char **)ft_calloc(1 + 1, sizeof(*data));
 	if (!data)
 		return (NULL);
-	if (type == TOKEN_DGREAT)
+	if (type == TOK_DGREAT)
 	{
 		*data = (char *)ft_calloc(2 + 1, sizeof(**data));
 		if (!*data)
@@ -109,3 +97,88 @@ t_token	*lexer_advance_current(t_lexer *lexer, int type)
 	token = token_init(type, data);
 	return (token);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// /*
+// **	Parse and return word
+// */
+
+// static char	*parse_tok_word(t_lexer *lexer)
+// {
+// 	char	*str;
+// 	int		str_len;
+// 	int		i;
+
+// 	str_len = 0;
+// 	while (!ft_is_end_word(lexer->str[lexer->i + str_len]))
+// 		str_len++;
+// 	str = (char *)ft_calloc(str_len + 1, sizeof(*str));
+// 	if (!str)
+// 		return (NULL);
+// 	i = 0;
+// 	while (i < str_len)
+// 	{
+// 		str[i] = lexer->str[lexer->i + i];
+// 		i++;
+// 	}
+// 	return (str);
+// }
+
+// /*
+// **	Create and return t_token from next TOK_WORD after cursor,
+// **	then position the cursor after the word.
+// **
+// **	TODO: handle ' or " should
+// **
+// */
+
+// t_token	*lexer_advance_word(t_lexer *lexer)
+// {
+// 	char			**data;
+// 	unsigned int	i;
+
+// 	data = (char **)ft_calloc(1 + 1, sizeof(*data));
+// 	if (!data)
+// 		return (NULL);
+// 	i = 0;
+// 	// echo toto'tata'titi'tu tu'ton ton
+// 	while (!ft_is_end_word(lexer->str[lexer->i + i]))
+// 	{
+// 		if (lexer->str[lexer->i + i] == '\'')
+// 		{
+// 			*data = expand_quote(lexer);	// *data = tototatatiti
+// 			// i = strlen(*data)
+// 			// continue
+// 		}
+// 		i++;
+// 	}
+// 	// else
+// 		*data = parse_tok_word(lexer);
+// 	lexer_advance(lexer, ft_strlen(*data));
+// 	return (token_init(TOK_WORD, data));
+// }
+
+
+/*
+**	Increment cursor while current char is a space.
+**	(to skip spaces between word)
+*/
+
+// void	lexer_skip_spaces(t_lexer *lexer)
+// {
+// 	while (lexer->str[lexer->i] == ' ')
+// 		lexer->i += 1;
+// 	lexer->c = lexer->str[lexer->i];
+// }

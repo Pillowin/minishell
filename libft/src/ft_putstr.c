@@ -1,38 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 14:48:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:29:4 by agautier         ###   ########.fr       */
+/*   Created: 2019/09/05 16:46:42 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/10 13:58:21 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <libft.h>
 
-// echo "Je \ suis ant\"oine"
+/*
+**	Affiche un à un les caractères d’une chaîne.
+*/
 
-int	main(void)
+void	ft_putstr(char *str)
 {
-	char buf[4096];
-	unsigned int i;
+	int i;
 
 	i = 0;
-	while (i < 4096)
+	while (str[i])
 	{
-		buf[i] = '\0';
+		write(1, &str[i], 1);
 		i++;
 	}
-	ft_putstr("prompt>");
-	if (read(STDIN_FILENO, buf, 4096) > 0)
-		lexer(buf);
-	else
-	{
-		printf(" tu c pa fer d pro gramme idiot bete de moche\n");
-		return (EXIT_FAILURE);
-	}
-	// read sur stdin
-	return (EXIT_SUCCESS);
 }

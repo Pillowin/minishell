@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 19:08:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/16 19:02:03 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/31 15:30:38 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 **	GREAT :		>
 **	DGREAT :	>>
 **	SEMI :		;
+**
+**	QUOTE :		'
+**	DQUOTE :	"
+**	BSLAH :		\
 **
 **		-- The Grammar --
 **
@@ -58,6 +62,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include "libft.h"
@@ -66,5 +71,14 @@
 
 # include "minishell_lexer.h"
 # include "minishell_parser.h"
+# include "minishell_expansion.h"
+
+
+/*
+**	utils.c
+*/
+
+int	ft_is_end_word(char c);
+int	ft_is_token(char c);
 
 #endif

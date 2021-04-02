@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 16:11:07 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/21 19:09:32 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/29 19:06:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,21 @@ typedef struct s_lexer
 
 typedef enum
 {
-	TOKEN_UNKNOW = 0,
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_LESS,
-	TOKEN_GREAT,
-	TOKEN_DGREAT,
-	TOKEN_SEMI,
-	TOKEN_NEWLINE,
-	TOKEN_REDIR,
-	TOKEN_COMMAND
+	TOK_UNKNOW = 0,
+	TOK_SPACE,
+	TOK_WORD,
+	TOK_PIPE,
+	TOK_LESS,
+	TOK_GREAT,
+	TOK_DGREAT,
+	TOK_SEMI,
+	TOK_DQUOTE,
+	TOK_QUOTE,
+	TOK_BSLASH,
+	TOK_DOLLAR,
+	TOK_NEWLINE,
+	TOK_REDIR,
+	TOK_COMMAND
 }	t_tok_type;
 
 typedef struct s_token
@@ -44,6 +49,7 @@ typedef struct s_token
 /*
 **	lexer.c
 */
+
 void	lexer(char *av);
 
 t_lexer	*lexer_init(char *str);
@@ -56,17 +62,9 @@ t_token	*lexer_get_token(t_lexer *lexer);
 /*
 **	token.c
 */
+
 t_token	*token_init(int type, char **data);
 char	*token_type_to_str(int type);
 void	token_print(void *token);
-
-/*
-**	check_token.c
-*/
-void	check_semi(t_list *tokens, void *data, unsigned int i);
-void	check_pipe(t_list *tokens, void *data, unsigned int i);
-void	check_dgreat(t_list *tokens, void *data, unsigned int i);
-void	check_great(t_list *tokens, void *data, unsigned int i);
-void	check_less(t_list *tokens, void *data, unsigned int i);
 
 #endif

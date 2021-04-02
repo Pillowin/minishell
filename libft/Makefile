@@ -6,7 +6,7 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 12:52:43 by agautier          #+#    #+#              #
-#    Updated: 2021/03/21 18:38:26 by agautier         ###   ########.fr        #
+#    Updated: 2021/04/02 16:18:35 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,21 @@ SRC		=	$(addprefix src/, \
 				ft_strlen.c \
 				ft_create_elem.c \
 				ft_free.c \
+				ft_strchr.c \
+				ft_strncpy.c \
+				ft_strjoin.c \
+				ft_strcpy.c \
+				ft_strcmp.c \
+				ft_strlcat.c \
+				ft_memcpy.c \
+				ft_putstr.c \
 				\
 				ft_list_push_back.c \
 				ft_list_foreach.c \
 				ft_list_at.c \
+				ft_lstnew.c \
 				my_list_foreach_if.c \
+				ft_list_remove_if.c \
 				\
 				btree_create_node.c \
 				btree_apply_prefix.c \

@@ -1,38 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/14 14:48:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:29:4 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/04 12:56:17 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/11 13:58:17 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-// echo "Je \ suis ant\"oine"
+/*
+**	man memcpy
+*/
 
-int	main(void)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	char buf[4096];
-	unsigned int i;
+	char		*d;
+	const char	*s;
+	size_t		i;
 
+	if (!dst && !src)
+		return (0);
+	d = dst;
+	s = src;
 	i = 0;
-	while (i < 4096)
+	while (i < n)
 	{
-		buf[i] = '\0';
+		d[i] = s[i];
 		i++;
 	}
-	ft_putstr("prompt>");
-	if (read(STDIN_FILENO, buf, 4096) > 0)
-		lexer(buf);
-	else
-	{
-		printf(" tu c pa fer d pro gramme idiot bete de moche\n");
-		return (EXIT_FAILURE);
-	}
-	// read sur stdin
-	return (EXIT_SUCCESS);
+	return (dst);
 }

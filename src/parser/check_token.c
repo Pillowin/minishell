@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mamaquig <mamaquig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 18:06:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/21 19:41:53 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/22 16:114:26 by mamaquig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@
 
 /*
 **	Accepted syntax :
-**		TOKEN_WORD TOKEN_SEMI				OR
-**		TOKEN_WORD TOKEN_SEMI TOKEN_NEWLINE	OR
-**		TOKEN_WORD TOKEN_SEMI TOKEN_WORD	OR
-**		TOKEN_WORD TOKEN_SEMI TOKEN_DGREAT	OR
-**		TOKEN_WORD TOKEN_SEMI TOKEN_GREAT	OR
-**		TOKEN_WORD TOKEN_SEMI TOKEN_LESS
+**		TOK_WORD TOK_SEMI				OR
+**		TOK_WORD TOK_SEMI TOK_NEWLINE	OR
+**		TOK_WORD TOK_SEMI TOK_WORD	OR
+**		TOK_WORD TOK_SEMI TOK_DGREAT	OR
+**		TOK_WORD TOK_SEMI TOK_GREAT	OR
+**		TOK_WORD TOK_SEMI TOK_LESS
 */
 
 void	check_semi(t_list *tokens, void *data, unsigned int i)
@@ -41,12 +41,12 @@ void	check_semi(t_list *tokens, void *data, unsigned int i)
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	curr = (t_token *)data;
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev->type != TOKEN_WORD)
+	if (prev->type != TOK_WORD)
 	{
 		printf("bash: syntax error near unexpected token `;'\n");
 		return ;
 	}
-	if (next->type == TOKEN_PIPE || next->type == TOKEN_SEMI)
+	if (next->type == TOK_PIPE || next->type == TOK_SEMI)
 	{
 		printf("bash: syntax error near unexpected token `;'\n");
 		return ;
@@ -55,10 +55,10 @@ void	check_semi(t_list *tokens, void *data, unsigned int i)
 
 /*
 **	Accepted syntax :
-**		TOKEN_WORD TOKEN_PIPE TOKEN_WORD	OR
-**		TOKEN_WORD TOKEN_PIPE TOKEN_DGREAT	OR
-**		TOKEN_WORD TOKEN_PIPE TOKEN_GREAT	OR
-**		TOKEN_WORD TOKEN_PIPE TOKEN_LESS
+**		TOK_WORD TOK_PIPE TOK_WORD	OR
+**		TOK_WORD TOK_PIPE TOK_DGREAT	OR
+**		TOK_WORD TOK_PIPE TOK_GREAT	OR
+**		TOK_WORD TOK_PIPE TOK_LESS
 */
 
 void	check_pipe(t_list *tokens, void *data, unsigned int i)
@@ -75,12 +75,12 @@ void	check_pipe(t_list *tokens, void *data, unsigned int i)
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	curr = (t_token *)data;
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev->type != TOKEN_WORD)
+	if (prev->type != TOK_WORD)
 	{
 		printf("bash: syntax error near unexpected token `|'\n");
 		return ;
 	}
-	if (next->type == TOKEN_PIPE || next->type == TOKEN_SEMI || next->type == TOKEN_NEWLINE)
+	if (next->type == TOK_PIPE || next->type == TOK_SEMI || next->type == TOK_NEWLINE)
 	{
 		printf("bash: syntax error near unexpected token `|'\n");
 		return ;
@@ -89,10 +89,10 @@ void	check_pipe(t_list *tokens, void *data, unsigned int i)
 
 /*
 **	Accepted syntax :
-**		TOKEN_WORD TOKEN_DGREAT TOKEN_WORD	OR
-**		TOKEN_PIPE TOKEN_DGREAT TOKEN_WORD	OR
-**		TOKEN_SEMI TOKEN_DGREAT TOKEN_WORD	OR
-**		           TOKEN_DGREAT TOKEN_WORD
+**		TOK_WORD TOK_DGREAT TOK_WORD	OR
+**		TOK_PIPE TOK_DGREAT TOK_WORD	OR
+**		TOK_SEMI TOK_DGREAT TOK_WORD	OR
+**		         TOK_DGREAT TOK_WORD
 */
 
 void	check_dgreat(t_list *tokens, void *data, unsigned int i)
@@ -106,12 +106,12 @@ void	check_dgreat(t_list *tokens, void *data, unsigned int i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	curr = (t_token *)data;
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev && (prev->type == TOKEN_GREAT || prev->type == TOKEN_DGREAT || prev->type == TOKEN_LESS))
+	if (prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
 	{
 		printf("bash: syntax error near unexpected token `>>'\n");
 		return ;
 	}
-	if (next->type != TOKEN_WORD)
+	if (next->type != TOK_WORD)
 	{
 		printf("bash: syntax error near unexpected token `>>'\n");
 		return ;
@@ -120,10 +120,10 @@ void	check_dgreat(t_list *tokens, void *data, unsigned int i)
 
 /*
 **	Accepted syntax :
-**		TOKEN_WORD TOKEN_GREAT TOKEN_WORD	OR
-**		TOKEN_PIPE TOKEN_GREAT TOKEN_WORD	OR
-**		TOKEN_SEMI TOKEN_GREAT TOKEN_WORD	OR
-**		           TOKEN_GREAT TOKEN_WORD
+**		TOK_WORD TOK_GREAT TOK_WORD	OR
+**		TOK_PIPE TOK_GREAT TOK_WORD	OR
+**		TOK_SEMI TOK_GREAT TOK_WORD	OR
+**		         TOK_GREAT TOK_WORD
 */
 
 void	check_great(t_list *tokens, void *data, unsigned int i)
@@ -137,12 +137,12 @@ void	check_great(t_list *tokens, void *data, unsigned int i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	curr = (t_token *)data;
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev && (prev->type == TOKEN_GREAT || prev->type == TOKEN_DGREAT || prev->type == TOKEN_LESS))
+	if (prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
 	{
 		printf("bash: syntax error near unexpected token `>'\n");
 		return ;
 	}
-	if (next->type != TOKEN_WORD)
+	if (next->type != TOK_WORD)
 	{
 		printf("bash: syntax error near unexpected token `>'\n");
 		return ;
@@ -151,10 +151,10 @@ void	check_great(t_list *tokens, void *data, unsigned int i)
 
 /*
 **	Accepted syntax :
-**		TOKEN_WORD TOKEN_LESS TOKEN_WORD	OR
-**		TOKEN_PIPE TOKEN_LESS TOKEN_WORD	OR
-**		TOKEN_SEMI TOKEN_LESS TOKEN_WORD	OR
-**		           TOKEN_LESS TOKEN_WORD
+**		TOK_WORD TOK_LESS TOK_WORD	OR
+**		TOK_PIPE TOK_LESS TOK_WORD	OR
+**		TOK_SEMI TOK_LESS TOK_WORD	OR
+**		         TOK_LESS TOK_WORD
 */
 
 void	check_less(t_list *tokens, void *data, unsigned int i)
@@ -168,12 +168,12 @@ void	check_less(t_list *tokens, void *data, unsigned int i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	curr = (t_token *)data;
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev && (prev->type == TOKEN_GREAT || prev->type == TOKEN_DGREAT || prev->type == TOKEN_LESS))
+	if (prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
 	{
 		printf("bash: syntax error near unexpected token `<'\n");
 		return ;
 	}
-	if (next->type != TOKEN_WORD)
+	if (next->type != TOK_WORD)
 	{
 		printf("bash: syntax error near unexpected token `<'\n");
 		return ;
