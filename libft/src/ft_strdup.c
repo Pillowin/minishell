@@ -1,23 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/06 17:27:51 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:13:37 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/05 16:38:29 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/11 13:59:16 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	Free un pointeur et le met a NULL.
+**	man strdup
 */
 
-void	ft_free(void **ptr)
+char	*ft_strdup(const char *s1)
 {
-	free(*ptr);
-	*ptr = NULL;
+	int		size;
+	char	*str;
+	int		i;
+
+	size = 0;
+	while (s1[size])
+		size++;
+	str = malloc(size + 1);
+	if (!str)
+		return (0);
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }

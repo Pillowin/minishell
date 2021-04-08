@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 18:56:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/02 16:14:23 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/07 18:41:32 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,14 @@ void	check_tokens(t_list *tokens)
 **	Merge TOK_[LESS | GREAT | DGREAT] and TOK_WORD to TOK_REDIR
 */
 
-void	redir_merge(t_list *tokens)
+void	redir_merge(t_list **tokens)
 {
 	t_list	*curr;
 	t_token	*redir;
 	t_list	*tmp;
 	char	**data;
 
-	curr = tokens;
+	curr = *tokens;
 	while (curr && ((t_token *)(curr->data))->type != TOK_NEWLINE)
 	{
 		if (((t_token *)(curr->data))->type == TOK_DGREAT
@@ -102,20 +102,54 @@ void	redir_merge(t_list *tokens)
 }
 
 /*
-**	Check quotes error
-**	And merge everyting in quotes (quotes included) into a t_token WORD
-**
-**	TOK_QUOTE -> TOK_BACKSLAH -> TOK_DQUOTE
+**	Merge all TOK_WORD qui se suivent
 */
 
-// void	interpret_quotes(t_list *tokens)
-// {
-// 	// Une liste avec pleins de tokens dont des TOK_[D]QUOTE
+void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
+{
+	t_list			*curr;
+	t_list			*prev;
+	t_list			*new;
+	t_token			*command;
+	char			**str;
+	unsigned int	i;
 
-// 	// On transforme tout les tokens entre les quotes en un TOK_WORD
+	curr = *tokens;
+	prev = NULL;
+	while (((t_token *)(curr->data))->type != TOK_NEWLINE)
+	{
+		i = 0;
+		if (((t_token *)(curr->data))->type == TOK_WORD)
+		{
+			str = (char **)ft_calloc(128 * 128, sizeof(str));	// TODO: count word
+			while (((t_token *)(curr->data))->type == TOK_WORD)
+			{
+				// str[i] = (char *)ft_calloc(128, sizeof(*str));
+				// str = (char **)realloc(str, (1 * sizeof(str)));
+				str[i] = ft_strdup(*(((t_token *)(curr->data))->data));
+				// delete curr
+				curr = curr->next;
+				// if (!prev)
+				// 	curr = *tokens;
+				// else
+				// 	curr = prev->next;
+				i++;
+			}
+			command = token_init(TOK_COMMAND, str);
+			new = ft_lstnew(command);
+			new->next = curr;
+			if (!prev)
+				*tokens = new;
+			else
+				prev->next = new;
+			continue ;
+		}
+		if (curr->next)
+			prev = curr;
+		curr = curr->next;
+	}
+}
 
-// 	// On veut une liste SANS TOK_[D]QUOTE
-// }
 
 /*
 **	Update list
@@ -126,7 +160,13 @@ void	redir_merge(t_list *tokens)
 
 void	parse_tokens(t_list **tokens)
 {
-	check_tokens(*tokens);
 	expand(tokens);
-	// redir_merge(tokens);
+	check_tokens(*tokens);
+	redir_merge(tokens);
+	// ft_list_foreach(*tokens, &token_print);
+	printf("\n-----------------------------------------\n\tCreating list\n\n");
+	command_merge(tokens);
+	ft_list_foreach(*tokens, &token_print);
+
+	create_tree(*tokens);
 }

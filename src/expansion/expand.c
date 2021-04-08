@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ggieteer <ggieteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 18:57:29 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:55:226 by agautier         ###   ########.fr       */
+/*   Updated: 2021/03/31 16:55:256 byggtiteerr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,6 @@ static void	expand_clean_word(t_list **tokens)
 	}
 }
 
-static int	is_tok_space(void *data)
-{
-	if (((t_token *)(data))->type == TOK_SPACE)
-		return (0);
-	return (1);
-}
-
 /*
 **	merge TOK_WORD and Remove TOK_SPACE
 */
@@ -52,7 +45,7 @@ static int	is_tok_space(void *data)
 static void	expand_clean(t_list** tokens)
 {
 	expand_clean_word(tokens);
-	ft_list_remove_if(tokens, NULL, &is_tok_space, &free);
+	ft_list_remove_if(tokens, (void *)TOK_SPACE, &is_tok_type, &ft_free);
 }
 
 /*
@@ -77,7 +70,7 @@ void	expand(t_list **tokens)
 		if (((t_token*)(curr->data))->type == TOK_QUOTE)
 			curr = expand_quote(&prev, next);
 		else if (((t_token*)(curr->data))->type == TOK_DQUOTE)
-			curr = expand_dquote(&prev, next);
+			curr = expand_dquote(&prev);
 		else if (((t_token*)(curr->data))->type == TOK_BSLASH)
 			curr = expand_bslash(&prev, next);
 		else if (((t_token*)(curr->data))->type == TOK_DOLLAR)

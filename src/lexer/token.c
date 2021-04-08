@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:48:29 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/02 13:04:42 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/07 16:38:25 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ void	token_print(void *token)
 	printf("token = %s\t", token_type_to_str(tok->type));
 	if (!tok->type)
 	{
-		printf("\t%p\n", tok);
+		// printf("\t%p\n", tok);
+		printf("\n");
 		return ;
 	}
 	i = 0;
@@ -95,11 +96,13 @@ void	token_print(void *token)
 	{
 		if (!(tok->data)[i])
 		{
-			printf("\t%p\n", tok);
+			// printf("\t%p\n", tok);
+			printf("\n");
 			return ;
 		}
 		printf("`%s`    ", (tok->data)[i]);
 		i++;
 	}
-	printf("\t%p\n", tok);
+	// printf("\t%p\n", tok);
+	printf("\n");
 }

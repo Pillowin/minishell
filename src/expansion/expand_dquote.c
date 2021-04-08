@@ -54,7 +54,7 @@
 **	TODO: if next char is not $ or " or \ or NEWLINE print \
 */
 
-static void	expand_dquote_bslash(t_list **prev, t_list *next)
+static void	expand_dquote_bslash(t_list **prev)
 {
 	t_list			*new;
 	t_list			*tmp;
@@ -63,9 +63,9 @@ static void	expand_dquote_bslash(t_list **prev, t_list *next)
 	char			**str;
 
 	tmp = (*prev)->next;
-	curr = next;
+	curr = tmp->next;
 	// boucle jusqu'a la dquote
-	while (((t_token *)(curr->data))->type != TOK_DQUOTE)
+	while (((t_token *)(curr->data))->type != TOK_DQUOTE && ((t_token *)(curr->data))->type != TOK_NEWLINE)
 	{
 		// si bslash
 		if (((t_token *)(curr->data))->type == TOK_BSLASH)
@@ -73,6 +73,7 @@ static void	expand_dquote_bslash(t_list **prev, t_list *next)
 			// si next is NOT $ or " or '\'
 			if ((((t_token *)(curr->next->data))->type != TOK_DOLLAR)
 				&& (((t_token *)(curr->next->data))->type != TOK_DQUOTE)
+				
 				&& (((t_token *)(curr->next->data))->type != TOK_BSLASH))
 			{	
 				// créé TOK_WORD '\' 
@@ -99,21 +100,28 @@ static void	expand_dquote_bslash(t_list **prev, t_list *next)
 	}
 }
 
-t_list	*expand_dquote(t_list **prev, t_list *next)
+t_list	*expand_dquote(t_list **prev)
 {
 	t_list			*new;
+	t_list			*next;
 	t_token			*token;
 	char			**str;
 
-	expand_dquote_bslash(prev, next);
+	expand_dquote_bslash(prev);
 	str = (char **)ft_calloc(1 + 1, sizeof(*str));
 	if (!str)
 		return (NULL);
 	*str = (char *)ft_calloc(1 + 1, sizeof(**str));
 	if (!*str)
 		return (NULL);
+	next = (*prev)->next->next;
 	while (((t_token *)(next->data))->type != TOK_DQUOTE)
 	{
+		if (((t_token *)(next->data))->type == TOK_NEWLINE)
+		{
+			printf("Unexpected dquote\n");
+			exit(EXIT_FAILURE);
+		}
 		*str = ft_strjoin(*str, *(((t_token *)(next->data))->data));
 		next = next->next;
 	}

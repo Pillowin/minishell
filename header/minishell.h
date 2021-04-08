@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 19:08:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 15:30:38 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/07 17:33:52 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,6 @@
 
 int	ft_is_end_word(char c);
 int	ft_is_token(char c);
+int	is_tok_type(t_token *data, void *type);
 
 #endif
