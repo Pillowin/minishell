@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_list_at.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaquig <mamaquig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 21:54:12 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/03/04 18:45:31 by mamaquig         ###   ########.fr       */
+/*   Updated: 2021/04/08 19:04:04 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_list.h"
+#include "libft.h"
 
 /*
 **	Renvoie le n-ième élément de la liste, sachant que le premier élément est

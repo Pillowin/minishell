@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_list_find.c                                     :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/01 18:40:58 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/08 19:04:08 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/08 10:55:09 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/11 14:06:07 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	Renvoie l’adresse du premier élément dont la donnée comparée renvoie 0.
+**	Écrit la chaine de caractères ’s’ sur le filedescriptor donné.
 */
 
-t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
+void	ft_putstr_fd(char *s, int fd)
 {
-	while (begin_list)
+	int	i;
+
+	if (!s)
+		return ;
+	i = 0;
+	while (s[i])
 	{
-		if (!cmp(begin_list->data, data_ref))
-			return (begin_list);
-		begin_list = begin_list->next;
+		write(fd, &s[i], 1);
+		i++;
 	}
-	return (NULL);
 }

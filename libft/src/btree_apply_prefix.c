@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   btree_apply_prefix.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaquig <mamaquig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 22:00:19 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/03/06 22:20:21 by mamaquig         ###   ########.fr       */
+/*   Updated: 2021/04/08 19:03:44 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_btree.h"
+#include "libft.h"
 
 /*
 **	Applique la fonction passée en paramètre à l’item de chaque node,

@@ -14,17 +14,11 @@
 
 static void	expand_clean_word(t_list **tokens)
 {
-	t_list	*prev;
 	t_list	*curr;
-	t_list	*next;
 
-	prev = NULL;
 	curr = *tokens;
-	next = NULL;
 	while (curr)
 	{
-		if (curr->next)
-			next = curr->next;
 		if (((t_token *)(curr->data))->type == TOK_WORD && ((t_token *)(curr->next->data))->type == TOK_WORD)
 		{
 			*((t_token *)(curr->data))->data = ft_strjoin(*((t_token *)(curr->data))->data, *((t_token *)(curr->next->data))->data);
@@ -32,8 +26,6 @@ static void	expand_clean_word(t_list **tokens)
 			//TODO: free curr->next (tmp)
 			continue;
 		}
-		if (curr->next)
-			prev = curr;
 		curr = curr->next;
 	}
 }
@@ -45,7 +37,7 @@ static void	expand_clean_word(t_list **tokens)
 static void	expand_clean(t_list** tokens)
 {
 	expand_clean_word(tokens);
-	ft_list_remove_if(tokens, (void *)TOK_SPACE, &is_tok_type, &ft_free);
+	ft_list_remove_if(tokens, (void *)TOK_SPACE, &is_tok_type, &token_destroy);
 }
 
 /*

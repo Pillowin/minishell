@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgmeqeeg <mgmeqeeg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ggeeteer <ggeeteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/03 21:49:04 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/07 16:14:402 bymgmiqeegr         ###   ########.fr       */
+/*   Updated: 2021/04/07 16:14:442 byggieteerr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,15 +97,18 @@ static void	eat_list_elem(t_list *list, t_btree **node)
 
 void	create_tree(t_list *tokens)
 {
+	// TODO: segv when no input
 	printf("\n-----------------------------------------\n");
 	printf("\tCreating tree\n\n");
 	t_btree	*tree;
 
-	ft_list_remove_if(&tokens, (void *)TOK_NEWLINE, &is_tok_type, &ft_free);
+	if (!tokens)
+		return ;
 	eat_list_elem(tokens, &tree);
 
-	printf("\n-----------------------------------------\n");
 	btree_apply_prefix(tree, &token_print);
+
+	btree_apply_prefix(tree, &token_destroy);
 	btree_free(&tree);
 }
 

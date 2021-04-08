@@ -12,7 +12,12 @@
 
 #include "minishell.h"
 
-// echo "Je \ suis ant\"oine"
+
+void	error(char *err, unsigned char status)
+{
+	ft_putstr_fd(err, STDERR_FILENO);
+	exit(status);
+}
 
 int	main(void)
 {

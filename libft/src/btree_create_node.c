@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   btree_create_node.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaquig <mamaquig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 21:22:26 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/03/04 21:57:03 by mamaquig         ###   ########.fr       */
+/*   Updated: 2021/04/08 19:03:46 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_btree.h"
+#include "libft.h"
 
 /*
 **	Alloue un nouvel élément, initialise son item à la valeur du paramètre et

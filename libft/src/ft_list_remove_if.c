@@ -6,12 +6,11 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 20:55:08 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/07 17:18:22 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/08 21:08:35 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "ft_list.h"
 
 /*
 **	Efface de la liste tous les éléments dont la donnée comparée renvoie 0.
@@ -29,7 +28,7 @@
 */
 
 void	ft_list_remove_if(t_list **begin_list, void *data_ref,
-							int (*cmp)(), void (*free_fct)(void **))
+							int (*cmp)(), void (*free_fct)(void *))
 {
 	t_list	*list_ptr;
 	t_list	*prev;
@@ -44,7 +43,7 @@ void	ft_list_remove_if(t_list **begin_list, void *data_ref,
 				prev->next = list_ptr->next;
 			else
 				*begin_list = (*begin_list)->next;
-			(*free_fct)((void **)&(list_ptr->data));
+			(*free_fct)(list_ptr->data);
 			ft_free((void **)&list_ptr);
 			if (!prev)
 				list_ptr = (*begin_list);

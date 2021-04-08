@@ -79,8 +79,7 @@ void	lexer(char *av)
 	tokens = NULL;
 	while (lexer->i < lexer->str_len)
 		ft_list_push_back(&tokens, lexer_get_token(lexer));
-	// ft_list_foreach(tokens, &token_print);
-	// printf("----------------------------------------------------------------\n");
+	ft_free((void **)&(lexer));
 	parse_tokens(&tokens);
 	printf("\n");
 }

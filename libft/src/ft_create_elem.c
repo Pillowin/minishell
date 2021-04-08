@@ -6,11 +6,11 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 15:18:11 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/03/04 19:07:54 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/08 19:03:52 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_list.h"
+#include "libft.h"
 
 /*
 **	Crée un nouvel élément de type t_list.

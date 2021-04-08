@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 19:48:29 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/07 16:38:25 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/08 18:52:113 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,29 @@ t_token	*token_init(int type, char **data)
 	token->data = data;
 	return (token);
 }
+
+/*
+**	Destroy and free a token.
+*/
+
+void	token_destroy(void *ptr)
+{
+	t_token			*token;
+	unsigned int	i;
+
+	token = (t_token *)ptr;
+	if (!token)
+		return ;
+	i = 0;
+	while (token->data[i])
+	{
+		ft_free((void **)&(token->data[i]));
+		i++;
+	}
+	ft_free((void **)&(token->data));
+	ft_free((void **)&token);
+}
+
 
 /*
 **	Return string corresponding to token type.

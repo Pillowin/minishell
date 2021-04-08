@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_list_foreach.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaquig <mamaquig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 16:54:07 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/03/04 18:46:26 by mamaquig         ###   ########.fr       */
+/*   Updated: 2021/04/08 19:04:26 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_list.h"
+#include "libft.h"
 
 /*
 **	Applique une fonction donnée en paramètre à la valeur contenue dans

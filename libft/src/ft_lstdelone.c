@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_list_find.c                                     :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/01 18:40:58 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/08 19:04:08 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/08 17:59:51 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/08 20:50:12 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	Renvoie l’adresse du premier élément dont la donnée comparée renvoie 0.
+**	Libère la mémoire de l’élément passé en argumenten utilisant la fonction
+**	del puis avec free(3).
+**	La mémoire de next n'est pas free.
 */
 
-t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
+void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-	while (begin_list)
-	{
-		if (!cmp(begin_list->data, data_ref))
-			return (begin_list);
-		begin_list = begin_list->next;
-	}
-	return (NULL);
+	if (!lst)
+		return ;
+	if (del)
+		del(lst->data);
+	ft_free((void **)&lst);
 }

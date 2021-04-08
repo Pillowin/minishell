@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 16:11:07 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/29 19:06:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/08 19:10:36 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_token
 void	lexer(char *av);
 
 t_lexer	*lexer_init(char *str);
+void	token_destroy(void *ptr);
 void	lexer_advance(t_lexer *lexer, unsigned int len);
 t_token	*lexer_advance_word(t_lexer *lexer);
 t_token	*lexer_advance_current(t_lexer *lexer, int type);

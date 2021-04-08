@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 19:08:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/07 17:33:52 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/08 23:04:38 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@
 # include "minishell_parser.h"
 # include "minishell_expansion.h"
 
+
+void	error(char *err, unsigned char status);
 
 /*
 **	utils.c

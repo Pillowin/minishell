@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 18:57:46 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/03 21:50:17 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/08 16:05:15 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 **	check_token.c
 */
 
-void	check_semi(t_list *tokens, void *data, unsigned int i);
-void	check_pipe(t_list *tokens, void *data, unsigned int i);
-void	check_dgreat(t_list *tokens, void *data, unsigned int i);
-void	check_great(t_list *tokens, void *data, unsigned int i);
-void	check_less(t_list *tokens, void *data, unsigned int i);
+void	check_semi(t_list *tokens, unsigned int i);
+void	check_pipe(t_list *tokens, unsigned int i);
+void	check_dgreat(t_list *tokens, unsigned int i);
+void	check_great(t_list *tokens, unsigned int i);
+void	check_less(t_list *tokens, unsigned int i);
 
 /*
 **	parser.c

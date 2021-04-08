@@ -6,7 +6,7 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/10 20:58:26 by agautier          #+#    #+#              #
-#    Updated: 2021/03/14 20:02:55 by agautier         ###   ########.fr        #
+#    Updated: 2021/04/08 21:18:0 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,6 @@ CC			=	gcc
 HEADER		=	-Iheader -Ilibft/header
 LIB			=	-Llibft
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
-
 all: $(NAME)
 
 $(NAME): libft $(OBJ)

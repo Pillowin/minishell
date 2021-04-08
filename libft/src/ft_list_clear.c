@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_list_find.c                                     :+:      :+:    :+:   */
+/*   ft_list_clear.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/01 18:40:58 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/08 19:04:08 by agautier         ###   ########.fr       */
+/*   Created: 2021/02/28 19:55:19 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/04/08 22:43:18 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	Renvoie l’adresse du premier élément dont la donnée comparée renvoie 0.
+**	Retire et libère l’ensemble des éléments de la liste.
 */
 
-t_list	*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)())
+void	ft_list_clear(t_list *begin_list, void (*free_fct)(void *))
 {
+	t_list	*tmp;
+
 	while (begin_list)
 	{
-		if (!cmp(begin_list->data, data_ref))
-			return (begin_list);
-		begin_list = begin_list->next;
+		tmp = begin_list->next;
+		free_fct(begin_list);
+		begin_list = tmp;
 	}
-	return (NULL);
 }
