@@ -61,12 +61,20 @@ static void	eat_list_elem(t_list *list, t_btree **node)
 	if (!prev && !(list->next))
 	{
 		*node = btree_create_node(((t_token *)(list->data)));
+		if (!(*node))
+		{
+			// TODO:
+		}
 		ft_free((void **)&(list));
 		return ;
 	}
 	else if (!prev)
 	{
 		*node = btree_create_node(((t_token *)(list->data)));
+		if (!(*node))
+		{
+			// TODO:
+		}
 		if (((t_token *)(list->data))->type == TOK_REDIR)
 			left = list->next;
 		else if (((t_token *)(list->data))->type == TOK_COMMAND)
@@ -87,6 +95,10 @@ static void	eat_list_elem(t_list *list, t_btree **node)
 			left = prev->next->next;
 		}
 		*node = btree_create_node(((t_token *)(prev->next->data)));
+		if (!(*node))
+		{
+			// TODO:
+		}
 		ft_free((void **)&(prev->next));
 	}
 	if (left)
@@ -115,6 +127,7 @@ void	create_tree(t_list *tokens)
 
 /*
 ls -l | grep grw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; diff otot toto >> diff
+ls -l | grep g'r'w | wc -l > lsf\\ile ; < ls"'f'i ile" c\at | rev \> itit > \u\t\u\t\ \>>> o't'ot \;; diff otot toto >> diff
 	- echo toto     ;    ls -l    |      grep drw
 	-    cmd      semi    cmd    pipe      cmd
 
@@ -144,13 +157,27 @@ ls -l | grep grw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; d
 
 
 
+// int	my_calloc(size_t count, size_t size, unsigned char **ptr)
+// {
+// 	size_t	i;
 
+// 	*ptr = (unsigned char *)malloc(size * count);
+// 	if (!(*ptr))
+// 		return (0);
+// 	i = 0;
+// 	while (i < size * count)
+// 	{
+// 		*ptr[i] = '\0';
+// 		i++;
+// 	}
+// 	return (1);
+// }
 
+// if (!(ptr = malloc(sizeof(ptr))))
+// 	return (NULL);
 
-
-
-
-
+// if (!my_calloc(1, sizeof(ptr), &ptr))
+// 	return (NULL);
 
 
 

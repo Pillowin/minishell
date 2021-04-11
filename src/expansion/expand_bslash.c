@@ -13,62 +13,71 @@
 #include "minishell.h"
 
 /*
-**	Fct appelé lorsque lexer->c = \
-**	TODO: handle \newline
+**	
 */
 
-/*
-**	without ""
-**	Preserves the literal value of the next character that follows, with the exception of newline.
-**
-**	whith ""
-**	if next char is not $ or " or \ or NEWLINE print \
-**	Preserves the literal value of the next character that follows, with the exception of newline.
-*/
-
-/*
-**	token = TOK_WORD        echo  
-**	token = TOK_SPACE             
-**	token = TOK_WORD        je    
-**	token = TOK_SPACE             <-- previous de expand.c, passé en paramètre à expand_quote
-**	token = TOK_BSLASH      \     <-- curr de expand.c previous de expand.c, passé en paramètre à expand_quote
-**	token = TOK_SPACE             <-- next de expand.c, passé en paramètre à expand_quote
-**	token = TOK_WORD        suis  
-**	token = TOK_SPACE             
-**	token = TOK_WORD        an    
-**	token = TOK_BSLASH      \     
-**	token = TOK_DQUOTE      "     
-**	token = TOK_WORD        toine 
-**	token = TOK_NEWLINE           
-*/
-
-/*
-**	without ""
-**	Preserves the literal value of the next character that follows, with the exception of newline.
-*/
-
-t_list	*expand_bslash(t_list **prev, t_list *next)
+t_list	*expand_bslash(t_list **tokens, t_list **prev, t_list *next)
 {
 	t_list		*new;
+	t_list		*tmp;
 	t_token		*token;
 	char		**str;
 
 	if (((t_token *)(next->data))->type == TOK_WORD || ((t_token *)(next->data))->type == TOK_NEWLINE)
 	{
-		// TODO: free curr
+		if (!(*prev))
+		{
+			tmp = (*tokens);
+			*tokens = (*tokens)->next;
+			ft_lstdelone(tmp, &token_destroy);
+			return (*tokens);
+		}
+		ft_lstdelone((*prev)->next, &token_destroy);
 		(*prev)->next = next;
 		return ((*prev)->next);
 	}
 	str = (char **)ft_calloc(1 + 1, sizeof(*str));
 	if (!str)
-		return (NULL);
-	*str = (char *)ft_calloc(1 + 1, sizeof(**str));
+	{
+		ft_list_foreach(*tokens, &token_destroy);
+		ft_list_clear(*tokens, &ft_free);
+		error("Memory allocation failed.\n", EXIT_FAILURE);
+	}
+	*str = ft_strdup(*(((t_token *)(next->data))->data));
 	if (!*str)
-		return (NULL);
-	**str = **(((t_token *)(next->data))->data);
+	{
+		ft_free((void **)&str);
+		ft_list_foreach(*tokens, &token_destroy);
+		ft_list_clear(*tokens, &ft_free);
+		error("Memory allocation failed.\n", EXIT_FAILURE);
+	}
 	token = token_init(TOK_WORD, str);
+	if (!token)
+	{
+		ft_free((void **)&(*str));
+		ft_free((void **)&str);
+		ft_list_foreach(*tokens, &token_destroy);
+		ft_list_clear(*tokens, &ft_free);
+		error("Memory allocation failed.\n", EXIT_FAILURE);
+	}
 	new = ft_lstnew(token);
-	new->next = next->next;
+	if (!new)
+	{
+		token_destroy(token);
+		ft_list_foreach(*tokens, &token_destroy);
+		ft_list_clear(*tokens, &ft_free);
+		error("Memory allocation failed.\n", EXIT_FAILURE);
+	}
+	tmp = next->next;
+	ft_lstdelone(next, &token_destroy);
+	new->next = tmp;
+	if (!(*prev))
+	{
+		ft_lstdelone(*tokens, &token_destroy);
+		*tokens = new;
+		return (new);
+	}
+	ft_lstdelone((*prev)->next, &token_destroy);
 	(*prev)->next = new;
 	return (new);
 }

@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ggieteer <ggieteer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/25 18:57:29 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/31 16:55:256 byggtiteerr         ###   ########.fr       */
+/*   Created: 2021/04/09 17:57:11 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/09 22:35:331 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	expand_clean_word(t_list **tokens)
-{
-	t_list	*curr;
-
-	curr = *tokens;
-	while (curr)
-	{
-		if (((t_token *)(curr->data))->type == TOK_WORD && ((t_token *)(curr->next->data))->type == TOK_WORD)
-		{
-			*((t_token *)(curr->data))->data = ft_strjoin(*((t_token *)(curr->data))->data, *((t_token *)(curr->next->data))->data);
-			curr->next = curr->next->next;
-			//TODO: free curr->next (tmp)
-			continue;
-		}
-		curr = curr->next;
-	}
-}
 
 /*
 **	merge TOK_WORD and Remove TOK_SPACE
@@ -36,7 +18,31 @@ static void	expand_clean_word(t_list **tokens)
 
 static void	expand_clean(t_list** tokens)
 {
-	expand_clean_word(tokens);
+	t_list	*curr;
+	void	*tmp;
+
+	curr = *tokens;
+	while (curr)
+	{
+		if (((t_token *)(curr->data))->type == TOK_WORD && ((t_token *)(curr->next->data))->type == TOK_WORD)
+		{
+			tmp = *((t_token *)(curr->data))->data;
+			*((t_token *)(curr->data))->data = ft_strjoin(tmp, *((t_token *)(curr->next->data))->data);
+			if (!(*((t_token *)(curr->data))->data))
+			{
+				ft_free((void **)&(tmp));
+				ft_list_foreach(*tokens, &token_destroy);
+				ft_list_clear(*tokens, &ft_free);
+				error("Memory allocation failed.\n", EXIT_FAILURE);
+			}
+			ft_free((void **)&(tmp));
+			tmp = curr->next->next;
+			ft_lstdelone(curr->next, &token_destroy);
+			curr->next = tmp;
+			continue;
+		}
+		curr = curr->next;
+	}
 	ft_list_remove_if(tokens, (void *)TOK_SPACE, &is_tok_type, &token_destroy);
 }
 
@@ -60,11 +66,11 @@ void	expand(t_list **tokens)
 		if (curr->next)
 			next = curr->next;
 		if (((t_token*)(curr->data))->type == TOK_QUOTE)
-			curr = expand_quote(&prev, next);
+			curr = expand_quote(tokens, &prev, next);
 		else if (((t_token*)(curr->data))->type == TOK_DQUOTE)
-			curr = expand_dquote(&prev);
+			curr = expand_dquote(tokens, &prev);
 		else if (((t_token*)(curr->data))->type == TOK_BSLASH)
-			curr = expand_bslash(&prev, next);
+			curr = expand_bslash(tokens, &prev, next);
 		else if (((t_token*)(curr->data))->type == TOK_DOLLAR)
 			expand_dollar();
 		if (curr->next)

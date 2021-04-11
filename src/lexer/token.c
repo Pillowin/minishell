@@ -50,7 +50,6 @@ void	token_destroy(void *ptr)
 	ft_free((void **)&token);
 }
 
-
 /*
 **	Return string corresponding to token type.
 **

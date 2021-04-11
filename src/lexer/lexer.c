@@ -22,7 +22,7 @@ t_lexer	*lexer_init(char *str)
 
 	lexer = (t_lexer *)ft_calloc(1, sizeof(*lexer));
 	if (!lexer)
-		return (NULL);
+		error("Memory allocation failed.\n", EXIT_FAILURE);
 	lexer->str = str;
 	lexer->str_len = ft_strlen(str);
 	lexer->i = 0;
@@ -38,9 +38,9 @@ t_lexer	*lexer_init(char *str)
 
 t_token	*lexer_get_token(t_lexer *lexer)
 {
-	if (lexer->str_len > lexer->i + 1 && lexer->c == '>'
-		&& lexer->str[lexer->i + 1] == '>')
-		return (lexer_advance_current(lexer, TOK_DGREAT));
+	// if (lexer->str_len > lexer->i + 1 && lexer->c == '>'
+	// 	&& lexer->str[lexer->i + 1] == '>')
+	// 	return (lexer_advance_current(lexer, TOK_DGREAT));
 	if (lexer->c == ' ')
 		return (lexer_advance_current(lexer, TOK_SPACE));
 	if (lexer->c == '|')
@@ -70,12 +70,12 @@ t_token	*lexer_get_token(t_lexer *lexer)
 **	TODO: parcourir la liste a la recherche de token dans l'ordre des priorites
 */
 
-void	lexer(char *av)
+void	lexer(char *input)
 {
 	t_lexer			*lexer;
 	t_list			*tokens;
 
-	lexer = lexer_init(av);
+	lexer = lexer_init(input);
 	tokens = NULL;
 	while (lexer->i < lexer->str_len)
 		ft_list_push_back(&tokens, lexer_get_token(lexer));

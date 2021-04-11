@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 19:08:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/08 23:04:38 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/09 16:42:04 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@
 # include "minishell_parser.h"
 # include "minishell_expansion.h"
 
+# define ERR_PARSING	2
 
 void	error(char *err, unsigned char status);
 

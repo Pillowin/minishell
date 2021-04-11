@@ -22,5 +22,5 @@ void	btree_free(t_btree **root)
 		return ;
 	btree_free(&((*root)->left));
 	btree_free(&((*root)->right));
-	ft_free((void **)root);
+	ft_free((void **)&(*root));
 }

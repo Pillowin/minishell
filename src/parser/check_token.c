@@ -13,11 +13,6 @@
 #include "minishell.h"
 
 /*
-**	TODO: error func
-**	TODO: toujours \n de present ? Si non ca segv
-*/
-
-/*
 **	Accepted syntax :
 **		TOK_WORD TOK_SEMI				OR
 **		TOK_WORD TOK_SEMI TOK_NEWLINE	OR
@@ -34,15 +29,17 @@ void	check_semi(t_list *tokens, unsigned int i)
 
 	if (!i)
 	{
-		error("bash: syntax error near unexpected token `;'\n", 2);
-		ft_list_clear(tokens, &token_destroy);
+		ft_list_foreach(tokens, &token_destroy);
+		ft_list_clear(tokens, &ft_free);
+		error("bash: syntax error near unexpected token `;'\n", ERR_PARSING);
 	}
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
 	if (prev->type != TOK_WORD || next->type == TOK_PIPE || next->type == TOK_SEMI)
 	{
-		error("bash: syntax error near unexpected token `;'\n", 2);
-		ft_list_clear(tokens, &token_destroy);
+		ft_list_foreach(tokens, &token_destroy);
+		ft_list_clear(tokens, &ft_free);
+		error("bash: syntax error near unexpected token `;'\n", ERR_PARSING);
 	}
 }
 
@@ -61,15 +58,17 @@ void	check_pipe(t_list *tokens, unsigned int i)
 
 	if (!i)
 	{
-		error("bash: syntax error near unexpected token `|'\n", 2);
-		ft_list_clear(tokens, &token_destroy);
+		ft_list_foreach(tokens, &token_destroy);
+		ft_list_clear(tokens, &ft_free);
+		error("bash: syntax error near unexpected token `|'\n", ERR_PARSING);
 	}
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
 	if (prev->type != TOK_WORD || next->type == TOK_PIPE || next->type == TOK_SEMI || next->type == TOK_NEWLINE)
 	{
-		error("bash: syntax error near unexpected token `|'\n", 2);
-		ft_list_clear(tokens, &token_destroy);
+		ft_list_foreach(tokens, &token_destroy);
+		ft_list_clear(tokens, &ft_free);
+		error("bash: syntax error near unexpected token `|'\n", ERR_PARSING);
 	}
 }
 
@@ -90,10 +89,11 @@ void	check_dgreat(t_list *tokens, unsigned int i)
 	if (i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS || next->type != TOK_WORD))
+	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS)) || next->type != TOK_WORD)
 	{
-		error("bash: syntax error near unexpected token `>>'\n", 2);
-		ft_list_clear(tokens, &token_destroy);
+		ft_list_foreach(tokens, &token_destroy);
+		ft_list_clear(tokens, &ft_free);
+		error("bash: syntax error near unexpected token `>>'\n", ERR_PARSING);
 	}
 }
 
@@ -114,10 +114,11 @@ void	check_great(t_list *tokens, unsigned int i)
 	if (i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS || next->type != TOK_WORD))
+	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS)) || next->type != TOK_WORD)
 	{
-		error("bash: syntax error near unexpected token `>'\n", 2);
-		ft_list_clear(tokens, &token_destroy);
+		ft_list_foreach(tokens, &token_destroy);
+		ft_list_clear(tokens, &ft_free);
+		error("bash: syntax error near unexpected token `>'\n", ERR_PARSING);
 	}
 }
 
@@ -138,9 +139,10 @@ void	check_less(t_list *tokens, unsigned int i)
 	if (i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS || next->type != TOK_WORD))
+	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS)) || next->type != TOK_WORD)
 	{
-		error("bash: syntax error near unexpected token `<'\n", 2);
-		ft_list_clear(tokens, &token_destroy);
+		ft_list_foreach(tokens, &token_destroy);
+		ft_list_clear(tokens, &ft_free);
+		error("bash: syntax error near unexpected token `<'\n", ERR_PARSING);
 	}
 }

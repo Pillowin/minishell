@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 19:38:21 by agautier          #+#    #+#             */
-/*   Updated: 2021/03/25 18:40:10 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/11 15:20:49 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,23 +77,23 @@ t_token	*lexer_advance_current(t_lexer *lexer, int type)
 	data = (char **)ft_calloc(1 + 1, sizeof(*data));
 	if (!data)
 		return (NULL);
-	if (type == TOK_DGREAT)
-	{
-		*data = (char *)ft_calloc(2 + 1, sizeof(**data));
-		if (!*data)
-			return (NULL);
-		(*data)[0] = '>';
-		(*data)[1] = '>';
-		lexer_advance(lexer, 2);
-	}
-	else
-	{
+	// if (type == TOK_DGREAT)
+	// {
+	// 	*data = (char *)ft_calloc(2 + 1, sizeof(**data));
+	// 	if (!*data)
+	// 		return (NULL);
+	// 	(*data)[0] = '>';
+	// 	(*data)[1] = '>';
+	// 	lexer_advance(lexer, 2);
+	// }
+	// else
+	// {
 		*data = (char *)ft_calloc(1 + 1, sizeof(**data));
 		if (!*data)
 			return (NULL);
 		(*data)[0] = lexer->c;
 		lexer_advance(lexer, 1);
-	}
+	// }
 	token = token_init(type, data);
 	return (token);
 }

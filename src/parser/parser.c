@@ -12,28 +12,6 @@
 
 #include "minishell.h"
 
-/*	t_list *tokens                                                                    |
-**	             0x0a                              0x0b                              0x0c                              0x0d
-**	┌----------------------------┐    ┌----------------------------┐    ┌----------------------------┐    ┌----------------------------┐
-**	|                            |    |                            |    |                            |    |                            |
-**	|  - data = t_token          |    |  - data = t_token          |    |  - data = t_token          |    |  - data = t_token          |
-**	|      - type = TOK_WORD     | -► |      - type = TOK_WORD     | -► |      - type = TOK_SEMI     | -► |      - type = TOK_WORD     |
-**	|      - data = "echo"       |    |      - data = "antoine"    |    |      - data = ";"          |    |      - data = "ls"         |
-**	|  - next = 0x0b             |    |  - next = 0x0c             |    |  - next = 0x0d             |    |  - next = NULL             |
-**	|                            |    |                            |    |                            |    |                            |
-**	└----------------------------┘    └----------------------------┘    └----------------------------┘    └----------------------------┘
-*/
-
-/*
-**	Priorites:
-**		- TOK_SEMI ;
-**		- TOK_PIPE |
-**		- TOK_DGREAT + TOK_WORD => TOK_REDIR [ >> , filename ]
-**		- TOK_GREAT + TOK_WORD => TOK_REDIR [ > , filename ]
-**		- TOK_LESS + TOK_WORD => TOK_REDIR [ < , filename ]
-**		- TOK_WORD... => TOK_COMMAND [ TOK_WORD, TOK_WORD... ]
-*/
-
 /*
 **	Comparer l'enum avec les éléments (token) du tableau.
 */
@@ -64,109 +42,6 @@ void	check_tokens(t_list *tokens)
 }
 
 /*
-**	Merge TOK_[LESS | GREAT | DGREAT] and TOK_WORD to TOK_REDIR
-*/
-
-void	redir_merge(t_list **tokens)
-{
-	t_list	*curr;
-	t_list	*redir;
-	t_list	*prev;
-	char	**data;
-
-	prev = NULL;
-	curr = *tokens;
-	while (curr && ((t_token *)(curr->data))->type != TOK_NEWLINE)
-	{
-		if (((t_token *)(curr->data))->type == TOK_DGREAT
-			|| ((t_token *)(curr->data))->type == TOK_GREAT
-			|| ((t_token *)(curr->data))->type == TOK_LESS)
-		{
-			data = (char **)ft_calloc(2 + 1, sizeof(*data));
-			if (!data)
-				return ;
-			data[0] = ft_strdup(*(((t_token *)((curr)->data))->data));
-			data[1] = ft_strdup(*(((t_token *)((curr->next)->data))->data));
-			redir = ft_lstnew(token_init(TOK_REDIR, data));
-			redir->next = curr->next->next;
-			if (prev)
-				prev->next = redir;
-			else
-				*tokens = redir;
-			ft_lstdelone(curr->next, token_destroy);
-			ft_lstdelone(curr, token_destroy);
-			curr = redir;
-		}
-		if (curr->next)
-			prev = curr;
-		curr = curr->next;
-	}
-}
-
-/*
-**	Merge all TOK_WORD qui se suivent
-*/
-
-void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
-{
-	t_list			*curr;
-	t_list			*prev;
-	t_list			*new;
-	t_list			*tmp;
-	t_list			*redirs;
-	char			**str;
-	unsigned int	i;
-
-	curr = *tokens;
-	prev = NULL;
-	while (((t_token *)(curr->data))->type != TOK_NEWLINE)
-	{
-		redirs = NULL;
-		i = 0;
-		if (((t_token *)(curr->data))->type == TOK_WORD)
-		{
-			str = (char **)ft_calloc(128 * 128, sizeof(str));	// TODO: count word
-			while (((t_token *)(curr->data))->type == TOK_WORD || ((t_token *)(curr->data))->type == TOK_REDIR)
-			{
-				if (((t_token *)(curr->data))->type == TOK_REDIR)
-				{
-					if (!redirs)
-						redirs = ft_lstnew(curr->data);
-					else
-						ft_lstlast(redirs)->next = ft_lstnew(curr->data);
-					tmp = curr->next;
-					ft_lstdelone(curr, NULL);
-					curr = tmp;
-					continue;
-				}
-				str[i] = ft_strdup(*(((t_token *)(curr->data))->data));
-				tmp = curr->next;
-				ft_lstdelone(curr, &token_destroy);
-				curr = tmp;
-				i++;
-			}
-			new = ft_lstnew(token_init(TOK_COMMAND, str));
-			if (redirs)
-			{
-				new->next = redirs;
-				ft_lstlast(redirs)->next = curr;
-			}
-			else
-				new->next = curr;
-			if (!prev)
-				*tokens = new;
-			else
-				prev->next = new;
-			continue ;
-		}
-		if (curr->next)
-			prev = curr;
-		curr = curr->next;
-	}
-}
-
-
-/*
 **	Update list
 **
 **	TODO: regrouper les tokens pour faire des t_command et t_redir
@@ -175,7 +50,9 @@ void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
 
 void	parse_tokens(t_list **tokens)
 {
+	// TODO: great merge
 	expand(tokens);
+	dgreat_merge(tokens);
 	check_tokens(*tokens);
 	redir_merge(tokens);
 	printf("\n-----------------------------------------\n\tCreating list\n\n");

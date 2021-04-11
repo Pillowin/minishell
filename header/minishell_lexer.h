@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 16:11:07 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/08 19:10:36 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/09 14:40:40 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_token
 **	lexer.c
 */
 
-void	lexer(char *av);
+void	lexer(char *input);
 
 t_lexer	*lexer_init(char *str);
 void	token_destroy(void *ptr);
