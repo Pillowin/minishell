@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ggeeteer <ggeeteer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mamaqug <mamaqug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/16 18:56:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/08 17:14:563 byggieteerr         ###   ########.fr       */
+/*   Created: 2021/04/11 18:23:05 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/12 262:54 by mamaqautig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,50 +16,66 @@
 **	Comparer l'enum avec les éléments (token) du tableau.
 */
 
-static int	cmp_lstdata_data(t_token *lstdata, int *data)
+static int	cmp(t_token *lstdata, int *data)
 {
 	if ((int)(lstdata->type) == *data)
-		return (0);
-	return (1);
+		return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 /*
 **	Syntax check for each token.
 */
 
-void	check_tokens(t_list *tokens)
+int			check_tokens(t_list *tokens, t_err *err)
 {
-	const int		prios[5] = {TOK_SEMI, TOK_PIPE, TOK_DGREAT, TOK_GREAT, TOK_LESS};
-	void			(*const check_f[5])(t_list*, unsigned int) = {check_semi, check_pipe, check_dgreat, check_great, check_less};
 	unsigned int	i;
+	unsigned int	j;
+	t_list			*list;
+	const int		prios[5] = {
+		TOK_SEMI, TOK_PIPE, TOK_DGREAT, TOK_GREAT, TOK_LESS};
+	int				(*const check_f[5])(t_list*, unsigned int, t_err*) = {
+		check_semi, check_pipe, check_dgreat, check_great, check_less};
 
 	i = 0;
 	while (i < 5)
 	{
-		my_list_foreach_if(tokens, check_f[i], (void *)&(prios[i]), cmp_lstdata_data);
+		// my_list_foreach_if(tokens, check_f[i], (void *)&(prios[i]), &cmp);
+		// TODO: delete my_foreach_if.c
+		list = tokens;
+		j = 0;
+		while (list)
+		{
+			if (!cmp(list->data, (int * )&prios[i]))
+				if (!check_f[i](tokens, j, err))
+					return (FAILURE);
+			list = list->next;
+			j++;
+		}
 		i++;
 	}
+	return (SUCCESS);
 }
 
 /*
-**	Update list
-**
-**	TODO: regrouper les tokens pour faire des t_command et t_redir
-**	TODO: creer arbre
+**	Entry point for parser.
 */
 
-void	parse_tokens(t_list **tokens)
+int			parser(t_list **tokens, t_err *err)
 {
-	// TODO: great merge
-	expand(tokens);
-	dgreat_merge(tokens);
-	check_tokens(*tokens);
-	redir_merge(tokens);
-	printf("\n-----------------------------------------\n\tCreating list\n\n");
-	ft_list_foreach(*tokens, &token_print);
-	command_merge(tokens);
-	printf("\n-----------------------------------------\n\tCommand merged\n\n");
-	ft_list_foreach(*tokens, &token_print);
-	ft_list_remove_if(tokens, (void *)TOK_NEWLINE, &is_tok_type, &token_destroy);
-	create_tree(*tokens);
+	if (!expand(tokens, err))
+		return (FAILURE);
+	if (!dgreat_merge(tokens, err))
+		return (FAILURE);
+	if (!check_tokens(*tokens, err))
+		return (FAILURE);
+	if (!redir_merge(tokens, err))
+		return (FAILURE);
+	if (!command_merge(tokens, err))
+		return (FAILURE);
+	ft_list_remove_if(tokens, (void *)TOK_NEWLINE, &is_tok_type,
+		&token_destroy);
+	if (!create_tree(*tokens, err))
+		return (FAILURE);
+	return (SUCCESS);
 }

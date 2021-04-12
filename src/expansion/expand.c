@@ -16,7 +16,7 @@
 **	merge TOK_WORD and Remove TOK_SPACE
 */
 
-static void	expand_clean(t_list** tokens)
+static int	expand_clean(t_list** tokens, t_err *err)
 {
 	t_list	*curr;
 	void	*tmp;
@@ -33,7 +33,7 @@ static void	expand_clean(t_list** tokens)
 				ft_free((void **)&(tmp));
 				ft_list_foreach(*tokens, &token_destroy);
 				ft_list_clear(*tokens, &ft_free);
-				error("Memory allocation failed.\n", EXIT_FAILURE);
+				return ((long)error(err, MALLOC, NULL, NULL));
 			}
 			ft_free((void **)&(tmp));
 			tmp = curr->next->next;
@@ -44,6 +44,7 @@ static void	expand_clean(t_list** tokens)
 		curr = curr->next;
 	}
 	ft_list_remove_if(tokens, (void *)TOK_SPACE, &is_tok_type, &token_destroy);
+	return (SUCCESS);
 }
 
 /*
@@ -52,7 +53,7 @@ static void	expand_clean(t_list** tokens)
 **	TODO: expand dollar
 */
 
-void	expand(t_list **tokens)
+int	expand(t_list **tokens, t_err *err)
 {
 	t_list	*prev;
 	t_list	*curr;
@@ -66,16 +67,17 @@ void	expand(t_list **tokens)
 		if (curr->next)
 			next = curr->next;
 		if (((t_token*)(curr->data))->type == TOK_QUOTE)
-			curr = expand_quote(tokens, &prev, next);
+			curr = expand_quote(tokens, &prev, next, err);
 		else if (((t_token*)(curr->data))->type == TOK_DQUOTE)
-			curr = expand_dquote(tokens, &prev);
+			curr = expand_dquote(tokens, &prev, err);
 		else if (((t_token*)(curr->data))->type == TOK_BSLASH)
-			curr = expand_bslash(tokens, &prev, next);
+			curr = expand_bslash(tokens, &prev, next, err);
 		else if (((t_token*)(curr->data))->type == TOK_DOLLAR)
 			expand_dollar();
 		if (curr->next)
 			prev = curr;
 		curr = curr->next;
 	}
-	expand_clean(tokens);
+	expand_clean(tokens, err);
+	return (SUCCESS);
 }

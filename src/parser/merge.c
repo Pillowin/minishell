@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   merge.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguiteer <gguiteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 15:19:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/11 15:44:07 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/11 18:25:334 byagattierr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 **	Merge TOK_[LESS | GREAT | DGREAT] and TOK_WORD to TOK_REDIR
 */
 
-void	redir_merge(t_list **tokens)
+int	redir_merge(t_list **tokens, t_err *err)
 {
 	t_list	*curr;
 	t_list	*redir;
 	t_list	*prev;
+	t_token	*token;
 	char	**data;
 
 	prev = NULL;
@@ -31,12 +32,30 @@ void	redir_merge(t_list **tokens)
 			|| ((t_token *)(curr->data))->type == TOK_GREAT
 			|| ((t_token *)(curr->data))->type == TOK_LESS)
 		{
-			data = (char **)ft_calloc(2 + 1, sizeof(*data));
-			if (!data)
-				return ;
-			data[0] = ft_strdup(*(((t_token *)((curr)->data))->data));
+			data = NULL;
+			if (!ft_strsdup(&data, 2, *(((t_token *)((curr)->data))->data)))
+			{
+				// TODO:
+				return((long)error(err, MALLOC, NULL, NULL));
+			}
 			data[1] = ft_strdup(*(((t_token *)((curr->next)->data))->data));
-			redir = ft_lstnew(token_init(TOK_REDIR, data));
+			if (!data[1])
+			{
+				// TODO:
+				return((long)error(err, MALLOC, NULL, NULL));
+			}
+			// token = NULL;
+			if (!token_init(TOK_REDIR, data, &token))
+			{
+				// TODO:
+				return((long)error(err, MALLOC, NULL, NULL));
+			}
+			redir = ft_lstnew(token);
+			if (!redir)
+			{
+				// TODO:
+				return((long)error(err, MALLOC, NULL, NULL));
+			}
 			redir->next = curr->next->next;
 			if (prev)
 				prev->next = redir;
@@ -50,13 +69,14 @@ void	redir_merge(t_list **tokens)
 			prev = curr;
 		curr = curr->next;
 	}
+	return (SUCCESS);
 }
 
 /*
 **	Merge all TOK_WORD qui se suivent
 */
 
-void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
+int	command_merge(t_list **tokens, t_err *err)	// TODO: ignorer les tok_redir
 {
 	t_list			*curr;
 	t_list			*prev;
@@ -65,6 +85,7 @@ void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
 	t_list			*redirs;
 	char			**str;
 	unsigned int	i;
+	t_token			*token;
 
 	curr = *tokens;
 	prev = NULL;
@@ -75,6 +96,11 @@ void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
 		if (((t_token *)(curr->data))->type == TOK_WORD)
 		{
 			str = (char **)ft_calloc(128 * 128, sizeof(str));	// TODO: count word
+			if (!str)
+			{
+				// TODO:
+				return((long)error(err, MALLOC, NULL, NULL));
+			}
 			while (((t_token *)(curr->data))->type == TOK_WORD || ((t_token *)(curr->data))->type == TOK_REDIR)
 			{
 				if (((t_token *)(curr->data))->type == TOK_REDIR)
@@ -89,12 +115,29 @@ void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
 					continue;
 				}
 				str[i] = ft_strdup(*(((t_token *)(curr->data))->data));
+				if (!str[i])
+				{
+					// ft_free((void **)&(*str));
+					// TODO:
+					return((long)error(err, MALLOC, NULL, NULL));
+				}
 				tmp = curr->next;
 				ft_lstdelone(curr, &token_destroy);
 				curr = tmp;
 				i++;
 			}
-			new = ft_lstnew(token_init(TOK_COMMAND, str));
+			// token = NULL;
+			if (!token_init(TOK_COMMAND, str, &token))
+			{
+				// TODO:
+				return((long)error(err, MALLOC, NULL, NULL));
+			}
+			new = ft_lstnew(token);
+			if (!new)
+			{
+				// TODO:
+				return((long)error(err, MALLOC, NULL, NULL));
+			}
 			if (redirs)
 			{
 				new->next = redirs;
@@ -112,9 +155,10 @@ void	command_merge(t_list **tokens)	// TODO: ignorer les tok_redir
 			prev = curr;
 		curr = curr->next;
 	}
+	return (SUCCESS);
 }
 
-void	dgreat_merge(t_list **tokens)
+int	dgreat_merge(t_list **tokens, t_err *err)
 {
 	t_list	*curr;
 	t_list	*tmp;
@@ -134,7 +178,8 @@ void	dgreat_merge(t_list **tokens)
 			{
 				ft_list_foreach(*tokens, &token_destroy);
 				ft_list_clear(*tokens, &ft_free);
-				error("Memory allocation failed.\n", EXIT_FAILURE);
+				// error("Memory allocation failed.\n", EXIT_FAILURE);
+				return((long)error(err, MALLOC, NULL, NULL));
 			}
 			ft_free((void **)&(*((t_token *)(curr->data))->data));
 			*((t_token *)(curr->data))->data = data;
@@ -142,4 +187,5 @@ void	dgreat_merge(t_list **tokens)
 		}
 		curr = curr->next;
 	}
+	return (SUCCESS);
 }

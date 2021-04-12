@@ -22,7 +22,7 @@
 **		TOK_WORD TOK_SEMI TOK_LESS
 */
 
-void	check_semi(t_list *tokens, unsigned int i)
+int	check_semi(t_list *tokens, unsigned int i, t_err *err)
 {
 	t_token	*prev;
 	t_token	*next;
@@ -31,7 +31,9 @@ void	check_semi(t_list *tokens, unsigned int i)
 	{
 		ft_list_foreach(tokens, &token_destroy);
 		ft_list_clear(tokens, &ft_free);
-		error("bash: syntax error near unexpected token `;'\n", ERR_PARSING);
+		// error("bash: syntax error near unexpected token `;'\n", ERR_PARSING);
+		return ((long)error(err, SYNTAX_SEMI, NULL, NULL));
+		// TODO: return instead of error
 	}
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
@@ -39,8 +41,11 @@ void	check_semi(t_list *tokens, unsigned int i)
 	{
 		ft_list_foreach(tokens, &token_destroy);
 		ft_list_clear(tokens, &ft_free);
-		error("bash: syntax error near unexpected token `;'\n", ERR_PARSING);
+		// error("bash: syntax error near unexpected token `;'\n", ERR_PARSING);
+		return ((long)error(err, SYNTAX_SEMI, NULL, NULL));
+		// TODO: return instead of error
 	}
+	return (SUCCESS);
 }
 
 /*
@@ -51,7 +56,7 @@ void	check_semi(t_list *tokens, unsigned int i)
 **		TOK_WORD TOK_PIPE TOK_LESS
 */
 
-void	check_pipe(t_list *tokens, unsigned int i)
+int	check_pipe(t_list *tokens, unsigned int i, t_err *err)
 {
 	t_token	*prev;
 	t_token	*next;
@@ -60,7 +65,8 @@ void	check_pipe(t_list *tokens, unsigned int i)
 	{
 		ft_list_foreach(tokens, &token_destroy);
 		ft_list_clear(tokens, &ft_free);
-		error("bash: syntax error near unexpected token `|'\n", ERR_PARSING);
+		// error("bash: syntax error near unexpected token `|'\n", ERR_PARSING);
+		return ((long)error(err, SYNTAX_PIPE, NULL, NULL));
 	}
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
@@ -68,8 +74,10 @@ void	check_pipe(t_list *tokens, unsigned int i)
 	{
 		ft_list_foreach(tokens, &token_destroy);
 		ft_list_clear(tokens, &ft_free);
-		error("bash: syntax error near unexpected token `|'\n", ERR_PARSING);
+		// error("bash: syntax error near unexpected token `|'\n", ERR_PARSING);
+		return ((long)error(err, SYNTAX_PIPE, NULL, NULL));
 	}
+	return (SUCCESS);
 }
 
 /*
@@ -80,7 +88,7 @@ void	check_pipe(t_list *tokens, unsigned int i)
 **		         TOK_DGREAT TOK_WORD
 */
 
-void	check_dgreat(t_list *tokens, unsigned int i)
+int	check_dgreat(t_list *tokens, unsigned int i, t_err *err)
 {
 	t_token	*prev;
 	t_token	*next;
@@ -93,8 +101,10 @@ void	check_dgreat(t_list *tokens, unsigned int i)
 	{
 		ft_list_foreach(tokens, &token_destroy);
 		ft_list_clear(tokens, &ft_free);
-		error("bash: syntax error near unexpected token `>>'\n", ERR_PARSING);
+		// error("bash: syntax error near unexpected token `>>'\n", ERR_PARSING);
+		return ((long)error(err, SYNTAX_DGREAT, NULL, NULL));
 	}
+	return (SUCCESS);
 }
 
 /*
@@ -105,7 +115,7 @@ void	check_dgreat(t_list *tokens, unsigned int i)
 **		         TOK_GREAT TOK_WORD
 */
 
-void	check_great(t_list *tokens, unsigned int i)
+int	check_great(t_list *tokens, unsigned int i, t_err *err)
 {
 	t_token	*prev;
 	t_token	*next;
@@ -118,8 +128,10 @@ void	check_great(t_list *tokens, unsigned int i)
 	{
 		ft_list_foreach(tokens, &token_destroy);
 		ft_list_clear(tokens, &ft_free);
-		error("bash: syntax error near unexpected token `>'\n", ERR_PARSING);
+		// error("bash: syntax error near unexpected token `>'\n", ERR_PARSING);
+		return ((long)error(err, SYNTAX_GREAT, NULL, NULL));
 	}
+	return (SUCCESS);
 }
 
 /*
@@ -130,7 +142,7 @@ void	check_great(t_list *tokens, unsigned int i)
 **		         TOK_LESS TOK_WORD
 */
 
-void	check_less(t_list *tokens, unsigned int i)
+int	check_less(t_list *tokens, unsigned int i, t_err *err)
 {
 	t_token	*prev;
 	t_token	*next;
@@ -143,6 +155,8 @@ void	check_less(t_list *tokens, unsigned int i)
 	{
 		ft_list_foreach(tokens, &token_destroy);
 		ft_list_clear(tokens, &ft_free);
-		error("bash: syntax error near unexpected token `<'\n", ERR_PARSING);
+		// error("bash: syntax error near unexpected token `<'\n", ERR_PARSING);
+		return ((long)error(err, SYNTAX_LESS, NULL, NULL));
 	}
+	return (SUCCESS);
 }

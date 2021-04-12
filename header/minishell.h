@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 19:08:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/09 16:42:04 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/12 15:13:444 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,38 @@
 # include "ft_list.h"
 # include "ft_btree.h"
 
+typedef struct s_err t_err;
+
 # include "minishell_lexer.h"
 # include "minishell_parser.h"
 # include "minishell_expansion.h"
 
-# define ERR_PARSING	2
+# define SUCCESS		1
+# define FAILURE		0
 
-void	error(char *err, unsigned char status);
+typedef enum
+{
+	NONE = 0,
+	MALLOC,
+	MULTILINE_QUOTE,
+	MULTILINE_DQUOTE,
+	MULTILINE_BSLASH,
+	SYNTAX_SEMI,
+	SYNTAX_PIPE,
+	SYNTAX_DGREAT,
+	SYNTAX_GREAT,
+	SYNTAX_LESS
+}	t_err_code;
+
+typedef struct	s_err
+{
+	char**			message;
+	unsigned char	status;
+}				t_err;
+
+
+void *error(t_err *err, t_err_code code, void *ptr, void (*free_fct)(void **));
+
 
 /*
 **	utils.c
@@ -84,5 +109,7 @@ void	error(char *err, unsigned char status);
 int	ft_is_end_word(char c);
 int	ft_is_token(char c);
 int	is_tok_type(t_token *data, void *type);
+int	ft_strsdup(char ***strs, size_t size, char *str);
+int	my_calloc(size_t count, size_t size, void **ptr);
 
 #endif

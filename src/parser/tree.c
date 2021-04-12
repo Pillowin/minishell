@@ -49,7 +49,7 @@ static t_list *find_next(t_list *tokens)
 }
 
 
-static void	eat_list_elem(t_list *list, t_btree **node)
+static int	eat_list_elem(t_list *list, t_btree **node, t_err *err)
 {
 	t_list	*left;
 	t_list	*right;
@@ -64,9 +64,10 @@ static void	eat_list_elem(t_list *list, t_btree **node)
 		if (!(*node))
 		{
 			// TODO:
+			return ((long)error(err, MALLOC, NULL, NULL));
 		}
 		ft_free((void **)&(list));
-		return ;
+		// return (SUCCESS);
 	}
 	else if (!prev)
 	{
@@ -74,12 +75,14 @@ static void	eat_list_elem(t_list *list, t_btree **node)
 		if (!(*node))
 		{
 			// TODO:
+			return ((long)error(err, MALLOC, NULL, NULL));
 		}
 		if (((t_token *)(list->data))->type == TOK_REDIR)
 			left = list->next;
 		else if (((t_token *)(list->data))->type == TOK_COMMAND)
 			right = list->next;
 		ft_free((void **)&(list));
+		// return (SUCCESS);
 	}
 	else
 	{
@@ -98,36 +101,44 @@ static void	eat_list_elem(t_list *list, t_btree **node)
 		if (!(*node))
 		{
 			// TODO:
+			return ((long)error(err, MALLOC, NULL, NULL));
 		}
 		ft_free((void **)&(prev->next));
 	}
 	if (left)
-		eat_list_elem(left, &((*node)->left));
+		if (!eat_list_elem(left, &((*node)->left), err))
+			return (FAILURE);
 	if (right)
-		eat_list_elem(right, &((*node)->right));
+		if (!eat_list_elem(right, &((*node)->right), err))
+			return (FAILURE);
+	return (SUCCESS);
 }
 
-void	create_tree(t_list *tokens)
+int	create_tree(t_list *tokens, t_err *err)
 {
 	// TODO: segv when no input
 	printf("\n-----------------------------------------\n");
-	printf("\tCreating tree\n\n");
 	t_btree	*tree;
 
+	ft_list_foreach(tokens, &token_print);
+	printf("\n-----------------------------------------\n");
+	printf("\tCreating tree\n\n");
 	if (!tokens)
-		return ;
-	eat_list_elem(tokens, &tree);
+		return (FAILURE);
+	if (!eat_list_elem(tokens, &tree, err))
+		return (FAILURE);
 
 	btree_apply_prefix(tree, &token_print);
 
 	btree_apply_prefix(tree, &token_destroy);
 	btree_free(&tree);
+	return (SUCCESS);
 }
 
 
 /*
-ls -l | grep grw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; diff otot toto >> diff
-ls -l | grep g'r'w | wc -l > lsf\\ile ; < ls"'f'i ile" c\at | rev \> itit > \u\t\u\t\ \>>> o't'ot \;; diff otot toto >> diff
+ls -l | grep drw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; diff otot toto >> diff
+ls -l | grep d'r'w | wc -l > lsf\\ile ; < ls"'f'i ile" c\at | rev \> itit > \u\t\u\t\ \>>> o't'ot \;; diff otot toto >> diff
 	- echo toto     ;    ls -l    |      grep drw
 	-    cmd      semi    cmd    pipe      cmd
 

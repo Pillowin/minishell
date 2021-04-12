@@ -16,7 +16,7 @@
 **	
 */
 
-static void	expand_dquote_bslash(t_list **tokens, t_list **prev)
+static int	expand_dquote_bslash(t_list **tokens, t_list **prev, t_err *err)
 {
 	t_list			*new;
 	t_list			*tmp;
@@ -41,30 +41,39 @@ static void	expand_dquote_bslash(t_list **tokens, t_list **prev)
 				&& (((t_token *)(curr->next->data))->type != TOK_BSLASH))
 			{	
 				// créé TOK_WORD '\' 
-				str = (char **)ft_calloc(1 + 1, sizeof(*str));
-				if (!str)
+				if (!ft_strsdup(&str, 1, "\\"))
 				{
 					ft_list_foreach(*tokens, &token_destroy);
 					ft_list_clear(*tokens, &ft_free);
-					error("Memory allocation failed.\n", EXIT_FAILURE);
+					return((long)error(err, MALLOC, NULL, NULL));
 				}
-				*str = (char *)ft_calloc(1 + 1, sizeof(**str));
-				if (!*str)
-				{
-					ft_free((void **)str);
-					ft_list_foreach(*tokens, &token_destroy);
-					ft_list_clear(*tokens, &ft_free);
-					error("Memory allocation failed.\n", EXIT_FAILURE);
-				}
-				**str = '\\';
-				token = token_init(TOK_WORD, str);
-				if (!token)
+				// str = (char **)ft_calloc(1 + 1, sizeof(*str));
+				// if (!str)
+				// {
+				// 	ft_list_foreach(*tokens, &token_destroy);
+				// 	ft_list_clear(*tokens, &ft_free);
+				// 	// error("Memory allocation failed.\n", EXIT_FAILURE);
+				// 	return((long)error(err, MALLOC, NULL, NULL));
+				// }
+				// *str = (char *)ft_calloc(1 + 1, sizeof(**str));
+				// if (!*str)
+				// {
+				// 	ft_free((void **)str);
+				// 	ft_list_foreach(*tokens, &token_destroy);
+				// 	ft_list_clear(*tokens, &ft_free);
+				// 	// error("Memory allocation failed.\n", EXIT_FAILURE);
+				// 	return((long)error(err, MALLOC, NULL, NULL));
+				// }
+				// **str = '\\';
+				// token = NULL;
+				if (!token_init(TOK_WORD, str, &token))
 				{
 					ft_free((void **)&(*str));
 					ft_free((void **)&str);
 					ft_list_foreach(*tokens, &token_destroy);
 					ft_list_clear(*tokens, &ft_free);
-					error("Memory allocation failed.\n", EXIT_FAILURE);
+					// error("Memory allocation failed.\n", EXIT_FAILURE);
+					return((long)error(err, MALLOC, NULL, NULL));
 				}
 				new = ft_lstnew(token);
 				if (!new)
@@ -72,26 +81,24 @@ static void	expand_dquote_bslash(t_list **tokens, t_list **prev)
 					token_destroy(token);
 					ft_list_foreach(*tokens, &token_destroy);
 					ft_list_clear(*tokens, &ft_free);
-					error("Memory allocation failed.\n", EXIT_FAILURE);
+					// error("Memory allocation failed.\n", EXIT_FAILURE);
+					return((long)error(err, MALLOC, NULL, NULL));
 				}
 				// mette sur le prev donc avant le TOK_BSLASH
 				new->next = curr;
 				tmp->next = new;
-				curr = expand_bslash(tokens, &new, curr->next);
+				curr = expand_bslash(tokens, &new, curr->next, err);
 			}
 			else
-			{
-				curr = expand_bslash(tokens, &tmp, curr->next);
-			}
-			// expand_bslash
-
+				curr = expand_bslash(tokens, &tmp, curr->next, err);
 		}
 		tmp = tmp->next;
 		curr = curr->next;
 	}
+	return (SUCCESS);
 }
 
-t_list	*expand_dquote(t_list **tokens, t_list **prev)
+t_list	*expand_dquote(t_list **tokens, t_list **prev, t_err *err)
 {
 	t_list			*new;
 	t_list			*next;
@@ -104,7 +111,8 @@ t_list	*expand_dquote(t_list **tokens, t_list **prev)
 		next = (*tokens)->next;
 	else
 		next = (*prev)->next->next;
-	expand_dquote_bslash(tokens, prev);
+	if (!expand_dquote_bslash(tokens, prev, err))
+		return (NULL);
 	if (!(*prev))
 		next = (*tokens)->next;
 	else
@@ -116,7 +124,8 @@ t_list	*expand_dquote(t_list **tokens, t_list **prev)
 		{
 			ft_list_foreach(*tokens, &token_destroy);
 			ft_list_clear(*tokens, &ft_free);
-			error("Undefined case : multiline double quote command.\n", ERR_PARSING);
+			// error("Undefined case : multiline double quote command.\n", ERR_PARSING);
+			return(error(err, MULTILINE_DQUOTE, NULL, NULL));
 		}
 		tmp = tmp->next;
 	}
@@ -145,7 +154,8 @@ t_list	*expand_dquote(t_list **tokens, t_list **prev)
 	{
 		ft_list_foreach(*tokens, &token_destroy);
 		ft_list_clear(*tokens, &ft_free);
-		error("Memory allocation failed.\n", EXIT_FAILURE);
+		// error("Memory allocation failed.\n", EXIT_FAILURE);
+		return(error(err, MALLOC, NULL, NULL));
 	}
 	// *str = (char *)ft_calloc(1 + 1, sizeof(**str));
 	// if (!*str)
@@ -169,24 +179,26 @@ t_list	*expand_dquote(t_list **tokens, t_list **prev)
 		*str = ft_strjoin(s, *(((t_token *)(next->data))->data));
 		if (!(*str))
 		{
-			ft_free((void **)&(s));
 			ft_list_foreach(*tokens, &token_destroy);
 			ft_list_clear(*tokens, &ft_free);
-			error("Memory allocation failed.\n", EXIT_FAILURE);
+			// error("Memory allocation failed.\n", EXIT_FAILURE);
+			return(error(err, MALLOC, NULL, NULL));
 		}
 		ft_free((void **)&(s));
 		tmp = next->next;
 		ft_lstdelone(next, &token_destroy);
 		next = tmp;
 	}
-	token = token_init(TOK_WORD, str);
+	// token = NULL;
+	token_init(TOK_WORD, str, &token);
 	if (!token)
 	{
 		ft_free((void **)&(*str));
 		ft_free((void **)&str);
 		ft_list_foreach(*tokens, &token_destroy);
 		ft_list_clear(*tokens, &ft_free);
-		error("Memory allocation failed.\n", EXIT_FAILURE);
+		// error("Memory allocation failed.\n", EXIT_FAILURE);
+		return(error(err, MALLOC, NULL, NULL));
 	}
 	new = ft_lstnew(token);
 	if (!new)
@@ -194,7 +206,8 @@ t_list	*expand_dquote(t_list **tokens, t_list **prev)
 		token_destroy(token);
 		ft_list_foreach(*tokens, &token_destroy);
 		ft_list_clear(*tokens, &ft_free);
-		error("Memory allocation failed.\n", EXIT_FAILURE);
+		// error("Memory allocation failed.\n", EXIT_FAILURE);
+		return(error(err, MALLOC, NULL, NULL));
 	}
 
 	tmp = next->next;

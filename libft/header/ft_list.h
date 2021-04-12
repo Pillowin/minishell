@@ -24,7 +24,7 @@ t_list			*ft_create_elem(void *data);
 void			ft_list_push_back(t_list **begin_list, void *data);
 void			ft_list_foreach(t_list *begin_list, void (*f)(void *));
 t_list			*ft_list_at(t_list *begin_list, unsigned int nbr);
-void			my_list_foreach_if(t_list *begin_list, void (*f)(t_list *,
+void			my_list_foreach_if(t_list *begin_list, int (*f)(t_list *,
 					unsigned int), void *data_ref, int (*cmp)());
 void			ft_list_clear(t_list *begin_list, void (*free_fct)(void **));
 t_list			*ft_lstlast(t_list *lst);

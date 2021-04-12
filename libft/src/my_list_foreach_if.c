@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 18:51:10 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/08 19:05:05 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/11 18:50:35 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **	certains éléments de la liste.
 */
 
-void	my_list_foreach_if(t_list *begin_list, void (*f)(t_list *,
+void	my_list_foreach_if(t_list *begin_list, int (*f)(t_list *,
 		unsigned int), void *data_ref, int (*cmp)())
 {
 	t_list			*list;
