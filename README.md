@@ -53,7 +53,7 @@ Regles de creation d'arbre :
 ``ls -l | grep grw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; diff otot toto >> diff``
 ``ls -l | grep d'r'w | wc -l > lsf\\ile ; < ls"'f'i ile" c\at | rev \> itit > \u\t\u\t\ \>>> o't'ot \;; diff otot toto >> diff``
 
-- mettre des return jusqu'au main en cas d'erreur
+- mettre des return jusqu'au main en cas d'erreur	TODO: DONE
 - fonctions de free
 - fonctions pour les repetitions
 - mise a la norme

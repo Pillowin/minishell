@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguiteerg ggqiteerig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 16:19:36 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/12 18:37:16 by ggi teer       ###   ########.fr       */
+/*   Created: 2021/04/13 16:38:52 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/04/13 1700:36 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,12 @@ t_token	*lexer_get_token(t_lexer *lexer, t_err *err)
 **	Entry point for parsing.
 */
 
-int		lexer(char *input, t_err *err)
+int	lexer(char *input, t_err *err)
 {
 	t_lexer	*lexer;
 	t_list	*tokens;
-	t_token *token;
+	t_token	*token;
 
-	// lexer = lexer_init(input, err);
-	// lexer = NULL;
 	if (!lexer_init(input, &lexer))
 		return ((long)error(err, MALLOC, NULL, NULL));
 	tokens = NULL;
@@ -69,7 +67,11 @@ int		lexer(char *input, t_err *err)
 	{
 		token = lexer_get_token(lexer, err);
 		if (!token)
+		{
+			ft_lstdel((void **)&tokens);
+			ft_free((void **)&(lexer));
 			return (FAILURE);
+		}
 		ft_list_push_back(&tokens, token);
 	}
 	ft_free((void **)&(lexer));

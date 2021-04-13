@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/09 17:57:11 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/09 22:35:331 by agautier         ###   ########.fr       */
+/*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/04/13 17:21:52 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **	merge TOK_WORD and Remove TOK_SPACE
 */
 
-static int	expand_clean(t_list** tokens, t_err *err)
+static int	expand_clean(t_list **tokens, t_err *err)
 {
 	t_list	*curr;
 	void	*tmp;
@@ -24,22 +24,19 @@ static int	expand_clean(t_list** tokens, t_err *err)
 	curr = *tokens;
 	while (curr)
 	{
-		if (((t_token *)(curr->data))->type == TOK_WORD && ((t_token *)(curr->next->data))->type == TOK_WORD)
+		if (((t_token *)(curr->data))->type == TOK_WORD
+			&& ((t_token *)(curr->next->data))->type == TOK_WORD)
 		{
 			tmp = *((t_token *)(curr->data))->data;
-			*((t_token *)(curr->data))->data = ft_strjoin(tmp, *((t_token *)(curr->next->data))->data);
-			if (!(*((t_token *)(curr->data))->data))
-			{
-				ft_free((void **)&(tmp));
-				ft_list_foreach(*tokens, &token_destroy);
-				ft_list_clear(*tokens, &ft_free);
-				return ((long)error(err, MALLOC, NULL, NULL));
-			}
+			*((t_token *)(curr->data))->data = ft_strjoin(tmp,
+					*((t_token *)(curr->next->data))->data);
 			ft_free((void **)&(tmp));
+			if (!(*((t_token *)(curr->data))->data))
+				return ((long)error(err, MALLOC, (void **)tokens, &ft_lstdel));
 			tmp = curr->next->next;
 			ft_lstdelone(curr->next, &token_destroy);
 			curr->next = tmp;
-			continue;
+			continue ;
 		}
 		curr = curr->next;
 	}
@@ -57,27 +54,26 @@ int	expand(t_list **tokens, t_err *err)
 {
 	t_list	*prev;
 	t_list	*curr;
-	t_list	*next;
 
 	prev = NULL;
 	curr = *tokens;
-	next = NULL;
 	while (curr)
 	{
-		if (curr->next)
-			next = curr->next;
-		if (((t_token*)(curr->data))->type == TOK_QUOTE)
-			curr = expand_quote(tokens, &prev, next, err);
-		else if (((t_token*)(curr->data))->type == TOK_DQUOTE)
+		if (((t_token *)(curr->data))->type == TOK_QUOTE)
+			curr = expand_quote(tokens, &prev, curr->next, err);
+		else if (((t_token *)(curr->data))->type == TOK_DQUOTE)
 			curr = expand_dquote(tokens, &prev, err);
-		else if (((t_token*)(curr->data))->type == TOK_BSLASH)
-			curr = expand_bslash(tokens, &prev, next, err);
-		else if (((t_token*)(curr->data))->type == TOK_DOLLAR)
+		else if (((t_token *)(curr->data))->type == TOK_BSLASH)
+			curr = expand_bslash(tokens, &prev, curr->next, err);
+		else if (((t_token *)(curr->data))->type == TOK_DOLLAR)
 			expand_dollar();
+		if (!curr)
+			return (FAILURE);
 		if (curr->next)
 			prev = curr;
 		curr = curr->next;
 	}
-	expand_clean(tokens, err);
+	if (!expand_clean(tokens, err))
+		return (FAILURE);
 	return (SUCCESS);
 }

@@ -26,10 +26,10 @@ void	init_msg(char **err_msg)
 	err_msg[SYNTAX_LESS] = "bash: syntax error near unexpected token `<'\n";
 }
 
-void	*error(t_err *err, t_err_code code, void *ptr, void (*free_fct)(void **))
+void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **))
 {
 	if (free_fct && ptr)
-		free_fct(&ptr);
+		free_fct(ptr);
 	ft_putstr_fd(err->message[code], STDERR_FILENO);
 	// set exit_status
 		// TODO:

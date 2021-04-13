@@ -98,9 +98,7 @@ typedef struct	s_err
 	unsigned char	status;
 }				t_err;
 
-
-void *error(t_err *err, t_err_code code, void *ptr, void (*free_fct)(void **));
-
+void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **));
 
 /*
 **	utils.c
@@ -111,5 +109,12 @@ int	ft_is_token(char c);
 int	is_tok_type(t_token *data, void *type);
 int	ft_strsdup(char ***strs, size_t size, char *str);
 int	my_calloc(size_t count, size_t size, void **ptr);
+
+/*
+**	free.c
+*/
+
+void	ft_free_tab(void **data);
+void	ft_lstdel(void **list);
 
 #endif
