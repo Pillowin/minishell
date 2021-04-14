@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ggeeteer <ggeeteer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/03 21:49:04 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/07 16:14:442 byggieteerr         ###   ########.fr       */
+/*   Created: 2021/04/14 21:38:14 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/04/14 23:26:32 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,90 +134,3 @@ int	create_tree(t_list *tokens, t_err *err)
 	btree_free(&tree);
 	return (SUCCESS);
 }
-
-
-/*
-ls -l | grep drw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; diff otot toto >> diff
-ls -l | grep d'r'w | wc -l > lsf\\ile ; < ls"'f'i ile" c\at | rev \> itit > \u\t\u\t\ \>>> o't'ot \;; diff otot toto >> diff
-	- echo toto     ;    ls -l    |      grep drw
-	-    cmd      semi    cmd    pipe      cmd
-
-		- recup next node et creer =  ;
-			=> list_gauche = cmd
-				- recup next node et creer =  cmd
-					=>
-					=>
-			=> list_droite = cmd pipe cmd
-				- recup next node et creer =  |
-					=> list_gauche = cmd
-						- recup next node et creer =  cmd
-							=>
-							=>
-					=> list_droite = cmd
-						- recup next node et creer =  cmd
-							=>
-							=>
-	---	semi ---
-	|          |
-	cmd      -- pipe --
-			|        |
-				cmd       cmd
-*/
-
-
-
-
-
-// int	my_calloc(size_t count, size_t size, unsigned char **ptr)
-// {
-// 	size_t	i;
-
-// 	*ptr = (unsigned char *)malloc(size * count);
-// 	if (!(*ptr))
-// 		return (0);
-// 	i = 0;
-// 	while (i < size * count)
-// 	{
-// 		*ptr[i] = '\0';
-// 		i++;
-// 	}
-// 	return (1);
-// }
-
-// if (!(ptr = malloc(sizeof(ptr))))
-// 	return (NULL);
-
-// if (!my_calloc(1, sizeof(ptr), &ptr))
-// 	return (NULL);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// static void	add_semi(t_list *tokens, int index)
-// {
-// 	// si find_xxx < index
-// 		// add a gauche
-// 		// apply_priority
-// 	// else
-// 		// add a gauche
-// }
-
-// static void	apply_priority()
-// {
-// 	add_semi(tokens);
-// 	add_pipe(tokens);
-// 	add_redir(tokens);
-// 	add_command(tokens);
-// }

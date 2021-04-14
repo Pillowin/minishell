@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaqug <mamaqug@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 18:23:05 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/12 262:54 by mamaqautig         ###   ########.fr       */
+/*   Created: 2021/04/14 18:56:21 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/04/14 18:58:10 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,19 @@ static int	cmp(t_token *lstdata, int *data)
 **	Syntax check for each token.
 */
 
-int			check_tokens(t_list *tokens, t_err *err)
+int	check_tokens(t_list *tokens, t_err *err)
 {
 	unsigned int	i;
 	unsigned int	j;
 	t_list			*list;
 	const int		prios[5] = {
 		TOK_SEMI, TOK_PIPE, TOK_DGREAT, TOK_GREAT, TOK_LESS};
-	int				(*const check_f[5])(t_list*, unsigned int, t_err*) = {
+	int (*	check_f[5])(t_list *, unsigned int, t_err *) = {
 		check_semi, check_pipe, check_dgreat, check_great, check_less};
 
 	i = 0;
 	while (i < 5)
 	{
-		// my_list_foreach_if(tokens, check_f[i], (void *)&(prios[i]), &cmp);
-		// TODO: delete my_foreach_if.c
 		list = tokens;
 		j = 0;
 		while (list)
@@ -61,7 +59,7 @@ int			check_tokens(t_list *tokens, t_err *err)
 **	Entry point for parser.
 */
 
-int			parser(t_list **tokens, t_err *err)
+int	parser(t_list **tokens, t_err *err)
 {
 	if (!expand(tokens, err))
 		return (FAILURE);

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/13 17:21:52 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/14 16:06:45 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	expand(t_list **tokens, t_err *err)
 	while (curr)
 	{
 		if (((t_token *)(curr->data))->type == TOK_QUOTE)
-			curr = expand_quote(tokens, &prev, curr->next, err);
+			curr = expand_quote(tokens, &prev, TOK_QUOTE, err);
 		else if (((t_token *)(curr->data))->type == TOK_DQUOTE)
 			curr = expand_dquote(tokens, &prev, err);
 		else if (((t_token *)(curr->data))->type == TOK_BSLASH)
