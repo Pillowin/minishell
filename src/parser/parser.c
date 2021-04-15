@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:56:21 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/14 18:58:10 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/15 16:44:49 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	check_tokens(t_list *tokens, t_err *err)
 		j = 0;
 		while (list)
 		{
-			if (!cmp(list->data, (int * )&prios[i]))
+			if (!cmp(list->data, (int *)&prios[i]))
 				if (!check_f[i](tokens, j, err))
 					return (FAILURE);
 			list = list->next;
