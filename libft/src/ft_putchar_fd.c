@@ -1,33 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/04 14:22:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:02:16 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/08 10:46:43 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/19 18:40:28 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	man strchr
+**	Écrit le caractère ’c’ sur le file descriptor donné.
 */
 
-char	*ft_strchr(const char *s, int c)
+void	ft_putchar_fd(char c, int fd)
 {
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == c)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if (s[i] == c)
-		return ((char *)&s[i]);
-	return (NULL);
+	write(fd, &c, 1);
 }

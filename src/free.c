@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 15:45:33 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/13 17:00:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/18 21:41:552 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,14 @@
 
 void	ft_free_tab(void **data)
 {
-	ft_free((void **)&(*data));
+	unsigned int	i;
+
+	i = 0;
+	while ((char **)(data)[i])
+	{
+		ft_free((void **)&(data[i]));
+		i++;
+	}
 	ft_free((void **)&data);
 }
 

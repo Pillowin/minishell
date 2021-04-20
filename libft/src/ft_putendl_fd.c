@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/04 14:22:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:02:16 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/08 10:54:41 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/18 18:56:28 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	man strchr
+**	Écrit la chaine de caractères ’s’ sur le filedescriptor donné, suivie d’un
+**	retour à la ligne.
 */
 
-char	*ft_strchr(const char *s, int c)
+void	ft_putendl_fd(char *s, int fd)
 {
-	int		i;
+	unsigned int	i;
 
+	if (!s)
+		return ;
 	i = 0;
 	while (s[i])
-	{
-		if (s[i] == c)
-			return ((char *)&s[i]);
 		i++;
-	}
-	if (s[i] == c)
-		return ((char *)&s[i]);
-	return (NULL);
+	write(fd, s, i);
+	write(fd, &"\n", 1);
 }

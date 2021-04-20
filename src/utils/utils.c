@@ -57,8 +57,7 @@ int	is_tok_type(t_token *data, void *type)
 /*
 **	
 */
-
-int	ft_strsdup(char ***strs, size_t size, char *str)
+int	my_strdup(char ***strs, size_t size, char *str)
 {
 	*strs = (char **)ft_calloc(size + 1, sizeof(**strs));
 	if (!(*strs))
@@ -71,6 +70,37 @@ int	ft_strsdup(char ***strs, size_t size, char *str)
 	}
 	return (SUCCESS);
 }
+
+// /*
+// **	Duplicate source but malloc'ed
+// */
+// char	**ft_strsdup(char **source)
+// {
+// 	unsigned int	i;
+// 	char			**str;
+
+// 	str = (char **)ft_calloc(ft_strslen(source) + 1, sizeof(*source));
+// 	if (!str)
+// 		return (NULL);
+// 	i = 0;
+// 	while (source[i])
+// 	{
+// 		str[i] = ft_strdup(source[i]);
+// 		if (!str[i])
+// 		{
+// 			i--;
+// 			while (i)
+// 			{
+// 				ft_free((void **)&str[i]);
+// 				i--;
+// 			}
+// 			ft_free((void **)str);
+// 			return (NULL);
+// 		}
+// 		i++;
+// 	}
+// 	return (str);
+// }
 
 /*
 **
@@ -91,4 +121,15 @@ int	my_calloc(size_t count, size_t size, void **ptr)
 		i++;
 	}
 	return (SUCCESS);
+}
+
+// TODO: put in libft
+size_t	ft_strslen(char **strs)
+{
+	size_t	i;
+
+	i = 0;
+	while (strs[i])
+		i++;
+	return (i);
 }

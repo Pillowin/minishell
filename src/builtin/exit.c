@@ -1,33 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/04 14:22:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:02:16 by agautier         ###   ########.fr       */
+/*   Created: 2021/04/19 22:01:31 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/20 21:24:10 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-/*
-**	man strchr
-*/
-
-char	*ft_strchr(const char *s, int c)
+unsigned char	builtin_exit(t_token *cmd, int fd, t_list **env)
 {
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == c)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if (s[i] == c)
-		return ((char *)&s[i]);
-	return (NULL);
+	// TODO:
+	(void)cmd;
+	(void)fd;
+	(void)env;
+	exit(EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:56:21 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/15 16:44:49 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/20 19:27:10 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	check_tokens(t_list *tokens, t_err *err)
 **	Entry point for parser.
 */
 
-int	parser(t_list **tokens, t_err *err)
+int	parser(t_list **tokens, t_err *err, t_list *env)
 {
 	if (!expand(tokens, err))
 		return (FAILURE);
@@ -73,7 +73,7 @@ int	parser(t_list **tokens, t_err *err)
 		return (FAILURE);
 	ft_list_remove_if(tokens, (void *)TOK_NEWLINE, &is_tok_type,
 		&token_destroy);
-	if (!create_tree(*tokens, err))
+	if (!create_tree(*tokens, err, env))
 		return (FAILURE);
 	return (SUCCESS);
 }

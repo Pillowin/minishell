@@ -1,33 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/04 14:22:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:02:16 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/04 13:36:34 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/19 16:33:26 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
 /*
-**	man strchr
+**	Renvoie 1 si le caractère passé en paramètre est un caractère alphabétique
+**	et renvoie 0 si le caractère passé en paramètre est un autre type de
+**	caractère.
 */
 
-char	*ft_strchr(const char *s, int c)
+int	ft_isalpha(int c)
 {
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == c)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if (s[i] == c)
-		return ((char *)&s[i]);
-	return (NULL);
+	if (c < 'A' || (c > 'Z' && c < 'a') || c > 'z')
+		return (0);
+	return (1);
 }

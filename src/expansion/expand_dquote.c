@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:00:48 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/14 18:12:14 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/18 21:22:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	push_bslash(t_list **toks, t_list **curr, t_list *next, t_err *err)
 		&& (((t_token *)(next->next->data))->type != TOK_DQUOTE)
 		&& (((t_token *)(next->next->data))->type != TOK_BSLASH))
 	{
-		if (!ft_strsdup(&str, 1, "\\"))
+		if (!my_strdup(&str, 1, "\\"))
 			return ((long)error(err, MALLOC, (void **)toks, &ft_lstdel));
 		if (!new_lstok(TOK_WORD, str, &new))
 		{

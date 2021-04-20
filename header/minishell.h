@@ -65,15 +65,11 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
+# include <errno.h>
 # include "libft.h"
 # include "ft_list.h"
 # include "ft_btree.h"
-
-typedef struct s_err t_err;
-
-# include "minishell_lexer.h"
-# include "minishell_parser.h"
-# include "minishell_expansion.h"
 
 # define SUCCESS		1
 # define FAILURE		0
@@ -98,17 +94,24 @@ typedef struct	s_err
 	unsigned char	status;
 }				t_err;
 
+# include "minishell_lexer.h"
+# include "minishell_parser.h"
+# include "minishell_expansion.h"
+# include "minishell_builtin.h"
+
 void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **));
 
 /*
 **	utils.c
 */
 
-int	ft_is_end_word(char c);
-int	ft_is_token(char c);
-int	is_tok_type(t_token *data, void *type);
-int	ft_strsdup(char ***strs, size_t size, char *str);
-int	my_calloc(size_t count, size_t size, void **ptr);
+int		ft_is_end_word(char c);
+int		ft_is_token(char c);
+int		is_tok_type(t_token *data, void *type);
+int		my_strdup(char ***strs, size_t size, char *str);
+int		my_calloc(size_t count, size_t size, void **ptr);
+size_t	ft_strslen(char **strs);
+char	**ft_strsdup(char **source);
 
 /*
 **	free.c
@@ -116,5 +119,8 @@ int	my_calloc(size_t count, size_t size, void **ptr);
 
 void	ft_free_tab(void **data);
 void	ft_lstdel(void **list);
+
+void	exec(t_btree *tree, t_list *env);
+
 
 #endif

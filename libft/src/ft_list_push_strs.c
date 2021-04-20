@@ -1,33 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_list_push_strs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/04 14:22:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/19 17:02:16 by agautier         ###   ########.fr       */
+/*   Created: 2021/04/18 19:40:37 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/18 21:05:16 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	man strchr
+**	Crée une nouvelle liste en y mettant les chaines de caracteres pointées
+**	par les éléments tableau strs.
+**	Edit : this is a modified func with ordered list
 */
 
-char	*ft_strchr(const char *s, int c)
+t_list	*ft_list_push_strs(size_t size, char **strs)
 {
-	int		i;
+	size_t	i;
+	t_list	*list;
+	t_list	*begin;
 
-	i = 0;
-	while (s[i])
+	if (!size)
+		return (NULL);
+	list = ft_create_elem(strs[0]);
+	begin = list;
+	i = 1;
+	while (i < size)
 	{
-		if (s[i] == c)
-			return ((char *)&s[i]);
+		list->next = ft_create_elem(strs[i]);
+		list = list->next;
 		i++;
 	}
-	if (s[i] == c)
-		return ((char *)&s[i]);
-	return (NULL);
+	return (begin);
 }

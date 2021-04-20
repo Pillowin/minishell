@@ -32,4 +32,6 @@ void			ft_lstdelone(t_list *lst, void (*del)(void *));
 void			ft_list_remove_if(t_list **begin_list, void *data_ref,
 							int (*cmp)(), void (*free_fct)(void *));
 t_list			*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)());
+t_list			*ft_list_push_strs(size_t size, char **strs);
+void			ft_list_sort(t_list **begin_list, int (*cmp)());
 #endif

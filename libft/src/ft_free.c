@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/06 17:27:51 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/09 21:03:08 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/19 17:09:36 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 void	ft_free(void **ptr)
 {
+	if (!(*ptr))
+		return ;
 	free(*ptr);
 	*ptr = NULL;
 }

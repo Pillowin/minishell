@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 20:48:33 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/14 18:35:33 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/18 21:22:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_list	*expand_bslash(t_list **toks, t_list **prev, t_list *next, t_err *err)
 	tmp = simple_case(toks, prev, next);
 	if (tmp)
 		return (tmp);
-	if (!ft_strsdup(&str, 1, *(((t_token *)(next->data))->data)))
+	if (!my_strdup(&str, 1, *(((t_token *)(next->data))->data)))
 		return (error(err, MALLOC, (void **)toks, &ft_lstdel));
 	if (!new_lstok(TOK_WORD, str, &new))
 		return (error(err, MALLOC, (void **)toks, &ft_lstdel));

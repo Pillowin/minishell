@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 22:20:19 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/14 22:22:50 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/18 21:22:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_list	*create_redir(t_list **tokens, t_list **prev, char ***data,
 	curr = *tokens;
 	if (*prev)
 		curr = (*prev)->next;
-	if (!ft_strsdup(data, 2, *(((t_token *)(curr->data))->data)))
+	if (!my_strdup(data, 2, *(((t_token *)(curr->data))->data)))
 		return (error(err, MALLOC, (void **)tokens, &ft_lstdel));
 	(*data)[1] = ft_strdup(*(((t_token *)((curr->next)->data))->data));
 	if (!((*data)[1]))

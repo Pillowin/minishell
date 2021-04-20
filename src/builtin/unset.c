@@ -1,35 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tree.c                                             :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/14 21:38:14 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/15 16:4446 8 bygautier r         ###   ########.fr       */
+/*   Created: 2021/04/19 21:30:05 by agautier          #+#    #+#             */
+/*   Updated: 2021/04/19 21:555:166 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+/*
+**
+*/
+static int	cmp(void *data, void *ref)
+{
+	if (!ft_strcmp(((t_var *)data)->name, ref))
+		return (0);
+	return (1);
+}
 
 /*
-**	Create a tree from list
+**	
 */
-
-int	create_tree(t_list *tokens, t_err *err, t_list *env)
+unsigned char	builtin_unset(t_token *cmd, int fd, t_list **env)
 {
-	t_btree	*tree;
+	unsigned int	i;
+	t_var			*var;
 
-	if (!tokens)
-		return (SUCCESS);
-	if (!eat_list(tokens, &tree))
+	(void)fd;
+	i = 1;
+	if (!(cmd->data[i]))
+		return (FAILURE);
+	while (cmd->data[i])
 	{
-		btree_apply_prefix(tree, &token_destroy);
-		btree_free(&tree);
-		return ((long)error(err, MALLOC, (void **)&tokens, &ft_lstdel));
+		var = var_init(get_name(cmd->data[i]), NULL, NULL);
+		ft_list_remove_if(env, (void *)var->name, &cmp, &var_destroy);
+		var_destroy(var);
+		i++;
 	}
-	exec(tree, env);
 	return (SUCCESS);
 }

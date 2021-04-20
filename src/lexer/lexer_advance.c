@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:06:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/13 17:18:50 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/18 21:22:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ t_token	*lexer_advance_current(t_lexer *lexer, t_tok_type type, t_err *err)
 	char	**data;
 	t_token	*token;
 
-	if (!ft_strsdup(&data, 1, &(lexer->c)))
+	if (!my_strdup(&data, 1, &(lexer->c)))
 		return (error(err, MALLOC, NULL, NULL));
 	lexer_advance(lexer, 1);
 	if (!token_init(type, data, &token))

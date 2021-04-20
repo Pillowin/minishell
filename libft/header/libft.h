@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 13:15:19 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/08 22:43:52 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/19 18:40:45 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,11 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	ft_putstr(char *str);
 char	*ft_strdup(const char *s1);
 void	ft_putstr_fd(char *s, int fd);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+void	ft_putendl_fd(char *s, int fd);
+int		ft_isalpha(int c);
+int		ft_isalnum(int c);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+void	ft_putchar_fd(char c, int fd);
 
 #endif

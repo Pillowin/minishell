@@ -54,7 +54,7 @@ t_token	*lexer_get_token(t_lexer *lexer, t_err *err)
 **	Entry point for parsing.
 */
 
-int	lexer(char *input, t_err *err)
+int	lexer(char *input, t_err *err, t_list *env)
 {
 	t_lexer	*lexer;
 	t_list	*tokens;
@@ -75,7 +75,7 @@ int	lexer(char *input, t_err *err)
 		ft_list_push_back(&tokens, token);
 	}
 	ft_free((void **)&(lexer));
-	if (!parser(&tokens, err))
+	if (!parser(&tokens, err, env))
 		return (FAILURE);
 	return (SUCCESS);
 }
