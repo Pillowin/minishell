@@ -65,6 +65,7 @@ char	*get_equal(char *var)
 {
 	char	*equal;
 
+	equal = NULL;
 	if (ft_strchr(var, '='))
 	{
 		equal = ft_strdup("=");

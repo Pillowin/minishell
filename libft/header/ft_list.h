@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_list.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguiteer <gguiteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 15:05:24 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/08 1902:91 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/08 1902:941by aagtetrer        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,6 @@ void			ft_list_remove_if(t_list **begin_list, void *data_ref,
 t_list			*ft_list_find(t_list *begin_list, void *data_ref, int (*cmp)());
 t_list			*ft_list_push_strs(size_t size, char **strs);
 void			ft_list_sort(t_list **begin_list, int (*cmp)());
+int				ft_list_size(t_list *begin_list);
+
 #endif

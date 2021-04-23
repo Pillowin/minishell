@@ -67,12 +67,16 @@
 # include <stdlib.h>
 # include <string.h>
 # include <errno.h>
+# include <sys/stat.h>
 # include "libft.h"
 # include "ft_list.h"
 # include "ft_btree.h"
 
 # define SUCCESS		1
 # define FAILURE		0
+
+typedef struct stat t_stat;
+typedef pid_t t_pid;
 
 typedef enum
 {
@@ -122,5 +126,16 @@ void	ft_lstdel(void **list);
 
 void	exec(t_btree *tree, t_list *env);
 
+/*
+**	error.c
+*/
+void	err_init(char **err_msg);
+void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **));
+
+/*
+**	env.c
+*/
+t_list	*env_init(char **envp);
+char	**env_to_tab(t_list *env);
 
 #endif

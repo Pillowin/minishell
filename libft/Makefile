@@ -6,7 +6,7 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 12:52:43 by agautier          #+#    #+#              #
-#    Updated: 2021/04/19 18:40:54 by agautier         ###   ########.fr        #
+#    Updated: 2021/04/22 13:40:15 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC		=	$(addprefix src/, \
 				ft_isalnum.c \
 				ft_substr.c \
 				ft_putchar_fd.c \
+				ft_split.c \
 				\
 				ft_list_push_back.c \
 				ft_list_foreach.c \
@@ -46,6 +47,7 @@ SRC		=	$(addprefix src/, \
 				ft_lstdelone.c \
 				ft_list_push_strs.c \
 				ft_list_sort.c \
+				ft_list_size.c \
 				\
 				btree_create_node.c \
 				btree_apply_prefix.c \

@@ -21,7 +21,9 @@
 int	create_tree(t_list *tokens, t_err *err, t_list *env)
 {
 	t_btree	*tree;
-
+printf("list=\n");
+	ft_list_foreach(tokens, &token_print);
+printf("\ntree=\n");
 	if (!tokens)
 		return (SUCCESS);
 	if (!eat_list(tokens, &tree))
