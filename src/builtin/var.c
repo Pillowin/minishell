@@ -38,6 +38,9 @@ void	var_destroy(void *data)
 	ft_free((void **)&(var));
 }
 
+/*
+**
+*/
 char	*get_name(char *var)
 {
 	unsigned int	i;

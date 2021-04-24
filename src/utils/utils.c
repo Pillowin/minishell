@@ -18,7 +18,7 @@
 
 int	ft_is_end_word(char c)
 {
-	if (c == ' ' || c == '\n')
+	if (!c || c == ' ' || c == '\n')
 		return (1);
 	return (0);
 }
@@ -132,4 +132,36 @@ size_t	ft_strslen(char **strs)
 	while (strs[i])
 		i++;
 	return (i);
+}
+
+/*
+**	Use to find var in env
+*/
+int	is_var(void *data, void *ref)
+{
+	if (!ft_strcmp(((t_var *)data)->name, ref))
+		return (0);
+	return (1);
+}
+
+/*
+**	check if word is a name until delimiter
+*/
+char	is_name(char *word, char delimiter)
+{
+	unsigned int	i;
+
+	if (!word)
+		return (FAILURE);
+	i = 0;
+	if (!ft_isalpha(word[i]) && word[i] != '_')
+		return (FAILURE);
+	i++;
+	while (word[i] && word[i] != delimiter)
+	{
+		if (!ft_isalnum(word[i]) && word[i] != '_')
+			return (FAILURE);
+		i++;
+	}
+	return (SUCCESS);
 }

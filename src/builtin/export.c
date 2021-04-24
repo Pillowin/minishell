@@ -59,27 +59,7 @@ static void	print_env(void *data, int fd)
 	ft_putchar_fd('\n', fd);
 }
 
-/*
-**	
-*/
-static char	check_syntax(char *name)
-{
-	unsigned int	i;
 
-	if (!name)
-		return (FAILURE);
-	i = 0;
-	if (!ft_isalpha(name[i]) && name[i] != '_')
-		return (FAILURE);
-	i++;
-	while (name[i] && name[i] != '=')
-	{
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (FAILURE);
-		i++;
-	}
-	return (SUCCESS);
-}
 
 /*
 **	Check if list already contains a var with name
@@ -122,8 +102,8 @@ unsigned char	builtin_export(t_token *cmd, int fd, t_list **env)
 		var = var_init(NULL, NULL, NULL);
 		if (!var)
 			return (FAILURE);
-		var->name = get_name(cmd->data[i]);
-		if (!check_syntax(var->name))
+		var->name = get_name(cmd->data[i]);	// TODO: use same func as expand_dollar ?
+		if (!is_name(var->name, '='))
 		{
 			var_destroy(var);
 			return (FAILURE);	// TODO: identifiant non valable

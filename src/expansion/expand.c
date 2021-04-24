@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/14 16:06:45 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/23 18:42:07 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	expand_clean(t_list **tokens, t_err *err)
 **	TODO: expand dollar
 */
 
-int	expand(t_list **tokens, t_err *err)
+int	expand(t_list **tokens, t_list *env, t_err *err)
 {
 	t_list	*prev;
 	t_list	*curr;
@@ -66,7 +66,7 @@ int	expand(t_list **tokens, t_err *err)
 		else if (((t_token *)(curr->data))->type == TOK_BSLASH)
 			curr = expand_bslash(tokens, &prev, curr->next, err);
 		else if (((t_token *)(curr->data))->type == TOK_DOLLAR)
-			expand_dollar();
+			curr = expand_dollar(tokens, &prev, env, err);
 		if (!curr)
 			return (FAILURE);
 		if (curr->next)

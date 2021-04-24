@@ -22,20 +22,20 @@
 **		TOK_WORD TOK_SEMI TOK_LESS
 */
 
-int	check_semi(t_list *tokens, unsigned int i, t_err *err)
-{
-	t_token	*prev;
-	t_token	*next;
+// int	check_semi(t_list *tokens, unsigned int i, t_err *err)
+// {
+// 	t_token	*prev;
+// 	t_token	*next;
 
-	if (!i)
-		return ((long)error(err, SYNTAX_SEMI, (void **)tokens, &ft_lstdel));
-	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
-	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev->type != TOK_WORD || next->type == TOK_PIPE
-		|| next->type == TOK_SEMI)
-		return ((long)error(err, SYNTAX_SEMI, (void **)&tokens, &ft_lstdel));
-	return (SUCCESS);
-}
+// 	if (!i)
+// 		return ((long)error(err, SYNTAX_SEMI, (void **)tokens, &ft_lstdel));
+// 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
+// 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
+// 	if (prev->type != TOK_WORD || next->type == TOK_PIPE
+// 		|| next->type == TOK_SEMI)
+// 		return ((long)error(err, SYNTAX_SEMI, (void **)&tokens, &ft_lstdel));
+// 	return (SUCCESS);
+// }
 
 /*
 **	Accepted syntax :
@@ -54,8 +54,7 @@ int	check_pipe(t_list *tokens, unsigned int i, t_err *err)
 		return ((long)error(err, SYNTAX_PIPE, (void **)tokens, &ft_lstdel));
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if (prev->type != TOK_WORD || next->type == TOK_PIPE
-		|| next->type == TOK_SEMI || next->type == TOK_NEWLINE)
+	if (prev->type != TOK_WORD || next->type == TOK_PIPE || next->type == TOK_NEWLINE)
 		return ((long)error(err, SYNTAX_PIPE, (void **)&tokens, &ft_lstdel));
 	return (SUCCESS);
 }
@@ -128,3 +127,5 @@ int	check_less(t_list *tokens, unsigned int i, t_err *err)
 		return ((long)error(err, SYNTAX_LESS, (void **)&tokens, &ft_lstdel));
 	return (SUCCESS);
 }
+
+// TODO: ramener la fonction check tokens ici

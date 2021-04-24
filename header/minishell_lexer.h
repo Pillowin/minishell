@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:36:47 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/20 19:26:22 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/23 16:52:34 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ typedef enum e_tok_type
 	TOK_LESS,
 	TOK_GREAT,
 	TOK_DGREAT,
-	TOK_SEMI,
 	TOK_DQUOTE,
 	TOK_QUOTE,
 	TOK_BSLASH,

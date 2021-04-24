@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 16:46:34 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/15 16:46:49 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/23 16:58:16 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,11 @@ static t_list	*ft_list_find_prev(t_list *list, void *data_ref, int (*cmp)())
 /*
 **	Trouve le token suivant dans la liste par ordre de priorité
 */
-
+//TODO: make prettier
 static t_list	*find_next(t_list *tokens)
 {
 	t_list	*ret;
 
-	ret = ft_list_find_prev(tokens, (void *)TOK_SEMI, &is_tok_type);
-	if (ret)
-		return (ret);
 	ret = ft_list_find_prev(tokens, (void *)TOK_PIPE, &is_tok_type);
 	if (ret)
 		return (ret);
@@ -76,8 +73,7 @@ static int	create_node_no_prio(t_list *list, t_btree **node, t_child *child)
 static int	create_node_prio(t_list *list, t_list *prev, t_btree **node,
 								t_child *child)
 {
-	if (((t_token *)(prev->next->data))->type == TOK_SEMI
-		|| ((t_token *)(prev->next->data))->type == TOK_PIPE)
+	if (((t_token *)(prev->next->data))->type == TOK_PIPE)
 	{
 		child->left = list;
 		child->right = prev->next->next;

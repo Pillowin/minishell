@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:46:45 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/20 19:52:50 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/24 21:42:16 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static int	is_flag(char *str)
 {
 	int i;
 
+	if (!str)
+		return (FAILURE);
 	i = 1;
 	if (str[0] != '-')
 		return (FAILURE);

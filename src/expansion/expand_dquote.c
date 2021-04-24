@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:00:48 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/18 21:22:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/23 16:31:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,23 @@ static int	expand_dquote_bslash(t_list **tokens, t_list **prev, t_err *err)
 }
 
 /*
+**      
+*/
+// static int	expand_dquote_dollar(t_list **tokens, t_list **prev, t_err *err)
+// {
+// 	//TODO:
+// }
+
+/*
 **	Merge TOK_WORD an TOK_SPACE between quotes into a single TOK_WORD and
 **	add it to list.
 */
-
 t_list	*expand_dquote(t_list **tokens, t_list **prev, t_err *err)
 {
 	if (!expand_dquote_bslash(tokens, prev, err))
 		return (NULL);
+	// TODO:  
+	// if (!expand_dquote_dollar(tokens, prev, err))
+		// return (NULL);
 	return (expand_quote(tokens, prev, TOK_DQUOTE, err));
 }

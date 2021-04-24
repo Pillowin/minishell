@@ -68,6 +68,7 @@
 # include <string.h>
 # include <errno.h>
 # include <sys/stat.h>
+# include <fcntl.h>
 # include "libft.h"
 # include "ft_list.h"
 # include "ft_btree.h"
@@ -116,6 +117,8 @@ int		my_strdup(char ***strs, size_t size, char *str);
 int		my_calloc(size_t count, size_t size, void **ptr);
 size_t	ft_strslen(char **strs);
 char	**ft_strsdup(char **source);
+int		is_var(void *data, void *ref);
+char	is_name(char *word, char delimiter);
 
 /*
 **	free.c
@@ -137,5 +140,12 @@ void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **));
 */
 t_list	*env_init(char **envp);
 char	**env_to_tab(t_list *env);
+
+/*
+**	redir.c
+*/
+
+void	redir_init(t_token *token, int *fd);
+void	redir_destroy(int *fd);
 
 #endif

@@ -21,9 +21,7 @@
 int	create_tree(t_list *tokens, t_err *err, t_list *env)
 {
 	t_btree	*tree;
-printf("list=\n");
-	ft_list_foreach(tokens, &token_print);
-printf("\ntree=\n");
+
 	if (!tokens)
 		return (SUCCESS);
 	if (!eat_list(tokens, &tree))
@@ -32,6 +30,11 @@ printf("\ntree=\n");
 		btree_free(&tree);
 		return ((long)error(err, MALLOC, (void **)&tokens, &ft_lstdel));
 	}
+	
+	// printf("\ntree = \n");
+	// btree_apply_prefix(tree, &token_print);
+	
+	// (void)env;
 	exec(tree, env);
 	return (SUCCESS);
 }

@@ -49,3 +49,25 @@ Regles de creation d'arbre :
 ``ls -l | grep grw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; diff otot toto >> diff``
 ``ls -l | grep d'r'w | wc -l > lsf\\ile ; < ls"'f'i ile" c\at | rev \> itit > \u\t\u\t\ \>>> o't'ot \;; diff otot toto >> diff``
 ``< abc >> toto >> tata > ta  >ty >\> >>\>\> >'>>'``
+
+
+prompt>echo a $
+a $
+prompt>echo a $cmd
+a CMD
+prompt>echo a $'cmd'
+a cmd
+prompt>echo a $'cmd'-toto
+a cmd-toto
+prompt>echo a $cmd-toto
+a CMD-toto
+prompt>echo a $'    cmd'
+a     cmd
+prompt>echo a $cmd'-toto' 
+a CMD-toto
+prompt>echo a $zboub
+a
+prompt>echo a $zboub-toto
+a -toto
+prompt>echo a $'zboub''-toto'
+a zboub-toto
