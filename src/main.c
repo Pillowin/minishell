@@ -25,11 +25,11 @@ void	print_var(void *data)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_list *env;
 	unsigned int	i;
-	char			buf[4096];		// TODO:
+	t_list			*env;
 	t_err			err;
 	char 			*err_msg[10];	// TODO:
+	char			buf[4096];		// TODO:
 
 	(void)argc;
 	(void)argv;
@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ft_list_foreach(env, &var_destroy);
 		ft_list_clear(env, &ft_free);
-		return (EXIT_FAILURE);
+		return (EXIT_FAILURE);	// TODO: use error
 	}
 
 	while (1)
@@ -53,12 +53,17 @@ int	main(int argc, char **argv, char **envp)
 			buf[i] = '\0';
 			i++;
 		}
-		ft_putstr("\e[35mprompt>\e[39m");
+		if (!prompt(&env))
+		{
+			ft_list_foreach(env, &var_destroy);
+			ft_list_clear(env, &ft_free);
+			return (EXIT_FAILURE);	// TODO: use error
+		}
 		if (read(STDIN_FILENO, buf, 4096) > 0)
 		{
 			if(!(lexer(buf, &err, env)))
 			{
-				printf("lexer casse2\n");
+				printf("erreur dans minishell\n");
 				// return (EXIT_FAILURE);
 				continue ;
 			}
@@ -162,7 +167,7 @@ int	main(int argc, char **argv, char **envp)
 /*
 // ** Fetch name and value
 // */
-// char	get_name_value(char *var, char **name, char **equal, char **value)
+// char	get_var_name_value(char *var, char **name, char **equal, char **value)
 // {
 // 	unsigned int	i;
 

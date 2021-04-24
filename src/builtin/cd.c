@@ -46,11 +46,10 @@ static char	update_var(t_list **env, char *name)
 /*
 **	TODO: update PWD and OLD_PWD
 */
-unsigned char	builtin_cd(t_token *cmd, int fd, t_list **env)
+unsigned char	builtin_cd(t_token *cmd, t_list **env)
 {
 	t_list	*lst;
 
-	(void)fd;
 	if (!(cmd->data[1]))
 	{
 		if (!update_var(env, "OLDPWD"))

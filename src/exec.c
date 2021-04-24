@@ -15,13 +15,13 @@
 /*
 **
 */
-static void	my_btree_prefix(t_btree *root, int *fd, t_list *env, void (*f)(void *, int *, t_list *env))
+static void	my_btree_prefix(t_btree *root, int (*fildes)[4], t_list *env, void (*f)(void *, int (*)[4], t_list *env))
 {
 	if (!root)
 		return ;
-	f(root->item, fd, env);
-	my_btree_prefix(root->left, fd, env, f);
-	my_btree_prefix(root->right, fd, env, f);
+	f(root->item, fildes, env);
+	my_btree_prefix(root->left, fildes, env, f);
+	my_btree_prefix(root->right, fildes, env, f);
 }
 
 /*
@@ -54,7 +54,7 @@ void	binary_exec(t_token *token, t_list *env, char *path)
 /*
 **
 */
-static void	exec_cmd(t_token *token, int fd, t_list *env)
+static void	exec_cmd(t_token *token, t_list *env)
 {
 	unsigned int	i;
 	char			*path;
@@ -62,7 +62,7 @@ static void	exec_cmd(t_token *token, int fd, t_list *env)
 	void			*tmp;
 	t_stat			buf;
 	const char		*builtin_names[7] = {"echo", "cd", "pwd", "export", "unset", "env", "exit"};
-	unsigned char	(*builtins[7])(t_token *cmd, int fd, t_list **env) = {
+	unsigned char	(*builtins[7])(t_token *cmd, t_list **env) = {
 		&builtin_echo, &builtin_cd, &builtin_pwd, &builtin_export, &builtin_unset, &builtin_env, &builtin_exit};
 
 	i = 0;
@@ -70,7 +70,7 @@ static void	exec_cmd(t_token *token, int fd, t_list *env)
 	{
 		if (!ft_strcmp(token->data[0], (char *)builtin_names[i]))
 		{
-			builtins[i](token, fd, &env);
+			builtins[i](token, &env);	// TODO: ne pas passer fd
 			return ;
 		}
 		i++;
@@ -139,7 +139,7 @@ static void	exec_cmd(t_token *token, int fd, t_list *env)
 /*
 **
 */
-static void	dispatch(void *item, int *fd, t_list *env)
+static void	dispatch(void *item, int (*fildes)[4], t_list *env)
 {
 	t_token	*token;
 
@@ -151,24 +151,30 @@ static void	dispatch(void *item, int *fd, t_list *env)
 	}
 	else if (token->type == TOK_REDIR)
 	{
-		redir_init(token, fd);
+		redir_init(token, fildes);
 	}
 	else if (token->type == TOK_COMMAND)
 	{
-		exec_cmd(token, *fd, env);
-		redir_destroy(fd);
+		// redir apply
+		exec_cmd(token, env);
+		redir_destroy(fildes);
 	}
+	// TODO: redir_destroy si on est sur le dernier token de la liste
 }
 
 /*
 **
 */
+
 void	exec(t_btree *tree, t_list *env)
 {
-	int	fd;
+	int	fildes[4];
 
-	fd = STDOUT_FILENO;
-	my_btree_prefix(tree, &fd, env, &dispatch);
+	fildes[IN] = STDIN_FILENO;
+	fildes[OUT] = STDOUT_FILENO;
+	fildes[REAL_IN] = -1;
+	fildes[REAL_OUT] = -1;
+	my_btree_prefix(tree, &fildes, env, &dispatch);
 	// btree_apply_prefix(tree, &token_print);
 
 	btree_apply_prefix(tree, &token_destroy);

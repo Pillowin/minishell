@@ -34,7 +34,6 @@ int	create_tree(t_list *tokens, t_err *err, t_list *env)
 	// printf("\ntree = \n");
 	// btree_apply_prefix(tree, &token_print);
 	
-	// (void)env;
 	exec(tree, env);
 	return (SUCCESS);
 }

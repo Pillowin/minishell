@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:00:48 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/23 16:31:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 00:38:05 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,23 +72,40 @@ static int	expand_dquote_bslash(t_list **tokens, t_list **prev, t_err *err)
 }
 
 /*
-**      
+**	Expand TOK_DOLLAR between double quotes.
 */
-// static int	expand_dquote_dollar(t_list **tokens, t_list **prev, t_err *err)
-// {
-// 	//TODO:
-// }
+// TODO: test a liiiiiitle more
+static int	expand_dquote_dollar(t_list **tokens, t_list **prev, t_list *env, t_err *err)
+{
+	t_list	*curr;
+	t_list	*next;
+
+	if (!(*prev))
+		curr = *tokens;
+	else
+		curr = (*prev)->next;
+	next = curr->next;
+	while (((t_token *)(next->data))->type != TOK_DQUOTE
+		&& ((t_token *)(next->data))->type != TOK_NEWLINE)
+	{
+		if (((t_token *)(next->data))->type == TOK_DOLLAR)
+			curr = expand_dollar(tokens, &curr, env, err);
+		curr = curr->next;
+		next = curr->next;
+	}
+	return (SUCCESS);
+}
 
 /*
 **	Merge TOK_WORD an TOK_SPACE between quotes into a single TOK_WORD and
 **	add it to list.
 */
-t_list	*expand_dquote(t_list **tokens, t_list **prev, t_err *err)
+
+t_list	*expand_dquote(t_list **tokens, t_list **prev, t_list *env, t_err *err)
 {
 	if (!expand_dquote_bslash(tokens, prev, err))
 		return (NULL);
-	// TODO:  
-	// if (!expand_dquote_dollar(tokens, prev, err))
-		// return (NULL);
+	if (!expand_dquote_dollar(tokens, prev, env, err))
+		return (NULL);
 	return (expand_quote(tokens, prev, TOK_DQUOTE, err));
 }

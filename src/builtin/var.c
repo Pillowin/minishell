@@ -41,7 +41,7 @@ void	var_destroy(void *data)
 /*
 **
 */
-char	*get_name(char *var)
+char	*get_var_name(char *var)
 {
 	unsigned int	i;
 	char			*value;
@@ -64,7 +64,7 @@ char	*get_name(char *var)
 	return (name);
 }
 
-char	*get_equal(char *var)
+char	*get_var_equal(char *var)
 {
 	char	*equal;
 
@@ -81,7 +81,7 @@ char	*get_equal(char *var)
 /*
 **	
 */
-char	*get_value(char *var)
+char	*get_var_value(char *var)
 {
 	unsigned int	i;
 	char			*value;

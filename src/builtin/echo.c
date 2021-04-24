@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:46:45 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/24 21:42:16 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 00:09:38 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	is_flag(char *str)
 	return (SUCCESS);
 }
 
-unsigned char	builtin_echo(t_token *cmd, int fd, t_list **env)
+unsigned char	builtin_echo(t_token *cmd, t_list **env)
 {
 	unsigned int	i;
 
@@ -44,12 +44,12 @@ unsigned char	builtin_echo(t_token *cmd, int fd, t_list **env)
 		i++;
 	while (cmd->data[i])
 	{
-		ft_putstr_fd(cmd->data[i], fd);
+		printf("%s", cmd->data[i]);
 		i++;
 		if (cmd->data[i])
-			ft_putstr_fd(" ", fd);
+			printf(" ");
 	}
 	if (!is_flag(cmd->data[1]))
-		ft_putstr_fd("\n", fd);
+		printf("\n");
 	return (SUCCESS);
 }

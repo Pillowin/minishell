@@ -73,8 +73,17 @@
 # include "ft_list.h"
 # include "ft_btree.h"
 
+# define DEFAULT_PROMPT	"\e[35mprompt>\e[39m"
+
 # define SUCCESS		1
 # define FAILURE		0
+
+# define IN			0
+# define OUT		1
+# define REAL_IN	2
+# define REAL_OUT	3
+
+
 
 typedef struct stat t_stat;
 typedef pid_t t_pid;
@@ -145,7 +154,12 @@ char	**env_to_tab(t_list *env);
 **	redir.c
 */
 
-void	redir_init(t_token *token, int *fd);
-void	redir_destroy(int *fd);
+void	redir_init(t_token *token, int (*fildes)[4]);
+void	redir_destroy(int (*fildes)[4]);
+
+/*
+**	prompt.c
+*/
+char	prompt(t_list **env);
 
 #endif

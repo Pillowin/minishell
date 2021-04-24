@@ -13,10 +13,10 @@
 #include "minishell.h"
 
 /*
-**	Print current working directory in fd.
+**	Print current working directory.
 */
 
-unsigned char	builtin_pwd(t_token *cmd, int fd, t_list **env)
+unsigned char	builtin_pwd(t_token *cmd, t_list **env)
 {
 	char *buf;
 
@@ -25,7 +25,7 @@ unsigned char	builtin_pwd(t_token *cmd, int fd, t_list **env)
 	buf = getcwd(NULL, 0);
 	if (!buf)
 		return (FAILURE);
-	ft_putendl_fd(buf, fd);
+	printf("%s\n", buf);
 	ft_free((void **)&buf);
 	return (SUCCESS);
 }

@@ -25,18 +25,17 @@ static int	cmp(void *data, void *ref)
 /*
 **	
 */
-unsigned char	builtin_unset(t_token *cmd, int fd, t_list **env)
+unsigned char	builtin_unset(t_token *cmd, t_list **env)
 {
 	unsigned int	i;
 	t_var			*var;
 
-	(void)fd;
 	i = 1;
 	if (!(cmd->data[i]))
 		return (FAILURE);
 	while (cmd->data[i])
 	{
-		var = var_init(get_name(cmd->data[i]), NULL, NULL);
+		var = var_init(get_var_name(cmd->data[i]), NULL, NULL);
 		ft_list_remove_if(env, (void *)var->name, &cmp, &var_destroy);
 		var_destroy(var);
 		i++;

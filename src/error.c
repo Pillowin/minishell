@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 12:17:44 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/23 16:59:03 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 00:40:25 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@
 */
 void	err_init(char **err_msg)
 {
-	err_msg[NONE] = "No error\n";
+	err_msg[NONE] = "No error.\n";
 	err_msg[MALLOC] = "Memory allocation failed.\n";
 	err_msg[MULTILINE_QUOTE] = "Undefined case : multiline quote command.\n";
 	err_msg[MULTILINE_DQUOTE] = "Undefined case : multiline double quote command.\n";
 	err_msg[MULTILINE_BSLASH] = "Undefined case : multiline back slash command.\n";
-	err_msg[SYNTAX_SEMI] = "bash: syntax error near unexpected token `;'\n";
-	err_msg[SYNTAX_PIPE] = "bash: syntax error near unexpected token `|'\n";
-	err_msg[SYNTAX_DGREAT] = "bash: syntax error near unexpected token `>>'\n";
-	err_msg[SYNTAX_GREAT] = "bash: syntax error near unexpected token `>'\n";
-	err_msg[SYNTAX_LESS] = "bash: syntax error near unexpected token `<'\n";
+	err_msg[SYNTAX_SEMI] = "minishell: syntax error near unexpected token `;'\n";
+	err_msg[SYNTAX_PIPE] = "minishell: syntax error near unexpected token `|'\n";
+	err_msg[SYNTAX_DGREAT] = "minishell: syntax error near unexpected token `>>'\n";
+	err_msg[SYNTAX_GREAT] = "minishell: syntax error near unexpected token `>'\n";
+	err_msg[SYNTAX_LESS] = "minishell: syntax error near unexpected token `<'\n";
 }
 
 /*

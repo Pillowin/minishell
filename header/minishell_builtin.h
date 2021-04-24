@@ -22,16 +22,16 @@ typedef struct s_var
 
 t_var	*var_init(char *name, char *equal, char *value);
 void	var_destroy(void *data);
-char	*get_name(char *var);
-char	*get_equal(char *var);
-char	*get_value(char *var);
+char	*get_var_name(char *var);
+char	*get_var_equal(char *var);
+char	*get_var_value(char *var);
 
-unsigned char	builtin_echo(t_token *cmd, int fd, t_list **env);
-unsigned char	builtin_cd(t_token *cmd, int fd, t_list **env);
-unsigned char	builtin_pwd(t_token *cmd, int fd, t_list **env);
-unsigned char	builtin_env(t_token *cmd, int fd, t_list **env);
-unsigned char	builtin_export(t_token *cmd, int fd, t_list **env);
-unsigned char	builtin_unset(t_token *cmd, int fd, t_list **env);
-unsigned char	builtin_exit(t_token *cmd, int fd, t_list **env);
+unsigned char	builtin_echo(t_token *cmd, t_list **env);
+unsigned char	builtin_cd(t_token *cmd, t_list **env);
+unsigned char	builtin_pwd(t_token *cmd, t_list **env);
+unsigned char	builtin_env(t_token *cmd, t_list **env);
+unsigned char	builtin_export(t_token *cmd, t_list **env);
+unsigned char	builtin_unset(t_token *cmd, t_list **env);
+unsigned char	builtin_exit(t_token *cmd, t_list **env);
 
 #endif

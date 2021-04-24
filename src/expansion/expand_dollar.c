@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 16:41:35 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/24 20:44:58 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 00:22:43 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ static t_list	*get_var(t_list *next, char **name, t_list *env, t_err *err)
 {
 	t_list *new;
 
-	token_print(next->data);
 	if (is_name(*(((t_token *)next->data)->data), '\n'))
 		*name = *((t_token *)next->data)->data;
 	else

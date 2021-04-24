@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/23 18:42:07 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 00:32:36 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	expand(t_list **tokens, t_list *env, t_err *err)
 		if (((t_token *)(curr->data))->type == TOK_QUOTE)
 			curr = expand_quote(tokens, &prev, TOK_QUOTE, err);
 		else if (((t_token *)(curr->data))->type == TOK_DQUOTE)
-			curr = expand_dquote(tokens, &prev, err);
+			curr = expand_dquote(tokens, &prev, env, err);
 		else if (((t_token *)(curr->data))->type == TOK_BSLASH)
 			curr = expand_bslash(tokens, &prev, curr->next, err);
 		else if (((t_token *)(curr->data))->type == TOK_DOLLAR)

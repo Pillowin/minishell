@@ -12,18 +12,15 @@
 
 #include "minishell.h"
 
-unsigned char	builtin_env(t_token *cmd, int fd, t_list **env)
+unsigned char	builtin_env(t_token *cmd, t_list **env)
 {
 	if (cmd->data[1])
 		return (FAILURE);
 	while (*env)
 	{
 		if (((t_var *)((*env)->data))->value)
-		{
-			ft_putstr_fd(((t_var *)((*env)->data))->name, fd);
-			ft_putchar_fd('=', fd);
-			ft_putendl_fd(((t_var *)((*env)->data))->value, fd);
-		}
+			printf("%s=%s\n", ((t_var *)((*env)->data))->name,
+					((t_var *)((*env)->data))->value);
 		*env = (*env)->next;
 	}
 	return (SUCCESS);

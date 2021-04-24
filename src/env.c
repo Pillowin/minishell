@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 12:16:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/22 12:58:04 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 00:51:42 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_list	*env_init(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		var = var_init(get_name(envp[i]), get_equal(envp[i]), get_value(envp[i]));
+		var = var_init(get_var_name(envp[i]), get_var_equal(envp[i]), get_var_value(envp[i]));
 		if (!var)
 			return (NULL);
 		ft_list_push_back(&env, var);

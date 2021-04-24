@@ -31,35 +31,15 @@ static t_list	*lstdup(t_list *lst)
 }
 
 /*
-**	ft_lst_foreach with 2 parameter in f
-*/
-
-static void	ft_list_foreach_fd(t_list *begin, int fd, void (*f)(void *, int))
-{
-	while (begin)
-	{
-		(*f)(begin->data, fd);
-		begin = begin->next;
-	}
-}
-
-/*
 **	
 */
-static void	print_env(void *data, int fd)
+static void	print_env(void *data)
 {
-	ft_putstr_fd("declare -x ", fd);
-	ft_putstr_fd(((t_var *)data)->name, fd);
+	printf("declare -x %s", ((t_var *)data)->name);
 	if (((t_var *)data)->value)
-	{
-		ft_putstr_fd("=\"", fd);
-		ft_putstr_fd(((t_var *)data)->value, fd);
-		ft_putchar_fd('"', fd);
-	}
-	ft_putchar_fd('\n', fd);
+		printf("=\"%s\"", ((t_var *)data)->value);
+	printf("\n");
 }
-
-
 
 /*
 **	Check if list already contains a var with name
@@ -81,7 +61,7 @@ static	t_list	*is_created(t_list *env, char *name)
 ** cmd[0] = export
 ** cmd[1] = name=value
 */
-unsigned char	builtin_export(t_token *cmd, int fd, t_list **env)
+unsigned char	builtin_export(t_token *cmd, t_list **env)
 {
 	unsigned int	i;
 	t_list			*lst;
@@ -93,7 +73,7 @@ unsigned char	builtin_export(t_token *cmd, int fd, t_list **env)
 	{
 		*env = lstdup(*env);
 		ft_list_sort(env, &ft_strcmp);
-		ft_list_foreach_fd(*env, fd, &print_env);
+		ft_list_foreach(*env, &print_env);
 		ft_list_clear(*env, &ft_free);
 		return (SUCCESS);
 	}
@@ -102,7 +82,7 @@ unsigned char	builtin_export(t_token *cmd, int fd, t_list **env)
 		var = var_init(NULL, NULL, NULL);
 		if (!var)
 			return (FAILURE);
-		var->name = get_name(cmd->data[i]);	// TODO: use same func as expand_dollar ?
+		var->name = get_var_name(cmd->data[i]);	// TODO: use same func as expand_dollar ?
 		if (!is_name(var->name, '='))
 		{
 			var_destroy(var);
@@ -112,7 +92,7 @@ unsigned char	builtin_export(t_token *cmd, int fd, t_list **env)
 		if (lst)
 		{
 			ft_free((void **)&((t_var *)lst->data)->value);
-			((t_var *)lst->data)->value = get_value(cmd->data[i]);
+			((t_var *)lst->data)->value = get_var_value(cmd->data[i]);
 			if (!(((t_var *)lst->data)->value))
 			{
 				ft_free((void **)&(var->name));
@@ -121,7 +101,7 @@ unsigned char	builtin_export(t_token *cmd, int fd, t_list **env)
 		}
 		else
 		{
-			new = var_init(get_name(cmd->data[i]), get_equal(cmd->data[i]), get_value(cmd->data[i]));
+			new = var_init(get_var_name(cmd->data[i]), get_var_equal(cmd->data[i]), get_var_value(cmd->data[i]));
 			if (!new)
 				return (FAILURE);
 			ft_list_push_back(env, new);
