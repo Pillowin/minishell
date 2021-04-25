@@ -25,7 +25,7 @@ unsigned char	builtin_pwd(t_token *cmd, t_list **env)
 	buf = getcwd(NULL, 0);
 	if (!buf)
 		return (FAILURE);
-	printf("%s\n", buf);
+	ft_putendl_fd(buf, STDOUT_FILENO);
 	ft_free((void **)&buf);
 	return (SUCCESS);
 }

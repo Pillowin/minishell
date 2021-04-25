@@ -30,16 +30,24 @@ static t_list	*lstdup(t_list *lst)
 	return (begin);
 }
 
+
 /*
 **	
 */
 static void	print_env(void *data)
 {
-	printf("declare -x %s", ((t_var *)data)->name);
+	ft_putstr_fd("declare -x ", STDOUT_FILENO);
+	ft_putstr_fd(((t_var *)data)->name, STDOUT_FILENO);
 	if (((t_var *)data)->value)
-		printf("=\"%s\"", ((t_var *)data)->value);
-	printf("\n");
+	{
+		ft_putstr_fd("=\"", STDOUT_FILENO);
+		ft_putstr_fd(((t_var *)data)->value, STDOUT_FILENO);
+		ft_putchar_fd('"', STDOUT_FILENO);
+	}
+	ft_putchar_fd('\n', STDOUT_FILENO);
 }
+
+
 
 /*
 **	Check if list already contains a var with name

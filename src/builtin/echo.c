@@ -6,12 +6,12 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:46:45 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/25 00:09:38 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 14:33:10 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "string.h"
+
 /*
 **	Print strings in fd
 */
@@ -44,12 +44,12 @@ unsigned char	builtin_echo(t_token *cmd, t_list **env)
 		i++;
 	while (cmd->data[i])
 	{
-		printf("%s", cmd->data[i]);
+		ft_putstr_fd(cmd->data[i], STDOUT_FILENO);
 		i++;
 		if (cmd->data[i])
-			printf(" ");
+			ft_putstr_fd(" ", STDOUT_FILENO);
 	}
 	if (!is_flag(cmd->data[1]))
-		printf("\n");
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (SUCCESS);
 }
