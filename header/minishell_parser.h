@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 18:57:46 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/20 19:27:26 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 18:41:18 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ int	check_less(t_list *tokens, unsigned int i, t_err *err);
 */
 
 int	check_tokens(t_list *tokens, t_err *err);
-int	parser(t_list **tokens, t_err *err, t_list *env);
+int	parser(t_list **tokens, t_list **cmds, t_err *err, t_list *env);
 
 /*
 **	tree.c
 */
 
 int	eat_list(t_list *list, t_btree **node);
-int	create_tree(t_list *tokens, t_err *err, t_list *env);
+int	create_tree(t_list *tokens, t_list **cmds, t_err *err);
 
 /*
 **	merge.c

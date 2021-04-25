@@ -30,6 +30,7 @@ int	main(int argc, char **argv, char **envp)
 	t_err			err;
 	char 			*err_msg[10];	// TODO:
 	char			buf[4096];		// TODO:
+	t_list			*cmds;
 
 	(void)argc;
 	(void)argv;
@@ -61,11 +62,18 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (read(STDIN_FILENO, buf, 4096) > 0)
 		{
-			if(!(lexer(buf, &err, env)))
+			cmds = NULL;
+			if(!(lexer(buf, &cmds, &err, env)))
 			{
 				printf("erreur dans minishell\n");
 				// return (EXIT_FAILURE);
 				continue ;
+			}
+			while (cmds)	// TODO: remove
+			{
+				// printf("tree %p\n", cmds->data);
+				exec(cmds->data, env);
+				cmds = cmds->next;
 			}
 		}
 		else

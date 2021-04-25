@@ -71,3 +71,13 @@ prompt>echo a $zboub-toto
 a -toto
 prompt>echo a $'zboub''-toto'
 a zboub-toto
+
+
+On arrive avec un liste complete de token
+On expand jusqu'au \n ou au ;
+Si le dernier est un ;
+	On coupe la liste
+	On remplace le ; par un \n
+On clean - merge - check - merge
+On cree notre arbre
+On l'ajoute a la liste d'arbre

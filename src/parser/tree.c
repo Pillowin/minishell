@@ -16,10 +16,13 @@
 **	Create a tree from list
 */
 
-int	create_tree(t_list *tokens, t_err *err, t_list *env)
+int	create_tree(t_list *tokens, t_list **cmds, t_err *err)
 {
 	t_btree	*tree;
 
+	// printf("\nlist in tree = \n");
+	// ft_list_foreach(tokens, &token_print);
+	// exit(EXIT_SUCCESS);
 	if (!tokens)
 		return (SUCCESS);
 	if (!eat_list(tokens, &tree))
@@ -31,7 +34,8 @@ int	create_tree(t_list *tokens, t_err *err, t_list *env)
 	
 	// printf("\ntree = \n");
 	// btree_apply_prefix(tree, &token_print);
-	
-	exec(tree, env);
+	ft_list_push_back(cmds, tree);
+	// exit(EXIT_SUCCESS);
+	// exec(tree, env);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 18:04:09 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/23 16:59:38 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 16:56:51 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ char	*token_type_to_str(int type)
 		return ("TOK_GREAT");
 	if (type == TOK_DGREAT)
 		return ("TOK_DGREAT");
+	if (type == TOK_SEMI)
+		return ("TOK_SEMI");
 	if (type == TOK_DQUOTE)
 		return ("TOK_DQUOTE");
 	if (type == TOK_QUOTE)
@@ -48,6 +50,7 @@ char	*token_type_to_str(int type)
 		return ("TOK_COMMAND");
 	return ("TOK_UNKNOW");
 }
+
 
 /*
 **	Print t_token infos.

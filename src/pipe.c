@@ -6,8 +6,8 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 15:48:33 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/25 16:23:22 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 16:52:20 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell"
+#include "minishell.h"

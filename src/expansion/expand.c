@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/25 16:24:55 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 18:22:14 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,16 @@ static int	expand_clean(t_list **tokens, t_err *err)
 
 /*
 **	Expand quotes double quotes and backslash
-**
-**	TODO: expand dollar
 */
 
-int	expand(t_list **tokens, t_list *env, t_err *err)
+int	expand(t_list **done, t_list **tokens, t_list *env, t_err *err)
 {
 	t_list	*prev;
 	t_list	*curr;
 
 	prev = NULL;
 	curr = *tokens;
-	while (curr)
+	while (curr && ((t_token *)(curr->data))->type != TOK_SEMI)
 	{
 		if (((t_token *)(curr->data))->type == TOK_QUOTE)
 			curr = expand_quote(tokens, &prev, TOK_QUOTE, err);
@@ -73,8 +71,15 @@ int	expand(t_list **tokens, t_list *env, t_err *err)
 			prev = curr;
 		curr = curr->next;
 	}
-	// if semi cut list
-	if (!expand_clean(tokens, err))
+	*done = *tokens;
+	*tokens = NULL;
+	if (curr && ((t_token *)(curr->data))->type == TOK_SEMI)
+	{
+		*tokens = curr->next;
+		curr->next = NULL;
+		((t_token *)(curr->data))->type = TOK_NEWLINE;
+	}
+	if (!expand_clean(done, err))
 		return (FAILURE);
 	return (SUCCESS);
 }
