@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/24 20:51:00 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/25 00:08:04 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 15:57:37 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,99 +18,63 @@
 
 void	redir_init(t_token *token, int (*fildes)[4])
 {
-	redir_destroy(fildes);	// TODO: check ?
+	int	type;
 
+	type = IN;
 	if (token->data[0][0] == '>')
+		type = OUT;
+	redir_destroy(type, fildes);	// TODO: check ?
+	(*fildes)[REAL + type] = dup(type);
+	if ((*fildes)[REAL + type] == -1)
 	{
-		(*fildes)[REAL_OUT] = dup(STDOUT_FILENO);
-		if ((*fildes)[REAL_OUT] == -1)
-		{
-			// TODO: cannot dup
-			printf("err : %s\n", strerror(errno));
-			return ;
-		}
-		if (token->data[0][1] == '>')
-			(*fildes)[OUT] = open(token->data[1], O_WRONLY | O_APPEND | O_CREAT, 0644);
-		else
-			(*fildes)[OUT] = open(token->data[1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-		if (dup2((*fildes)[OUT], STDOUT_FILENO) == -1)
-		{
-			// TODO: cannot dup2
-			printf("err : %s\n", strerror(errno));
-			return ;
-		}
+		// TODO: cannot dup
+		printf("err : %s\n", strerror(errno));
+		return ;
 	}
-
 	if (token->data[0][0] == '<')
-	{
-		(*fildes)[REAL_IN] = dup(STDIN_FILENO);
-		if ((*fildes)[REAL_IN] == -1)
-		{
-			// TODO: cannot dup
-			printf("err : %s\n", strerror(errno));
-			return ;
-		}
-		(*fildes)[IN] = open(token->data[1], O_RDONLY);
-		if (dup2((*fildes)[IN], STDIN_FILENO) == -1)
-		{
-			// TODO: cannot dup2
-			printf("err : %s\n", strerror(errno));
-			return ;
-		}
-	}
-
-
-	if ((*fildes)[OUT] == -1 || (*fildes)[IN] == -1)
+		(*fildes)[type] = open(token->data[1], O_RDONLY);
+	else if (token->data[0][1] == '>')
+		(*fildes)[type] = open(token->data[1], O_WRONLY | O_APPEND | O_CREAT, 0644);
+	else
+		(*fildes)[type] = open(token->data[1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if ((*fildes)[type] == -1)
 	{
 		// TODO: cannot open
+		printf("err : %s\n", strerror(errno));
+		return ;
+	}
+	if (dup2((*fildes)[type], type) == -1)
+	{
+		// TODO: cannot dup2
 		printf("err : %s\n", strerror(errno));
 		return ;
 	}
 }
 
 /*
-**
+**	
 */
 
-void	redir_destroy(int (*fildes)[4])
+void	redir_destroy(int type, int (*fildes)[4])
 {
-	if ((*fildes)[REAL_IN] != -1)
+	if ((*fildes)[REAL + type] != -1)
 	{
-		if (dup2((*fildes)[REAL_IN], STDIN_FILENO) == -1)
+		if (dup2((*fildes)[REAL + type], type) == -1)
 		{
 			// TODO: cannot redup
 			printf("err : %s\n", strerror(errno));
 			return ;
 		}
-		(*fildes)[REAL_IN] = -1;
+		(*fildes)[REAL + type] = -1;
 	}
-	if ((*fildes)[IN] != STDIN_FILENO)
+	if ((*fildes)[type] != type)
 	{
-		if (close((*fildes)[IN]) == -1)
+		if (close((*fildes)[type]) == -1)
 		{
 			// TODO: cannot close
-			return ;
-		}
-		(*fildes)[IN] = STDIN_FILENO;
-	}
-
-	if ((*fildes)[REAL_OUT] != -1)
-	{
-		if (dup2((*fildes)[REAL_OUT], STDOUT_FILENO) == -1)
-		{
-			// TODO: cannot redup
 			printf("err : %s\n", strerror(errno));
 			return ;
 		}
-		(*fildes)[REAL_OUT] = -1;
-	}
-	if ((*fildes)[OUT] != STDOUT_FILENO)
-	{
-		if (close((*fildes)[OUT]) == -1)
-		{
-			// TODO: cannot close
-			return ;
-		}
-		(*fildes)[OUT] = STDOUT_FILENO;
+		(*fildes)[type] = type;
 	}
 }

@@ -78,12 +78,14 @@
 # define SUCCESS		1
 # define FAILURE		0
 
-# define IN			0
-# define OUT		1
-# define REAL_IN	2
-# define REAL_OUT	3
-
-
+# define REAL	2
+enum
+{
+	IN = 0,
+	OUT,
+	REAL_IN,
+	REAL_OUT
+};
 
 typedef struct stat t_stat;
 typedef pid_t t_pid;
@@ -155,7 +157,7 @@ char	**env_to_tab(t_list *env);
 */
 
 void	redir_init(t_token *token, int (*fildes)[4]);
-void	redir_destroy(int (*fildes)[4]);
+void	redir_destroy(int type, int (*fildes)[4]);
 
 /*
 **	prompt.c

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/25 00:32:36 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/25 16:24:55 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	expand(t_list **tokens, t_list *env, t_err *err)
 			prev = curr;
 		curr = curr->next;
 	}
+	// if semi cut list
 	if (!expand_clean(tokens, err))
 		return (FAILURE);
 	return (SUCCESS);

@@ -157,7 +157,8 @@ static void	dispatch(void *item, int (*fildes)[4], t_list *env)
 	{
 		// redir apply
 		exec_cmd(token, env);
-		redir_destroy(fildes);
+		redir_destroy(IN, fildes);
+		redir_destroy(OUT, fildes);
 	}
 	// TODO: redir_destroy si on est sur le dernier token de la liste
 }

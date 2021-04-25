@@ -75,6 +75,12 @@ char	*get_var_equal(char *var)
 		if (!equal)
 			return (FAILURE);
 	}
+	else
+	{
+		equal = ft_strdup("");
+		if (!equal)
+			return (FAILURE);
+	}
 	return (equal);
 }
 
@@ -91,6 +97,12 @@ char	*get_var_value(char *var)
 	{
 		i = value - var + 1;
 		value = ft_substr(var, i, ft_strlen(var) - i);
+		if (!value)
+			return (FAILURE);
+	}
+	else
+	{
+		value = ft_strdup("");
 		if (!value)
 			return (FAILURE);
 	}

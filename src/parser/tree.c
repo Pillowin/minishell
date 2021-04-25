@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-
-
 /*
 **	Create a tree from list
 */

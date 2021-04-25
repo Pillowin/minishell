@@ -77,7 +77,7 @@ unsigned char	builtin_export(t_token *cmd, t_list **env)
 	t_var			*new;
 
 	i = 1;
-	if (!cmd->data[i])
+	if (!(cmd->data[i]))	// si juste export
 	{
 		*env = lstdup(*env);
 		ft_list_sort(env, &ft_strcmp);
@@ -85,7 +85,7 @@ unsigned char	builtin_export(t_token *cmd, t_list **env)
 		ft_list_clear(*env, &ft_free);
 		return (SUCCESS);
 	}
-	while (cmd->data[i])
+	while (cmd->data[i])	// s'il y a des arguments
 	{
 		var = var_init(NULL, NULL, NULL);
 		if (!var)
@@ -97,7 +97,7 @@ unsigned char	builtin_export(t_token *cmd, t_list **env)
 			return (FAILURE);	// TODO: identifiant non valable
 		}
 		lst = is_created(*env, var->name);
-		if (lst)
+		if (lst)	// si la var etait deja dans la liste
 		{
 			ft_free((void **)&((t_var *)lst->data)->value);
 			((t_var *)lst->data)->value = get_var_value(cmd->data[i]);
@@ -107,7 +107,7 @@ unsigned char	builtin_export(t_token *cmd, t_list **env)
 				return (FAILURE);
 			}
 		}
-		else
+		else	// si la var existe pas
 		{
 			new = var_init(get_var_name(cmd->data[i]), get_var_equal(cmd->data[i]), get_var_value(cmd->data[i]));
 			if (!new)
