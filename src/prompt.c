@@ -6,42 +6,42 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 01:18:19 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/25 01:28:51 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/04 22:34:32 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**	Create tab to create a new var.
+**	Create t to create a new var.
 */
 
 static char	**tab_init(char *s1, char *s2, char *s3)
 {
-	char	**tab;
+	char	**t;
 
-	tab = (char **)ft_calloc(3, sizeof(*tab));
-	if (!tab)
+	t = (char **)ft_calloc(3, sizeof(*t));
+	if (!t)
 		return (NULL);
-	tab[0] = ft_strdup(s1);
-	if (!tab[0])
+	t[0] = ft_strdup(s1);
+	if (!t[0])
 	{
-		ft_free_tab((void **)tab);
+		ft_free_tab((void **)t);
 		return (NULL);
 	}
-	tab[1] = ft_strdup(s2);
-	if (!tab[1])
+	t[1] = ft_strdup(s2);
+	if (!t[1])
 	{
-		ft_free_tab((void **)tab);
+		ft_free_tab((void **)t);
 		return (NULL);
 	}
-	tab[2] = ft_strdup(s3);
-	if (!tab[2])
+	t[2] = ft_strdup(s3);
+	if (!t[2])
 	{
-		ft_free_tab((void **)tab);
+		ft_free_tab((void **)t);
 		return (NULL);
 	}
-	return (tab);
+	return (t);
 }
 
 /*
@@ -51,14 +51,14 @@ static char	**tab_init(char *s1, char *s2, char *s3)
 char	prompt(t_list **env)
 {
 	t_list	*prompt;
-	char	**tab;
+	char	**t;
 	t_var	*var;
 
 	prompt = ft_list_find(*env, (void *)"PS1", &is_var);
 	if (!prompt)
 	{
-		tab = tab_init("PS1", "=", DEFAULT_PROMPT);
-		var = var_init(tab[0], tab[1], tab[2]);
+		t = tab_init("PS1", "=", DEFAULT_PROMPT);
+		var = var_init(t[0], t[1], t[2]);
 		if (!var)
 			return (FAILURE);
 		ft_list_push_back(env, var);
@@ -66,9 +66,9 @@ char	prompt(t_list **env)
 	}
 	else if (!((((t_var *)prompt->data)->value)))
 	{
-		tab = tab_init("PS1", "=", DEFAULT_PROMPT);
-		((t_var *)prompt->data)->equal = tab[1];
-		((t_var *)prompt->data)->equal = tab[2];
+		t = tab_init("PS1", "=", DEFAULT_PROMPT);
+		((t_var *)prompt->data)->equal = t[1];
+		((t_var *)prompt->data)->equal = t[2];
 	}
 	ft_putstr_fd(((t_var *)prompt->data)->value, STDOUT_FILENO);
 	return (SUCCESS);

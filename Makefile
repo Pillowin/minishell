@@ -6,7 +6,7 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/14 22:08:43 by mamaquig          #+#    #+#              #
-#    Updated: 2021/04/20 23:33:22 by agautier         ###   ########.fr        #
+#    Updated: 2021/05/04 22:37:03 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 all: $(NAME)
 
 $(NAME): libft $(OBJ)
-	$(CC) $(CFLAGS) $(HEADER) $(LIB) -o $@ $(OBJ) -lft
+	$(CC) $(CFLAGS) $(HEADER) $(LIB) -o $@ $(OBJ) -lft -ltermcap
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(HEADER) -c $< -o $@

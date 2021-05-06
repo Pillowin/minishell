@@ -6,16 +6,45 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 16:41:35 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/25 00:22:43 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:3144 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**	Handle specific case for (d)quotes and special char
+**	Handle $?
 */
 
+static t_list	*question_mark(t_list **curr, t_list **next)
+{
+	char	*new_str;
+	char	*str;
+	void	*tmp;
+
+	if ((*(((t_token *)((*next)->data))->data))[0] != '?')
+		return (NULL);
+	((t_token *)((*curr)->data))->type = TOK_WORD;
+	ft_free((void **)(((t_token *)((*curr)->data))->data));
+	new_str = ft_itoa(g_exit_status);
+	*((t_token *)((*curr)->data))->data = new_str;
+	if ((*(((t_token *)((*next)->data))->data))[1])
+	{
+		str = ft_substr(*(((t_token *)((*next)->data))->data), 1,
+				ft_strlen(*(((t_token *)((*next)->data))->data)) - 1);
+		ft_free((void **)(((t_token *)((*next)->data))->data));
+		*(((t_token *)((*next)->data))->data) = str;
+		return (*curr);
+	}
+	tmp = (*next)->next;
+	ft_lstdelone((*next), &token_destroy);
+	(*curr)->next = tmp;
+	return (*curr);
+}
+
+/*
+**	Handle specific case for (d)quotes and special char
+*/
 static t_list	*specific_case(t_list **prev, t_list *curr, t_list *next)
 {
 	if (((t_token *)next->data)->type != TOK_WORD
@@ -42,7 +71,6 @@ static t_list	*specific_case(t_list **prev, t_list *curr, t_list *next)
 	}
 	return (NULL);
 }
-
 
 /*
 **	Fetch var name
@@ -82,6 +110,9 @@ t_list	*expand_dollar(t_list **toks, t_list **prev, t_list *env, t_err *err)
 	if (*prev)
 		curr = (*prev)->next;
 	next = curr->next;
+	new = question_mark(&curr, &next);
+	if (new)
+		return (new);
 	new = specific_case(prev, curr, next);
 	if (new)
 		return (new);
@@ -92,8 +123,10 @@ t_list	*expand_dollar(t_list **toks, t_list **prev, t_list *env, t_err *err)
 		ft_lstdelone(next, &token_destroy);
 	ft_lstdelone(curr, &token_destroy);
 	if (*prev)
+	{
 		(*prev)->next = new;
-	else
-		*toks = new;
-	return (new);
+		return (*prev);
+	}
+	*toks = new;
+	return (*toks);
 }

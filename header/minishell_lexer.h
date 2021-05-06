@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:36:47 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/25 17:02:30 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/29 23:11:02 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_token
 **	lexer.c
 */
 
-int		lexer(char *input, t_list **cmds, t_err *err, t_list *env);
+int		lexer(char *input, t_err *err, t_list *env);
 int		lexer_init(char *str, t_lexer **lexer);
 t_token	*lexer_get_token(t_lexer *lexer, t_err *err);
 

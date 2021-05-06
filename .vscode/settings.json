@@ -1,5 +1,7 @@
 {
 	"files.associations": {
-		"limits": "c"
+		"limits": "c",
+		"term.h": "c",
+		"ncurses_dll.h": "c"
 	}
 }

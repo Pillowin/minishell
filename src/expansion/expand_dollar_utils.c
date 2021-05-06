@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/24 19:15:54 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/24 20:47:07 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/28 17:42:11 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ static char	new_lst_space(t_list **new, t_err *err)
 	char	**data;
 
 	if (!my_strdup(&data, 1, " "))
-		return ((char)error(err, MALLOC, NULL, NULL));
+		return ((long)error(err, MALLOC, NULL, NULL));
 	if (!new_lstok(TOK_SPACE, data, new))
-		return ((char)error(err, MALLOC, NULL, NULL));
+		return ((long)error(err, MALLOC, NULL, NULL));
 	return (SUCCESS);
 }
 

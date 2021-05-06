@@ -3,201 +3,161 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ggeeteer <ggeeteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 21:38:33 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/24 208:04:06 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/24 208:04406 byggeeteerr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// TODO: free dans les err malloc
+
+
 /*
-**
+**	
 */
-static void	my_btree_prefix(t_btree *root, int (*fildes)[4], t_list *env, void (*f)(void *, int (*)[4], t_list *env))
+static void	fd_init(t_fd *fd)
 {
-	if (!root)
-		return ;
-	f(root->item, fildes, env);
-	my_btree_prefix(root->left, fildes, env, f);
-	my_btree_prefix(root->right, fildes, env, f);
+	fd->redirs[IN] = STDIN_FILENO;
+	fd->redirs[OUT] = STDOUT_FILENO;
+	fd->redirs[REAL_IN] = -1;
+	fd->redirs[REAL_OUT] = -1;
+	fd->pipes[IN] = STDIN_FILENO;
+	fd->pipes[OUT] = STDOUT_FILENO;
+	fd->pipes[REAL_IN] = -1;
+	fd->pipes[REAL_OUT] = -1;
+	fd->is_child = 0;
+	fd->is_forked = 0;
+	fd->is_dad_pipe = 0;
+	fd->pid = -1;
 }
 
 /*
 **
 */
-void	binary_exec(t_token *token, t_list *env, char *path)
+
+static char	my_btree_prefix(t_btree *root, t_fd_env_err *fd_env_err, char (*f)(void *, t_fd_env_err *))
 {
-	char	**envp;
+	char	ret;
+	
+	if (!(f(root->item, fd_env_err)))
+		return (FAILURE);
+	if (root->left && (!(fd_env_err->fd->is_dad_pipe) || !(fd_env_err->fd->is_forked) || fd_env_err->fd->is_child))
+	{
+		ret = my_btree_prefix(root->left, fd_env_err, f);
+		if (!ret)
+			return (FAILURE);
+	}
+	if (root->right && (!(fd_env_err->fd->is_dad_pipe) || !(fd_env_err->fd->is_forked) || !(fd_env_err->fd->is_child)))
+	{
+		ret = my_btree_prefix(root->right, fd_env_err, f);
+		if (!ret)
+			return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
+/*
+**
+*/
+
+static char	exec_cmd(t_token *token, t_fd *fd, t_list *env, t_err *err)
+{
+	char	*path;
+	int		ret;
 	t_stat	buf;
-	t_pid	pid;
 
-	if (stat(path, &buf) != 0)
+	err->cmd_name = ft_strdup(token->data[0]);
+	if (!(err->cmd_name))
+		return (FAILURE);
+	ret = is_builtin(token, fd, env, err);
+	if (!ret)
+		return (FAILURE);
+	else if (ret == DONE)
+		return (SUCCESS);
+	if (token->data[0][0] == '/')
 	{
-		printf("on return : %s\n", strerror(errno));
-		return ;
-	}
-	if (buf.st_mode & S_IXUSR)
-	{
-		pid = fork();
-		if (!pid)	// si pid = 0 ca veut dire qu'on est dans l'enfant
-		{
-			envp = env_to_tab(env);
-			if (execve(path, token->data, envp) == -1)
-				printf("err = %s\n", strerror(errno));
-		}
-		waitpid(pid, NULL, 0);
-	}
-}
-
-/*
-**
-*/
-static void	exec_cmd(t_token *token, t_list *env)
-{
-	unsigned int	i;
-	char			*path;
-	char			**paths;
-	void			*tmp;
-	t_stat			buf;
-	const char		*builtin_names[7] = {"echo", "cd", "pwd", "export", "unset", "env", "exit"};
-	unsigned char	(*builtins[7])(t_token *cmd, t_list **env) = {
-		&builtin_echo, &builtin_cd, &builtin_pwd, &builtin_export, &builtin_unset, &builtin_env, &builtin_exit};
-
-	i = 0;
-	while (i < 7)
-	{
-		if (!ft_strcmp(token->data[0], (char *)builtin_names[i]))
-		{
-			builtins[i](token, &env);	// TODO: ne pas passer fd
-			return ;
-		}
-		i++;
-	}
-	if (token->data[0][0] == '/')	// si path absolute		=> /bin/ls
-	{
-		path = ft_strdup(token->data[0]);
+		path = binary_absolute_path(token, err);
 		if (!path)
-			return ;	// TODO: error ?
+			return (FAILURE);
 	}
-	else if (token->data[0][0] == '.')	// is path relative 	=> ../ls
+	else if (token->data[0][0] == '.')
 	{
-		path = getcwd(NULL, 0);
+		path = binary_relative_path(token, err);
 		if (!path)
-			return ;	// TODO: error ?
-		tmp = ft_strjoin(path, "/");
-		ft_free((void **)&path);
-		if (!tmp)
-			return ;
-		path = ft_strjoin(tmp, token->data[0]);
-		ft_free((void **)&tmp);
-		if (!path)
-			return ;
+			return (FAILURE);
 	}
-	else	// is not a path		=> ls
+	else
 	{
-		tmp = ft_list_find(env, (void *)"PATH", &is_var);
-		if (!tmp)
-			return ;
-		tmp = ((t_var *)((t_list *)tmp)->data)->value;
-		paths = ft_split(tmp, ':');	// 
-		i = 0;
-		while (paths[i])
-		{
-			path = paths[i];
-			if (!path)
-				return ;	// TODO: error ?
-			tmp = ft_strjoin(path, "/");
-			if (!tmp)
-			{
-				ft_free_tab((void **)paths);
-				return ;
-			}
-			path = ft_strjoin(tmp, token->data[0]);
-			ft_free((void **)&tmp);
-			if (!path)
-				return ;
-			if (stat(path, &buf) == 0)
-				break;
-			ft_free((void **)&path);
-			i++;
-		}
-		if (!paths[i])
-		{
-			printf("command not found\n");
-			ft_free_tab((void **)paths);
-			return ;	// TODO: command not found
-		}
-		path = ft_strdup(path);
-		ft_free_tab((void **)paths);
+		path = binary_not_a_path(token, &buf, env, err);
+		if (!path)
+			return (FAILURE);
 	}
-	binary_exec(token, env, path);
+	if (!binary_exec(token, path, fd, env))
+		return ((long)error(err, ERRNO, NULL, NULL));
 	ft_free((void **)&path);
+	return (SUCCESS);
 }
 
 /*
 **
 */
-static void	dispatch(void *item, int (*fildes)[4], t_list *env)
+
+static char	dispatch(void *item, t_fd_env_err *fd_env_err)
 {
 	t_token	*token;
 
 	token = (t_token *)item;
 	if (token->type == TOK_PIPE)
 	{
-		// TODO:
-		printf("PIPE\n");
+		if (!pipe_init(fd_env_err->fd))
+			return ((long)error(fd_env_err->err, ERRNO, NULL, NULL));
+			fd_env_err->fd->is_dad_pipe = 1;
 	}
 	else if (token->type == TOK_REDIR)
 	{
-		redir_init(token, fildes);
+		if (!redir_init(token, &(fd_env_err->fd->redirs)))
+			return ((long)error(fd_env_err->err, ERRNO, NULL, NULL));
+		fd_env_err->fd->is_dad_pipe = 0;
+
 	}
 	else if (token->type == TOK_COMMAND)
 	{
-		// redir apply
-		exec_cmd(token, env);
-		redir_destroy(IN, fildes);
-		redir_destroy(OUT, fildes);
+		if (!exec_cmd(token, fd_env_err->fd, fd_env_err->env, fd_env_err->err))
+			return (FAILURE);
+		if (!redir_destroy(IN, &(fd_env_err->fd->redirs)))
+			return (FAILURE);
+		if (!redir_destroy(OUT, &(fd_env_err->fd->redirs)))
+			return (FAILURE);
+		fd_env_err->fd->is_dad_pipe = 0;
 	}
-	// TODO: redir_destroy si on est sur le dernier token de la liste
+	return (SUCCESS);
 }
 
+
 /*
-**
+**	Return null if no error
 */
 
-void	exec(t_btree *tree, t_list *env)
+char	exec(t_btree *tree, t_list *env, t_err *err)
 {
-	int	fildes[4];
+	t_fd			fd;
+	t_fd_env_err	fd_env_err;
 
-	fildes[IN] = STDIN_FILENO;
-	fildes[OUT] = STDOUT_FILENO;
-	fildes[REAL_IN] = -1;
-	fildes[REAL_OUT] = -1;
-	my_btree_prefix(tree, &fildes, env, &dispatch);
+	// btree_apply_prefix(tree, &token_print);
+	// ft_putendl_fd("\n", STDERR_FILENO);
+
+	fd_init(&fd);
+	fd_env_err = (t_fd_env_err){&fd, env, err};
+	if (!my_btree_prefix(tree, &fd_env_err, &dispatch))
+		return (FAILURE);
+	if (!pipe_destroy(fd_env_err.fd))
+		return ((long)error(err, ERRNO, NULL, NULL));
 	// btree_apply_prefix(tree, &token_print);
 
 	btree_apply_prefix(tree, &token_destroy);
 	btree_free(&tree);
+	return (SUCCESS);
 }
-
-
-
-
-
-
-
-
-/*
-	verif si le fichier est executable par nous
-		d rwx rwx rwx
-		0 000 000 000
-		1 111 111 111
-
-		- rwx r-x r-x
-		0 111 101 101	<- retour de stat
-		0 001 000 000	<- masque
-	ET	-------------
-		0 000 000 000	<- perm ok
-*/

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/24 20:51:00 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/25 15:57:37 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/03 17:05:40 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,65 +16,48 @@
 **	// TODO: remove all fd in builtin
 */
 
-void	redir_init(t_token *token, int (*fildes)[4])
+char	redir_init(t_token *token, int (*redirs)[4])
 {
 	int	type;
 
 	type = IN;
 	if (token->data[0][0] == '>')
 		type = OUT;
-	redir_destroy(type, fildes);	// TODO: check ?
-	(*fildes)[REAL + type] = dup(type);
-	if ((*fildes)[REAL + type] == -1)
-	{
-		// TODO: cannot dup
-		printf("err : %s\n", strerror(errno));
-		return ;
-	}
+	if (!redir_destroy(type, redirs))	// TODO: check ?
+		return (FAILURE);
+	(*redirs)[REAL + type] = dup(type);
+	if ((*redirs)[REAL + type] == -1)
+		return (FAILURE);
 	if (token->data[0][0] == '<')
-		(*fildes)[type] = open(token->data[1], O_RDONLY);
+		(*redirs)[type] = open(token->data[1], O_RDONLY);
 	else if (token->data[0][1] == '>')
-		(*fildes)[type] = open(token->data[1], O_WRONLY | O_APPEND | O_CREAT, 0644);
+		(*redirs)[type] = open(token->data[1], O_WRONLY | O_APPEND | O_CREAT, 0644);
 	else
-		(*fildes)[type] = open(token->data[1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if ((*fildes)[type] == -1)
-	{
-		// TODO: cannot open
-		printf("err : %s\n", strerror(errno));
-		return ;
-	}
-	if (dup2((*fildes)[type], type) == -1)
-	{
-		// TODO: cannot dup2
-		printf("err : %s\n", strerror(errno));
-		return ;
-	}
+		(*redirs)[type] = open(token->data[1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if ((*redirs)[type] == -1)
+		return (FAILURE);
+	if (dup2((*redirs)[type], type) == -1)
+		return (FAILURE);
+	return (SUCCESS);
 }
 
 /*
 **	
 */
 
-void	redir_destroy(int type, int (*fildes)[4])
+char	redir_destroy(int type, int (*redirs)[4])
 {
-	if ((*fildes)[REAL + type] != -1)
+	if ((*redirs)[REAL + type] != -1)
 	{
-		if (dup2((*fildes)[REAL + type], type) == -1)
-		{
-			// TODO: cannot redup
-			printf("err : %s\n", strerror(errno));
-			return ;
-		}
-		(*fildes)[REAL + type] = -1;
+		if (dup2((*redirs)[REAL + type], type) == -1)
+			return (FAILURE);
+		(*redirs)[REAL + type] = -1;
 	}
-	if ((*fildes)[type] != type)
+	if ((*redirs)[type] != type)
 	{
-		if (close((*fildes)[type]) == -1)
-		{
-			// TODO: cannot close
-			printf("err : %s\n", strerror(errno));
-			return ;
-		}
-		(*fildes)[type] = type;
+		if (close((*redirs)[type]) == -1)
+			return (FAILURE);
+		(*redirs)[type] = type;
 	}
+	return (SUCCESS);
 }

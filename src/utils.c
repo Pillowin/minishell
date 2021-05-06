@@ -49,7 +49,7 @@ int	ft_is_token(char c)
 
 int	is_tok_type(t_token *data, void *type)
 {
-	if (data->type == (t_tok_type)type)
+	if (data->type == (long)type)
 		return (0);
 	return (1);
 }
@@ -164,4 +164,50 @@ char	is_name(char *word, char delimiter)
 		i++;
 	}
 	return (SUCCESS);
+}
+
+/*
+** create new double list
+*/
+
+t_dlist	*ft_create_delem(void *data)
+{
+	t_dlist	*list;
+
+	list = (t_dlist *)malloc(sizeof(*list));
+	if (!list)
+		return (NULL);
+	list->data = data;
+	list->next = NULL;
+	list->prev = NULL;
+	return (list);
+}
+
+/*
+**	push back new double list
+*/
+
+void	ft_dlist_push_back(t_dlist **begin_list, void *data)
+{
+	t_dlist	*curr;
+
+	if (*begin_list == NULL)
+	{
+		*begin_list = ft_create_delem(data);
+		return ;
+	}
+	curr = *begin_list;
+	while (curr->next)
+		curr = curr->next;
+	curr->next = ft_create_delem(data);
+	curr->next->prev = curr;
+}
+
+/*
+**	
+*/
+
+int	ft_putchar(int c)
+{
+	return (write(STDOUT_FILENO, &c, 1));
 }

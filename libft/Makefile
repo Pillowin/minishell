@@ -6,7 +6,7 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 12:52:43 by agautier          #+#    #+#              #
-#    Updated: 2021/04/22 13:40:15 by agautier         ###   ########.fr        #
+#    Updated: 2021/05/06 14:24:46 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,10 @@ SRC		=	$(addprefix src/, \
 				ft_substr.c \
 				ft_putchar_fd.c \
 				ft_split.c \
+				ft_itoa.c	\
+				get_next_line_utils.c \
+				get_next_line.c \
+				ft_isprint.c \
 				\
 				ft_list_push_back.c \
 				ft_list_foreach.c \

@@ -3,81 +3,69 @@
 Aussi mignon qu'un vrai shell
 L’objectif de ce projet est de créer un simple shell. Ca sera votre propre petit bash, ou zsh. Vous en apprendrez beaucoup sur les process et les file descriptors.
 
-## Tree
+## Tokens
 
-Parcours en prefix
-Priorites :
+| TOKEN       | Character |
+| :---------- | :-------: |
+| TOK_SEMI    | ;         |
+| TOK_PIPE    | \|        |
+| TOK_LESS    | <         |
+| TOK_GREAT   | >         |
+| TOK_DGREAT  | >>        |
+| TOK_BSLASH  | \\        |
+| TOK_DOLLAR  | $         |
+| TOK_QUOTE   | '         |
+| TOK_DQUOTE  | "         |
+| TOK_NEWLINE | \\n       |
+| TOK_SPACE   |           |
+| TOK_WORD    | xxx       |
 
-- SEMI
-- PIPE
-- DGREAT GREAT LESS
-- WORD
-
-Regles de creation d'arbre :
-
-- Semi : tout ce qui est a gauche va a gauche && tout ce qui est a droite va a droite
-- Pipe : tout ce qui est a gauche va a gauche && tout ce qui est a droite va a droite
-- Redir : tout ce qui est a gauche va a droite && tout ce qui est a droite va a gauche
-- Command : a la suite en prefix
+```C
+/*
+**		-- The Grammar --
+**
+**	program        : command NEWLINE
+**	               |         NEWLINE
+**	               ;
+**	command        : simple_command separator command
+**	               | simple_command SEMI
+**	               | simple_command
+**	               ;
+**	simple_command : cmd_prefix WORD cmd_suffix
+**	               | cmd_prefix WORD
+**	               | cmd_prefix
+**	               |            WORD cmd_suffix
+**	               |            WORD
+**	               ;
+**	cmd_prefix     : io_file cmd_prefix
+**	               | io_file
+**	               ;
+**	word           : WORD
+**	               ;
+**	cmd_suffix     : io_file cmd_suffix
+**	               | io_file
+**	               | WORD    cmd_suffix
+**	               | WORD
+**	               ;
+**	io_file        : LESS   WORD
+**	               | GREAT  WORD
+**	               | DGREAT WORD
+**	               ;
+**	separator      : PIPE
+**	               | SEMI
+**	               ;
+*/
+```
 
 ## TODO
 
-### Lexer
-
-- Rajoute un token \
-- Checks de quotes
-- Expansion des " ' et \
-
-### Parser
-
-- Check leaks
-
-### Expansion
-
-- Handle dolar
-
-### Makefile
-
-- remove fsanitize
-- explicit files (remove wildcard)
-- compile .o in folder
-
-### Divers
-
 - Remove useless libft file
-
-``ls -l | grep grw | wc -l > lsfile ; < lsfile cat | rev > itit > utut >> otot ; diff otot toto >> diff``
-``ls -l | grep d'r'w | wc -l > lsf\\ile ; < ls"'f'i ile" c\at | rev \> itit > \u\t\u\t\ \>>> o't'ot \;; diff otot toto >> diff``
-``< abc >> toto >> tata > ta  >ty >\> >>\>\> >'>>'``
-
-
-prompt>echo a $
-a $
-prompt>echo a $cmd
-a CMD
-prompt>echo a $'cmd'
-a cmd
-prompt>echo a $'cmd'-toto
-a cmd-toto
-prompt>echo a $cmd-toto
-a CMD-toto
-prompt>echo a $'    cmd'
-a     cmd
-prompt>echo a $cmd'-toto' 
-a CMD-toto
-prompt>echo a $zboub
-a
-prompt>echo a $zboub-toto
-a -toto
-prompt>echo a $'zboub''-toto'
-a zboub-toto
-
-
-On arrive avec un liste complete de token
-On expand jusqu'au \n ou au ;
-Si le dernier est un ;
-	On coupe la liste
-	On remplace le ; par un \n
-On clean - merge - check - merge
-On cree notre arbre
-On l'ajoute a la liste d'arbre
+- remove fsanitize
+- explicit files (remove wildcard) in makefile
+- leaks
+- norm
+- clean files
+- exit status
+- error messages
+- syntax redir dollar
+- zombie quand ./toto alors que toto est un dossier
