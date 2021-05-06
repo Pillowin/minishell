@@ -211,3 +211,14 @@ int	ft_putchar(int c)
 {
 	return (write(STDOUT_FILENO, &c, 1));
 }
+
+/*
+**
+*/
+
+t_dlist	*dlst_last(t_dlist *dlist)
+{
+	while (dlist && dlist->next)
+		dlist = dlist->next;
+	return (dlist);
+}

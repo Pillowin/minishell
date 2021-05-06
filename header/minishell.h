@@ -19,6 +19,7 @@
 # include <string.h>
 # include <errno.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 # include <fcntl.h>
 # include <signal.h>
 # include <term.h>
@@ -32,7 +33,7 @@
 # define SUCCESS		1
 # define DONE			2
 
-# define BUF_SIZE		16
+# define BUF_SIZE		1024
 # define KEY_DEL		127
 # define EOT			4
 # define KEY_UP			"\x1B[A"
@@ -133,6 +134,7 @@ char	is_name(char *word, char delimiter);
 t_dlist	*ft_create_delem(void *data);
 void	ft_dlist_push_back(t_dlist **begin_list, void *data);
 int		ft_putchar(int c);
+t_dlist	*dlst_last(t_dlist *dlist);
 
 /*
 **	free.c
@@ -204,17 +206,23 @@ void	signal_init();
 void	minishell(t_list *env, t_err *err);
 
 /*
-**	termcap.c
+**	termcap
 */
 
 char			tc_init(t_termios *termios);
 char			tc_destroy(t_termios *termios);
 int				tc_read(t_dlist **cmds, t_dlist **cpy, char **buf, t_list **env);
 
-void			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env);
-void			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env);
+char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env);
+char			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env);
 void			tc_del(char **buf, unsigned int *i);
 unsigned int	tc_eol(t_dlist **curr_cpy, char **buf, unsigned int *i);
 int				tc_dispatch(t_dlist **curr_cpy, char **buf, t_list **env, unsigned int *i);
+
+/*
+**	minishell.c
+*/
+
+void	minishell(t_list *env, t_err *err);
 
 #endif

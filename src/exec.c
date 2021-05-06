@@ -114,7 +114,7 @@ static char	dispatch(void *item, t_fd_env_err *fd_env_err)
 	{
 		if (!pipe_init(fd_env_err->fd))
 			return ((long)error(fd_env_err->err, ERRNO, NULL, NULL));
-			fd_env_err->fd->is_dad_pipe = 1;
+		fd_env_err->fd->is_dad_pipe = 1;
 	}
 	else if (token->type == TOK_REDIR)
 	{

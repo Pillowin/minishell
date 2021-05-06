@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 15:49:04 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/06 18:06:15 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/06 21:54:10 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,57 +16,69 @@
 **	Select previous command in history
 */
 
-void	tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env)
+char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i
+						, t_list **env)
 {
 	ft_strncpy(&((*buf)[(*i)]), "", 3);
 	if ((*curr_cpy)->prev)
 	{
-		(*curr_cpy)->data = ft_strdup((*buf));	// ?????????????????????????????????
+		ft_free((void *)&((*curr_cpy)->data));
+		(*curr_cpy)->data = ft_strdup((*buf));
+		if (!((*curr_cpy)->data))
+			return (FAILURE);
 		*curr_cpy = (*curr_cpy)->prev;
-		tputs(tgetstr("dl", NULL), 1, &ft_putchar);	// dl pour delete_line
-		ft_strncpy((*buf), (*curr_cpy)->data, BUF_SIZE);
-		prompt(env);	// TODO: check
-		write(STDIN_FILENO, (*buf), ft_strlen((*buf)));
-		*i = ft_strlen((*buf));
+		tputs(tgetstr("dl", NULL), 1, &ft_putchar);
+		ft_strncpy(*buf, (*curr_cpy)->data, BUF_SIZE);
+		if (!prompt(env))
+			return (FAILURE);
+		write(STDIN_FILENO, (*buf), ft_strlen(*buf));
+		*i = ft_strlen(*buf);
 	}
+	return (SUCCESS);
 }
 
 /*
 **	Select next command in history
 */
 
-void	tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env)
+char			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i
+						, t_list **env)
 {
 	ft_strncpy(&((*buf)[(*i)]), "", 3);
 	if ((*curr_cpy)->next)
 	{
-		(*curr_cpy)->data = ft_strdup((*buf));	// TODO: free un jour  - really need to dup ?
-		(*curr_cpy) = (*curr_cpy)->next;
-		tputs(tgetstr("dl", NULL), 1, &ft_putchar);	// dl pour delete_line
-		ft_strncpy((*buf), (*curr_cpy)->data, BUF_SIZE);
-		prompt(env);	// TODO: check
+		ft_free((void *)&((*curr_cpy)->data));
+		(*curr_cpy)->data = ft_strdup(*buf);
+		if (!((*curr_cpy)->data))
+			return (FAILURE);
+		*curr_cpy = (*curr_cpy)->next;
+		tputs(tgetstr("dl", NULL), 1, &ft_putchar);
+		ft_strncpy(*buf, (*curr_cpy)->data, BUF_SIZE);
+		if (!prompt(env))
+			return (FAILURE);
 		write(STDIN_FILENO, (*buf), ft_strlen(*buf));
-		(*i) = ft_strlen(*buf);
+		*i = ft_strlen(*buf);
 	}
+	return (SUCCESS);
 }
 
 /*
 **	Remove prev printed char
 */
 
-void	tc_del(char **buf, unsigned int *i)
+void			tc_del(char **buf, unsigned int *i)
 {
 	if (!(*i))
 		return ;
-	tputs(tgetstr("le", NULL), 1, &ft_putchar);	// le pour se déplacer à gauche
-	tputs(tgetstr("dc", NULL), 1, &ft_putchar);	// dc pour delete next char
+	tputs(tgetstr("le", NULL), 1, &ft_putchar);
+	tputs(tgetstr("dc", NULL), 1, &ft_putchar);
 	(*buf)[(*i)] = '\0';
 	*i -= 1;
 	(*buf)[(*i)] = '\0';
 }
 
 /*
-**	
+**	Add buf to lists and go to parser
 */
 
 unsigned int	tc_eol(t_dlist **curr_cpy, char **buf, unsigned int *i)
@@ -84,23 +96,30 @@ unsigned int	tc_eol(t_dlist **curr_cpy, char **buf, unsigned int *i)
 }
 
 /*
-**
+**	Interpret key pressed
 */
 
-int	tc_dispatch(t_dlist **curr_cpy, char **buf, t_list **env, unsigned int *i)
+int				tc_dispatch(t_dlist **curr_cpy, char **buf, t_list **env
+							, unsigned int *i)
 {
-	if (!ft_strncmp(&((*buf)[*i]), KEY_UP, 3))	// fleche du haut
-		tc_up(curr_cpy, buf, i, env);
-	else if (!ft_strncmp(&((*buf)[*i]), KEY_DOWN, 3))	// fleche du bas
-		tc_down(curr_cpy, buf, i, env);
-	else if ((*buf)[*i] == KEY_DEL)	// appui sur del
+	if (!ft_strncmp(&((*buf)[*i]), KEY_UP, 3))
+	{
+		if (!tc_up(curr_cpy, buf, i, env))
+			return (-2);
+	}
+	else if (!ft_strncmp(&((*buf)[*i]), KEY_DOWN, 3))
+	{
+		if (!tc_down(curr_cpy, buf, i, env))
+			return (-2);
+	}
+	else if ((*buf)[*i] == KEY_DEL)
 		tc_del(buf, i);
-	else if (ft_isprint((*buf)[*i]))	// affichage du caractere standard
+	else if (ft_isprint((*buf)[*i]))
 	{
 		ft_putchar_fd((*buf)[*i], STDOUT_FILENO);
 		*i += 1;
 	}
-	else if ((*buf)[*i] == '\n')	// stop la lecture car \n
+	else if ((*buf)[*i] == '\n')
 		return (tc_eol(curr_cpy, buf, i));
 	else
 		ft_strncpy(&((*buf)[*i]), "", 2);
