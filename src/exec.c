@@ -95,8 +95,12 @@ static char	exec_cmd(t_token *token, t_fd *fd, t_list *env, t_err *err)
 		if (!path)
 			return (FAILURE);
 	}
-	if (!binary_exec(token, path, fd, env))
-		return ((long)error(err, ERRNO, NULL, NULL));
+	if (!binary_exec(token, path, fd, env, err))
+	{
+		ft_free((void **)&path);
+		// return ((long)error(err, ERRNO, NULL, NULL));
+		return (FAILURE);
+	}
 	ft_free((void **)&path);
 	return (SUCCESS);
 }
@@ -126,11 +130,25 @@ static char	dispatch(void *item, t_fd_env_err *fd_env_err)
 	else if (token->type == TOK_COMMAND)
 	{
 		if (!exec_cmd(token, fd_env_err->fd, fd_env_err->env, fd_env_err->err))
+		{
+			if (fd_env_err->fd->is_child)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd(strerror(errno), STDERR_FILENO);
+				ft_putchar_fd('\n', STDERR_FILENO);
+				exit(g_exit_status);
+			}
 			return (FAILURE);
+		}
 		if (!redir_destroy(IN, &(fd_env_err->fd->redirs)))
 			return (FAILURE);
 		if (!redir_destroy(OUT, &(fd_env_err->fd->redirs)))
 			return (FAILURE);
+		if (fd_env_err->fd->is_dad_pipe)
+		{
+			if (!pipe_destroy(fd_env_err->fd))
+				return (FAILURE);
+		}
 		fd_env_err->fd->is_dad_pipe = 0;
 	}
 	return (SUCCESS);
@@ -152,7 +170,11 @@ char	exec(t_btree *tree, t_list *env, t_err *err)
 	fd_init(&fd);
 	fd_env_err = (t_fd_env_err){&fd, env, err};
 	if (!my_btree_prefix(tree, &fd_env_err, &dispatch))
+	{
+		if (!pipe_destroy(fd_env_err.fd))
+			return ((long)error(err, ERRNO, NULL, NULL));
 		return (FAILURE);
+	}
 	if (!pipe_destroy(fd_env_err.fd))
 		return ((long)error(err, ERRNO, NULL, NULL));
 	// btree_apply_prefix(tree, &token_print);

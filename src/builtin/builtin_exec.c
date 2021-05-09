@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/27 18:53:09 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/29 23:06:01 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/09 17:06:23 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ char	is_builtin(t_token *token, t_fd *fd, t_list *env, t_err *err)
 			{
 				// TODO: retrieve value from builtin error
 				if (fd->is_child)
-					exit (EXIT_FAILURE);	// TODO: what value ?
-				else
-					return (FAILURE);
+				{
+					exit(EXIT_FAILURE);	// TODO: what value ?
+				}
+				return (FAILURE);
 			}
 			if (fd->is_child)
 			{

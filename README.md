@@ -69,3 +69,5 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 - error messages
 - syntax redir dollar
 - zombie quand ./toto alors que toto est un dossier
+- segv quand entree > BUF_SIZE
+- ```dsfkgjd | ls -l```

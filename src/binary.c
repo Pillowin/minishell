@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/27 18:42:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/03 19:36:32 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/09 17:19:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,10 @@ char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
 	
 	tmp = ft_list_find(env, (void *)"PATH", &is_var);
 	if (!tmp)
+	{
+		fprintf(stderr, "Not found error\n");
 		return (error(err, NOT_FOUND, NULL, NULL));
+	}
 	tmp = ((t_var *)((t_list *)tmp)->data)->value;
 	paths = ft_split(tmp, ':');	// 
 	if (!paths)
@@ -84,7 +87,10 @@ char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
 		i++;
 	}
 	if (!paths[i])
+	{
+		fprintf(stderr, "Not found error\n");
 		return (error(err, NOT_FOUND, (void **)paths, &ft_free_tab));
+	}
 	path = ft_strdup(path);
 	if (!path)
 		return (error(err, MALLOC, NULL, NULL));
@@ -96,20 +102,27 @@ char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
 **
 */
 
-char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env)
+char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env, t_err *err)
 {
 	char	**envp;
+	int		status;
 	t_stat	buf;
 	t_pid	pid;
 
+
+
 	if (stat(path, &buf) != 0)
-		return (FAILURE);
-	if (!(buf.st_mode & S_IXUSR))
-		return (FAILURE);
+	{
+		fprintf(stderr, "No such file error\n");
+		return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
+	}
+	if (buf.st_mode & S_IFDIR)
+		return ((long)error(err, IS_A_DIR, NULL, NULL));
+	else if (!(buf.st_mode & S_IXUSR))
+		return ((long)error(err, PERM, NULL, NULL));
 	envp = env_to_tab(env);
 	if (!envp)
 		return (FAILURE);
-	// fprintf(stderr, "%s %s %d || %d\n", token->data[0], token->data[1], !(fd->is_forked), !(fd->is_child));
 	if (!(fd->is_forked) || !(fd->is_child))
 	{
 		pid = fork();
@@ -117,14 +130,17 @@ char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env)
 			return (FAILURE);
 		else if (!pid)	// si pid = 0 ca veut dire qu'on est dans l'enfant
 		{
-			// fprintf(stderr, "ici %s %s\n", token->data[0], token->data[1]);
 			if (execve(path, token->data, envp) == -1)
 				return (FAILURE);
 		}
-		waitpid(pid, NULL, 0);	// TODO: verif
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status) && WEXITSTATUS(status))
+		{
+			g_exit_status = WEXITSTATUS(status);
+			return (SUCCESS);
+		}
 		return (SUCCESS);
 	}
-	// fprintf(stderr, "la %s %s\n", token->data[0], token->data[1]);
 	execve(path, token->data, envp);
 	return (FAILURE);
 }

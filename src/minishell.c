@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 22:03:32 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/06 22:33:09 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/09 17:11:39 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	minishell(t_list *env, t_err *err)
 
 		ft_free((void **)&buf);
 		len = tc_read(&cmds, &cpy, &buf, &env);
-		printf("\ncmd=`%s`\tlast exit_status=`%d`\n", buf, g_exit_status);
+		// printf("\ncmd=`%s`\tlast exit_status=`%d`\n", buf, g_exit_status);
 		if (len == -1)
 		{
 			ft_putstr_fd("\nexit\n", STDOUT_FILENO);
@@ -57,7 +57,7 @@ void	minishell(t_list *env, t_err *err)
 			buf[len] = '\n';
 			if(!(lexer(buf, err, env)))
 			{
-				ft_putendl_fd(err->message[err->code], STDERR_FILENO);
+				// ft_putendl_fd(err->message[err->code], STDERR_FILENO);	// TODO: etait utile ?
 				// printf("erreur dans minishell\n");
 				// return (EXIT_FAILURE);
 				// continue ;

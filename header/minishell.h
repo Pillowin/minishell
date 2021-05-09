@@ -60,7 +60,7 @@ typedef struct	s_dlist
 	t_dlist	*prev;
 }				t_dlist;
 
-typedef enum
+typedef enum e_err_code
 {
 	NONE = 0,
 	MALLOC,
@@ -75,6 +75,8 @@ typedef enum
 	SYNTAX_GREAT,
 	SYNTAX_LESS,
 	NOT_FOUND,
+	NO_SUCH_FILE,
+	IS_A_DIR,
 	PERM,
 	ERRNO
 }	t_err_code;
@@ -185,7 +187,8 @@ char	prompt(t_list **env);
 char	*binary_absolute_path(t_token *token, t_err *err);
 char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err);
 char	*binary_relative_path(t_token *token, t_err *err);
-char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env);
+// char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env);
+char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env, t_err *err);
 
 /*
 **	exec.c

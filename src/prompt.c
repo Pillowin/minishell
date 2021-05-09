@@ -70,6 +70,8 @@ char	prompt(t_list **env)
 	// 	((t_var *)prompt->data)->equal = s2;
 	// 	((t_var *)prompt->data)->value = s3;
 	// }
+	
+	printf("%d ", g_exit_status);	fflush(stdout);	// TODO: REMOVE 
 	ft_putstr_fd(((t_var *)prompt->data)->value, STDOUT_FILENO);
 	return (SUCCESS);
 }

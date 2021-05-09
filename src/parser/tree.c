@@ -31,7 +31,6 @@ int	create_tree(t_list *tokens, t_list *env, t_err *err)
 	g_exit_status = 0;
 	if (!exec(tree, env, err))
 	{
-		// error exec
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(err->cmd_name, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
@@ -41,6 +40,7 @@ int	create_tree(t_list *tokens, t_list *env, t_err *err)
 			ft_putstr_fd(err->message[err->code], STDERR_FILENO);
 		ft_putchar_fd('\n', STDERR_FILENO);
 		ft_free((void **)&(err->cmd_name));
+		return (FAILURE);
 	}
 	
 	return (SUCCESS);
