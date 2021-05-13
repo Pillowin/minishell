@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   gc.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/19 22:01:31 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/12 15:26:10 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/13 14:32:56 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/13 16:14:46 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef GC_H
+# define GC_H
 
-unsigned char	builtin_exit(t_token *cmd, t_list **env, t_err *err)
-{
-	// TODO:
-	(void)cmd;
-	(void)env;
-	(void)err;
-	exit(EXIT_SUCCESS);
-}
+# include <stdlib.h>
+# include "ft_list.h"
+
+void	*gc_calloc(t_list **gc, size_t count, size_t size);
+void	gc_set(t_list **gc, void *ptr);
+void	gc_free(t_list **gc, void **ptr);
+void	gc_clean(t_list **gc);
+
+#endif

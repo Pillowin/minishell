@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 12:17:44 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/09 17:17:44 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/12 14:11:224 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,17 @@ void	err_init(char **err_msg)
 	err_msg[SYNTAX_GREAT] = "minishell: syntax error near unexpected token `>'";
 	err_msg[SYNTAX_LESS] = "minishell: syntax error near unexpected token `<'";
 
+	err_msg[HOME_NOT_SET] = "« HOME » not set";
+	err_msg[OLDPWD_NOT_SET] = "« OLDPWD » not set";
+	err_msg[TOO_MANY_ARG] = "too many arguments";
+
 	err_msg[NOT_FOUND] = "command not found";
 	err_msg[NO_SUCH_FILE] = "No such file or directory";
 
 	err_msg[IS_A_DIR] = "is a directory";
 	err_msg[PERM] = "Permission denied";
+
+	err_msg[EXPORT] = "not a valid indentifier";
 }
 
 /*
@@ -67,6 +73,7 @@ void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **))
 	if (free_fct && ptr)
 		free_fct(ptr);
 	err->code = code;
-	set_exit_status(code);
+	if (code)
+		set_exit_status(code);
 	return(NULL);
 }

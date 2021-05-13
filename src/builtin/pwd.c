@@ -16,12 +16,13 @@
 **	Print current working directory.
 */
 
-unsigned char	builtin_pwd(t_token *cmd, t_list **env)
+unsigned char	builtin_pwd(t_token *cmd, t_list **env, t_err *err)
 {
 	char *buf;
 
-	(void)cmd;	// TODO: ?
+	(void)cmd;
 	(void)env;
+	(void)err;
 	buf = getcwd(NULL, 0);
 	if (!buf)
 		return (FAILURE);

@@ -60,10 +60,10 @@ int	check_pipe(t_list *tokens, unsigned int i, t_err *err)
 
 /*
 **	Accepted syntax :
-**		TOK_WORD TOK_DGREAT TOK_WORD	OR
-**		TOK_PIPE TOK_DGREAT TOK_WORD	OR
-**		TOK_SEMI TOK_DGREAT TOK_WORD	OR
-**		         TOK_DGREAT TOK_WORD
+**		TOK_WORD TOK_DGREAT (TOK_WORD | TOK_DOLLAR)	OR
+**		TOK_PIPE TOK_DGREAT (TOK_WORD | TOK_DOLLAR)	OR
+**		TOK_SEMI TOK_DGREAT (TOK_WORD | TOK_DOLLAR)	OR
+**		         TOK_DGREAT (TOK_WORD | TOK_DOLLAR)
 */
 int	check_dgreat(t_list *tokens, unsigned int i, t_err *err)
 {
@@ -75,17 +75,17 @@ int	check_dgreat(t_list *tokens, unsigned int i, t_err *err)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
 	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
-			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE))
+			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE && next->type != TOK_DOLLAR))
 		return ((long)error(err, SYNTAX_DGREAT, (void **)&tokens, &ft_lstdel));
 	return (SUCCESS);
 }
 
 /*
 **	Accepted syntax :
-**		TOK_WORD TOK_GREAT TOK_WORD	OR
-**		TOK_PIPE TOK_GREAT TOK_WORD	OR
-**		TOK_SEMI TOK_GREAT TOK_WORD	OR
-**		         TOK_GREAT TOK_WORD
+**		TOK_WORD TOK_GREAT (TOK_WORD | TOK_DOLLAR)	OR
+**		TOK_PIPE TOK_GREAT (TOK_WORD | TOK_DOLLAR)	OR
+**		TOK_SEMI TOK_GREAT (TOK_WORD | TOK_DOLLAR)	OR
+**		         TOK_GREAT (TOK_WORD | TOK_DOLLAR)
 */
 int	check_great(t_list *tokens, unsigned int i, t_err *err)
 {
@@ -97,17 +97,17 @@ int	check_great(t_list *tokens, unsigned int i, t_err *err)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
 	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
-			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE))
+			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE && next->type != TOK_DOLLAR))
 		return ((long)error(err, SYNTAX_GREAT, (void **)&tokens, &ft_lstdel));
 	return (SUCCESS);
 }
 
 /*
 **	Accepted syntax :
-**		TOK_WORD TOK_LESS TOK_WORD	OR
-**		TOK_PIPE TOK_LESS TOK_WORD	OR
-**		TOK_SEMI TOK_LESS TOK_WORD	OR
-**		         TOK_LESS TOK_WORD
+**		TOK_WORD TOK_LESS (TOK_WORD | TOK_DOLLAR)	OR
+**		TOK_PIPE TOK_LESS (TOK_WORD | TOK_DOLLAR)	OR
+**		TOK_SEMI TOK_LESS (TOK_WORD | TOK_DOLLAR)	OR
+**		         TOK_LESS (TOK_WORD | TOK_DOLLAR)
 */
 int	check_less(t_list *tokens, unsigned int i, t_err *err)
 {
@@ -119,7 +119,7 @@ int	check_less(t_list *tokens, unsigned int i, t_err *err)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
 	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
-			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE))
+			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE && next->type != TOK_DOLLAR))
 		return ((long)error(err, SYNTAX_LESS, (void **)&tokens, &ft_lstdel));
 	return (SUCCESS);
 }

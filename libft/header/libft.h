@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 13:15:19 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/06 14:24:26 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/13 16:14:16 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "ft_list.h"
 # include "ft_btree.h"
 # include "get_next_line.h"
+# include "gc.h"
 
 int		ft_isalnum(int c);
 void	*ft_calloc(size_t count, size_t size);
@@ -43,5 +44,6 @@ void	ft_putchar_fd(char c, int fd);
 char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
 int		ft_isprint(int c);
+void	ft_bzero(void *s, size_t n);
 
 #endif

@@ -122,13 +122,32 @@ int		tc_read(t_dlist **cmds, t_dlist **cpy, char **buf, t_list **env)
 	*buf = tc_read_init(cmds, cpy, &curr, &curr_cpy);
 	if (!(*buf))
 		return (-2);
+	index = -1;
 	i = 0;
 	while (i < BUF_SIZE && read(STDIN_FILENO, &((*buf)[i]), BUF_SIZE))
 	{
+		if (g_exit_status & 0xFF00)
+		{
+			i = (*buf)[i];
+			ft_strncpy(*buf, "", BUF_SIZE);
+			if (ft_isprint(i))
+			{
+				(*buf)[0] = i;
+				ft_putchar_fd(i, STDOUT_FILENO);
+			}
+			if (i == EOT || (*buf)[0] == EOT)
+				return (tc_destroy(&termios));
+			if (ft_isprint(i))
+				i = 1;
+			else
+				i = 0;
+			g_exit_status &= 0x00FF;
+			continue ;
+		}
 		if ((*buf)[i] == EOT && !i)
 			return (tc_destroy(&termios));
 		index = tc_dispatch(&curr_cpy, buf, env, &i);
-		if (index == -2)
+		if (index == ARROW)
 			return (-2);
 		else if (index != -1)
 			break ;

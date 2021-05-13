@@ -23,11 +23,12 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <term.h>
+// # include <sys/ioctl.h>
 # include "libft.h"
 # include "ft_list.h"
 # include "ft_btree.h"
 
-# define DEFAULT_PROMPT	"\e[35mprompt>\e[39m"
+# define DEFAULT_PROMPT	"\e[35mmashashell>\e[39m"
 
 # define FAILURE		0
 # define SUCCESS		1
@@ -38,7 +39,7 @@
 # define EOT			4
 # define KEY_UP			"\x1B[A"
 # define KEY_DOWN		"\x1B[B"
-
+# define ARROW			-2
 # define REAL			2
 enum
 {
@@ -74,15 +75,20 @@ typedef enum e_err_code
 	SYNTAX_DGREAT,
 	SYNTAX_GREAT,
 	SYNTAX_LESS,
+	HOME_NOT_SET,
+	OLDPWD_NOT_SET,
+	TOO_MANY_ARG,
 	NOT_FOUND,
 	NO_SUCH_FILE,
 	IS_A_DIR,
 	PERM,
-	ERRNO
+	EXPORT,
+	ERR_NO
 }	t_err_code;
 
 typedef struct	s_err
 {
+	t_list			*gc;
 	char			**message;
 	unsigned char	code;
 	char			*cmd_name;
@@ -116,7 +122,7 @@ typedef struct	s_sig_param
 # include "minishell_expansion.h"
 # include "minishell_builtin.h"
 
-unsigned char	g_exit_status;
+unsigned short int	g_exit_status;
 
 void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **));
 
@@ -137,6 +143,11 @@ t_dlist	*ft_create_delem(void *data);
 void	ft_dlist_push_back(t_dlist **begin_list, void *data);
 int		ft_putchar(int c);
 t_dlist	*dlst_last(t_dlist *dlist);
+void	waitall();
+char	tab_init(char **s1, char **s2, char **s3);
+t_list	*update_env(t_list **env, char *name, char *value);
+t_list	*insert_env(t_list **env, char *name, char *equal, char *value);
+
 
 /*
 **	free.c
@@ -144,7 +155,6 @@ t_dlist	*dlst_last(t_dlist *dlist);
 
 void	ft_free_tab(void **data);
 void	ft_lstdel(void **list);
-
 
 /*
 **	error.c
@@ -164,7 +174,7 @@ char	**env_to_tab(t_list *env);
 **	redir.c
 */
 
-char	redir_init(t_token *token, int (*redirs)[4]);
+char	redir_init(t_token *token, int (*redirs)[4], t_err *err);
 char	redir_destroy(int type, int (*redirs)[4]);
 
 /*

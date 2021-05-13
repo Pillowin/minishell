@@ -20,13 +20,13 @@ typedef struct s_var
 	char	*value;
 }	t_var;
 
-unsigned char	builtin_echo(t_token *cmd, t_list **env);
-unsigned char	builtin_cd(t_token *cmd, t_list **env);
-unsigned char	builtin_pwd(t_token *cmd, t_list **env);
-unsigned char	builtin_env(t_token *cmd, t_list **env);
-unsigned char	builtin_export(t_token *cmd, t_list **env);
-unsigned char	builtin_unset(t_token *cmd, t_list **env);
-unsigned char	builtin_exit(t_token *cmd, t_list **env);
+unsigned char	builtin_echo(t_token *cmd, t_list **env, t_err *err);
+unsigned char	builtin_cd(t_token *cmd, t_list **env, t_err *err);
+unsigned char	builtin_pwd(t_token *cmd, t_list **env, t_err *err);
+unsigned char	builtin_env(t_token *cmd, t_list **env, t_err *err);
+unsigned char	builtin_export(t_token *cmd, t_list **env, t_err *err);
+unsigned char	builtin_unset(t_token *cmd, t_list **env, t_err *err);
+unsigned char	builtin_exit(t_token *cmd, t_list **env, t_err *err);
 
 /*
 **	exec.c

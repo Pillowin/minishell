@@ -67,7 +67,87 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 - clean files
 - exit status
 - error messages
-- syntax redir dollar
-- zombie quand ./toto alors que toto est un dossier
 - segv quand entree > BUF_SIZE
-- ```dsfkgjd | ls -l```
+- exit
+
+
+<!-- ```verif l'ordre d'execution du path``` -->
+
+<!--
+```bash
+prompt>env | grep PWD
+OLDPWD=jhgbnk
+PWD=/home/user42/42/minishell
+prompt>cd toto
+prompt>env | grep PWD
+OLDPWD=/home/user42/42/minishell
+PWD=/home/user42/42/minishell/toto
+prompt>cd ..
+prompt>env | grep PWD
+OLDPWD=/home/user42/42/minishell/toto
+PWD=/home/user42/42/minishell
+prompt>cd -
+prompt>env | grep PWD
+OLDPWD=/home/user42/42/minishell
+PWD=/home/user42/42/minishell/toto
+prompt>pwd
+/home/user42/42/minishell/toto
+prompt>cd
+minishell (tree): cd: « HOME » not set
+prompt>export HOME=$PWD/..
+prompt>export HOME=$PWD/..
+prompt>cd
+minishell (tree): cd: No such file or directory
+prompt>echo $HOME
+```
+-->
+<!--
+```export coucou ca va```	=> env doit pas afficher les valeur vide
+```export est pas trie```
+```export 2wefr coucou ca``` => pareil pour unset
+-->
+
+<!-- - ctrl d apres ctrl c au debut de minishell fonctionne pas la premiere fois -->
+
+<!-- 
+- builtin
+- cd $USER$plop$USER => not found (err msg)
+- cd -
+-->
+
+<!--
+```<rien cat >coucou``` => rien existe pas
+```>rien``` => loop
+-->
+
+<!-- - syntax redir dollar -->
+<!-- - zombie quand ./toto alors que toto est un dossier -->
+
+<!-- - ```dsfkgjd | ls -l``` -->
+
+<!-- echo \a => 2 err msg -->
+<!-- - fleche segv -->
+<!-- env -i ./minishell demarre pas a cause de term -->
+
+<!-- 
+- signaux
+- ctrl + c need to clean buf
+- ctrl + c apres ./minishell retour a la ligne
+- ctrl + c afficher ^C 
+-->
+
+<!--
+```
+0 prompt>echo | echo | echi
+Not found error
+minishell: echi: command not found
+command not found
+127 prompt>echo | echo | echi | echo
+
+Not found error
+0 minishell: prompt>No such file or directory
+```
+-->
+
+<!-- ```ls coucou | export c=moi | grep -c``` -->
+<!-- ```hrtgf | htg |jyhtg |jyhtgrf |jhtgr |jhfgd |jhgfd |jhgfd |jhfgd |jhgfd |jghfd``` => messages d'erreur melanges -->

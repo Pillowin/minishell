@@ -26,7 +26,7 @@ static t_list	*question_mark(t_list **curr, t_list **next)
 		return (NULL);
 	((t_token *)((*curr)->data))->type = TOK_WORD;
 	ft_free((void **)(((t_token *)((*curr)->data))->data));
-	new_str = ft_itoa(g_exit_status);
+	new_str = ft_itoa(g_exit_status & 0x00FF);
 	*((t_token *)((*curr)->data))->data = new_str;
 	if ((*(((t_token *)((*next)->data))->data))[1])
 	{

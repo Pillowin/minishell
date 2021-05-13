@@ -47,6 +47,7 @@ char	*get_var_name(char *var)
 	char			*value;
 	char			*name;
 
+
 	value = ft_strchr(var, '=');
 	if (value)
 	{
@@ -54,13 +55,11 @@ char	*get_var_name(char *var)
 		name = ft_substr(var, 0, i - 1);
 		if (!name)
 			return (NULL);
+		return (name);
 	}
-	else
-	{
-		name = ft_strdup(var);
-		if (!name)
-			return (NULL);
-	}
+	name = ft_strdup(var);
+	if (!name)
+		return (NULL);
 	return (name);
 }
 

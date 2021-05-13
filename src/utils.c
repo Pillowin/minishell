@@ -222,3 +222,93 @@ t_dlist	*dlst_last(t_dlist *dlist)
 		dlist = dlist->next;
 	return (dlist);
 }
+
+/*
+**	Wait until all child are DEAD :3
+*/
+
+void	waitall()
+{
+
+	int ret;
+
+	while (1)
+	{
+		ret = waitpid(-1, NULL, 0);
+		if (ret == -1)
+			break;
+	}
+}
+
+/*
+**	Create t to create a new var.
+*/
+
+char	tab_init(char **s1, char **s2, char **s3)
+{
+	*s1 = ft_strdup(*s1);
+	if (!*s1)
+		return (FAILURE);
+	*s2 = ft_strdup(*s2);
+	if (!*s2)
+	{
+		ft_free((void **)s1);
+		return (FAILURE);
+	}
+	*s3 = ft_strdup(*s3);
+	if (!*s3)
+	{
+		ft_free((void **)s1);
+		ft_free((void **)s2);
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
+/*
+**
+*/
+
+t_list	*update_env(t_list **env, char *name, char *value)
+{
+	t_list	*env_var;
+	t_var	init;
+	t_var	*var;
+
+	env_var = ft_list_find(*env, (void *)name, &is_var);
+	if (!env_var || !((t_var *)env_var->data)->value)
+	{
+		init.name = name;
+		init.equal = "=";
+		if (env_var && ((t_var *)env_var->data)->name)
+			init.name = ((t_var *)env_var->data)->name;
+		if (env_var && ((t_var *)env_var->data)->equal)
+			init.equal = ((t_var *)env_var->data)->equal;
+		init.value = value;
+		if (!tab_init(&(init.name), &(init.equal), &(init.value)))
+			return (NULL);
+		var = var_init(init.name, init.equal, init.value);
+		if (!var)
+			return (NULL);
+		ft_list_push_back(env, var);
+		return(ft_lstlast(*env));
+	}
+	ft_free((void **)&((t_var *)env_var->data)->value);
+	((t_var *)env_var->data)->value = value;
+	return (env_var);
+}
+/*
+**
+*/
+
+t_list	*insert_env(t_list **env, char *name, char *equal, char *value)
+{
+	t_var	*var;
+
+	
+	var = var_init(name, equal, value);
+	if (!var)
+		return (NULL);
+	ft_list_push_back(env, var);
+	return(ft_lstlast(*env));
+}

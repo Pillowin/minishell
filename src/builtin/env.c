@@ -13,16 +13,17 @@
 #include "minishell.h"
 
 /*
-**
+**	// TODO: do not print if no value
 */
 
-unsigned char	builtin_env(t_token *cmd, t_list **env)
+unsigned char	builtin_env(t_token *cmd, t_list **env, t_err *err)
 {
+	(void)err;
 	if (cmd->data[1])
 		return (FAILURE);
 	while (*env)
 	{
-		if (((t_var *)((*env)->data))->value)
+		if (*(((t_var *)((*env)->data))->value))
 		{
 			ft_putstr_fd(((t_var *)((*env)->data))->name, STDOUT_FILENO);
 			ft_putchar_fd('=', STDOUT_FILENO);

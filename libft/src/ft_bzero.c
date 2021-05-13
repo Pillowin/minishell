@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/19 22:01:31 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/12 15:26:10 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/04 12:17:46 by agautier          #+#    #+#             */
+/*   Updated: 2020/11/11 13:54:21 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-unsigned char	builtin_exit(t_token *cmd, t_list **env, t_err *err)
+/*
+**	man bzero
+*/
+
+void	ft_bzero(void *s, size_t n)
 {
-	// TODO:
-	(void)cmd;
-	(void)env;
-	(void)err;
-	exit(EXIT_SUCCESS);
+	size_t			i;
+	unsigned char	*ptr;
+
+	ptr = s;
+	i = 0;
+	while (i < n)
+	{
+		ptr[i] = '\0';
+		i++;
+	}
 }

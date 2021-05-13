@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:46:45 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/09 17:06:26 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/12 13:23:55 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ static int	is_flag(char *str)
 	return (SUCCESS);
 }
 
-unsigned char	builtin_echo(t_token *cmd, t_list **env)
+unsigned char	builtin_echo(t_token *cmd, t_list **env, t_err *err)
 {
 	unsigned int	i;
 
+	(void)err;
 	(void)env;
 	i = 1;
 	while (is_flag(cmd->data[i]))

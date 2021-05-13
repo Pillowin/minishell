@@ -31,17 +31,22 @@ int	create_tree(t_list *tokens, t_list *env, t_err *err)
 	g_exit_status = 0;
 	if (!exec(tree, env, err))
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(err->cmd_name, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		if (err->code == ERRNO)
-			ft_putstr_fd(strerror(errno), STDERR_FILENO);
+		// ft_putstr_fd("minishell: 3", STDERR_FILENO);	// TODO:
+		// ft_putstr_fd(err->cmd_name, STDERR_FILENO);
+		// ft_putstr_fd(": ", STDERR_FILENO);
+		// if (err->code == ERR_NO)
+		// 	ft_putstr_fd(strerror(errno), STDERR_FILENO);
+		// else
+		// 	ft_putstr_fd(err->message[err->code], STDERR_FILENO);
+		// ft_putchar_fd('\n', STDERR_FILENO);
+		int tmp = dup(STDOUT_FILENO);
+		dup2(STDERR_FILENO, STDOUT_FILENO);			// TODO: message pour cd et export avec les « toto+toto=tonton »
+		if (err->code == ERR_NO)
+			printf("minishell (tree): %s: %s\n", err->cmd_name, strerror(errno));	// TODO: remove tree
 		else
-			ft_putstr_fd(err->message[err->code], STDERR_FILENO);
-		ft_putchar_fd('\n', STDERR_FILENO);
+			printf("minishell (tree): %s: %s\n", err->cmd_name, err->message[err->code]);
+		dup2(tmp, STDOUT_FILENO);
 		ft_free((void **)&(err->cmd_name));
-		return (FAILURE);
 	}
-	
 	return (SUCCESS);
 }

@@ -12,30 +12,7 @@
 
 #include "minishell.h"
 
-/*
-**	Create t to create a new var.
-*/
 
-static char	tab_init(char **s1, char **s2, char **s3)
-{
-	*s1 = ft_strdup(*s1);
-	if (!*s1)
-		return (FAILURE);
-	*s2 = ft_strdup(*s2);
-	if (!*s2)
-	{
-		ft_free((void **)s1);
-		return (FAILURE);
-	}
-	*s3 = ft_strdup(*s3);
-	if (!*s3)
-	{
-		ft_free((void **)s1);
-		ft_free((void **)s2);
-		return (FAILURE);
-	}
-	return (SUCCESS);
-}
 
 /*
 **	Print pretty prompt and set PS1if needed.
@@ -44,34 +21,11 @@ static char	tab_init(char **s1, char **s2, char **s3)
 char	prompt(t_list **env)
 {
 	t_list	*prompt;
-	t_var	*var;
-	char	*s1;
-	char	*s2;
-	char	*s3;
 
-	s1 = "PS1";
-	s2 = "=";
-	s3 = DEFAULT_PROMPT;
 	prompt = ft_list_find(*env, (void *)"PS1", &is_var);
-	if (!prompt)
-	{
-		if (!tab_init(&s1, &s2, &s3))
-			return (FAILURE);
-		var = var_init(s1, s2, s3);
-		if (!var)
-			return (FAILURE);
-		ft_list_push_back(env, var);
-		prompt = ft_lstlast(*env);
-	}
-	// else if (!((((t_var *)prompt->data)->value))) //TODO: vérif si ok
-	// {
-	// 	if (!tab_init(&s1, &s2, &s3))
-	// 		return (FAILURE);
-	// 	((t_var *)prompt->data)->equal = s2;
-	// 	((t_var *)prompt->data)->value = s3;
-	// }
-	
-	printf("%d ", g_exit_status);	fflush(stdout);	// TODO: REMOVE 
+	if (!prompt || !((((t_var *)prompt->data)->value)))
+		prompt = update_env(env, "PS1", DEFAULT_PROMPT);
+	// printf("%d ", g_exit_status & 0x00FF);	fflush(stdout);	// TODO: REMOVE 
 	ft_putstr_fd(((t_var *)prompt->data)->value, STDOUT_FILENO);
 	return (SUCCESS);
 }

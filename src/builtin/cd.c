@@ -12,6 +12,10 @@
 
 #include "minishell.h"
 
+/*
+**
+*/
+
 static int	cmp(void *data, void *ref)
 {
 	if (!ft_strcmp(((t_var *)data)->name, ref))
@@ -20,76 +24,72 @@ static int	cmp(void *data, void *ref)
 }
 
 /*
-**	Attribute current path to name 
+**
 */
-static char	update_var(t_list **env, char *name)
+unsigned char	builtin_cd(t_token *cmd, t_list **env, t_err *err)
 {
 	t_list	*lst;
-	char	*path;
-	// t_var	*var;
+	char	*oldpwd;
+	char	*pwd;
 
-	path = getcwd(NULL, 0);
-	if (!path)
-		return (FAILURE);
-	lst = ft_list_find(*env, (void *)name, &cmp);
-	if (lst)
+	if (!(cmd->data[1]))	// cd sans arg
 	{
-		ft_free((void **)&(((t_var *)lst->data)->value));
-		((t_var *)lst->data)->value = ft_strdup(path);
-		if (!(((t_var *)lst->data)->value))
-			return (FAILURE);
-	}
-	ft_free((void **)&path);
-	return (SUCCESS);
-}
-
-/*
-**	TODO: update PWD and OLD_PWD
-*/
-unsigned char	builtin_cd(t_token *cmd, t_list **env)
-{
-	t_list	*lst;
-
-	if (!(cmd->data[1]))
-	{
-		if (!update_var(env, "OLDPWD"))
-			return (FAILURE);
-
-		// je vais dans HOME
 		lst = ft_list_find(*env, "HOME", &cmp);
 		if (lst)
 		{
 			if (!(((t_var *)lst->data)->value))
 				return (FAILURE);
 			if (chdir((((t_var *)lst->data)->value)) == -1)
-			{
-				printf("erreur de cd : %s\n", strerror(errno));
-				return (FAILURE);	// TODO: use errno
-			}
+				return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
+			oldpwd = getcwd(NULL, 0);
+			if (!update_env(env, "OLDPWD", oldpwd))
+				return (FAILURE);
+			pwd = ft_strdup((((t_var *)lst->data)->value));
+			if (!pwd || !update_env(env, "PWD", pwd))
+				return (FAILURE);
+			return (SUCCESS);
 		}
-		else
-		{
-			// HOME not set
-		}
-
-		if (!update_var(env, "PWD"))
+		return ((long)error(err, HOME_NOT_SET, NULL, NULL));
+	}
+	else if (cmd->data[2])	// trop d'arg
+		return ((long)error(err, TOO_MANY_ARG, NULL, NULL));
+	else if (*(cmd->data[1]) == '-')	// cd -
+	{
+		// pwd = on veut recuperer PWD
+		pwd = getcwd(NULL, 0);
+		// oldpwd = on veut recuperer OLDPWD
+		lst = ft_list_find(*env, "OLDPWD", &cmp);
+		if (!lst)
+			return ((long)error(err, OLDPWD_NOT_SET, NULL, NULL));
+		oldpwd = ft_strdup(((t_var *)lst->data)->value);
+		if (!oldpwd)
+			return (FAILURE);
+		// se déplacer dans oldpwd
+		if (chdir(oldpwd) == -1)
+			return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
+		// update PWD
+		if (!update_env(env, "PWD", oldpwd))
+			return (FAILURE);
+		// update OLDPWD
+		if (!update_env(env, "OLDPWD", pwd))
 			return (FAILURE);
 	}
-	else if (cmd->data[2])
-		return (FAILURE);	//trop d'arguments
-	else
+	else	// cas standard
 	{
-		if (!update_var(env, "OLDPWD"))
-			return (FAILURE);
-
-		// je change de dossier
+		// oldpwd = on veut recuperer OLDPWD
+		oldpwd = getcwd(NULL, 0);
+	
+		// se déplacer dans oldpwd
 		if (chdir(cmd->data[1]) == -1)
-		{
-			printf("erreur de cd : %s\n", strerror(errno));
-			return (FAILURE);	// TODO: use errno
-		}
-
-		if (!update_var(env, "PWD"))
+			return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
+		pwd = getcwd(NULL, 0);
+		if (!pwd)
+			return (FAILURE);
+		// update PWD
+		if (!update_env(env, "PWD", pwd))
+			return (FAILURE);
+		// update OLDPWD
+		if (!update_env(env, "OLDPWD", oldpwd))
 			return (FAILURE);
 	}
 	return (SUCCESS);

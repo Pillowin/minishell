@@ -98,7 +98,7 @@ static char	exec_cmd(t_token *token, t_fd *fd, t_list *env, t_err *err)
 	if (!binary_exec(token, path, fd, env, err))
 	{
 		ft_free((void **)&path);
-		// return ((long)error(err, ERRNO, NULL, NULL));
+		// return ((long)error(err, ERR_NO, NULL, NULL));
 		return (FAILURE);
 	}
 	ft_free((void **)&path);
@@ -117,28 +117,52 @@ static char	dispatch(void *item, t_fd_env_err *fd_env_err)
 	if (token->type == TOK_PIPE)
 	{
 		if (!pipe_init(fd_env_err->fd))
-			return ((long)error(fd_env_err->err, ERRNO, NULL, NULL));
+			return ((long)error(fd_env_err->err, ERR_NO, NULL, NULL));
 		fd_env_err->fd->is_dad_pipe = 1;
 	}
 	else if (token->type == TOK_REDIR)
 	{
-		if (!redir_init(token, &(fd_env_err->fd->redirs)))
-			return ((long)error(fd_env_err->err, ERRNO, NULL, NULL));
+		if (!redir_init(token, &(fd_env_err->fd->redirs), fd_env_err->err))
+			return (FAILURE);
+			// return ((long)error(fd_env_err->err, ERR_NO, NULL, NULL));
 		fd_env_err->fd->is_dad_pipe = 0;
 
 	}
 	else if (token->type == TOK_COMMAND)
 	{
+		if (fd_env_err->fd->pipes[REAL_IN] == -1 && fd_env_err->fd->pipes[REAL_OUT] == -1)
+			waitpid(-1, NULL, 0);
 		if (!exec_cmd(token, fd_env_err->fd, fd_env_err->env, fd_env_err->err))
 		{
 			if (fd_env_err->fd->is_child)
 			{
-				ft_putstr_fd("minishell: ", STDERR_FILENO);
-				ft_putstr_fd(strerror(errno), STDERR_FILENO);
-				ft_putchar_fd('\n', STDERR_FILENO);
-				exit(g_exit_status);
+				// ft_putstr_fd("minishell: 1", STDERR_FILENO);	// TODO:
+				// ft_putstr_fd(strerror(errno), STDERR_FILENO);
+				// ft_putchar_fd('\n', STDERR_FILENO);
+
+				// waitpid(-1, NULL, 0);
+				
+				int tmp = dup(STDOUT_FILENO);	// TODO:
+				dup2(STDERR_FILENO, STDOUT_FILENO);
+				if (fd_env_err->err->code == ERR_NO)
+					printf("minishell: %s: %s\n", *(token->data), strerror(errno));
+				else
+					printf("minishell: %s: %s\n", *(token->data), fd_env_err->err->message[fd_env_err->err->code]);
+				dup2(tmp, STDOUT_FILENO);
+
+				// ft_putstr_fd("minishell: 1", STDERR_FILENO);	// TODO:
+				// ft_putstr_fd(*(token->data), STDERR_FILENO);
+				// ft_putstr_fd(": ", STDERR_FILENO);
+				// if (fd_env_err->err->code == ERR_NO)
+				// 	ft_putstr_fd(strerror(errno), STDERR_FILENO);
+				// else
+				// 	ft_putstr_fd(fd_env_err->err->message[fd_env_err->err->code], STDERR_FILENO);
+				// ft_putchar_fd('\n', STDERR_FILENO);
+
+				exit(g_exit_status & 0x00FF);
 			}
 			return (FAILURE);
+			waitpid(-1, NULL, 0);
 		}
 		if (!redir_destroy(IN, &(fd_env_err->fd->redirs)))
 			return (FAILURE);
@@ -171,13 +195,22 @@ char	exec(t_btree *tree, t_list *env, t_err *err)
 	fd_env_err = (t_fd_env_err){&fd, env, err};
 	if (!my_btree_prefix(tree, &fd_env_err, &dispatch))
 	{
+		if (!redir_destroy(IN, &(fd_env_err.fd->redirs)))
+			return (FAILURE);
+		if (!redir_destroy(OUT, &(fd_env_err.fd->redirs)))
+			return (FAILURE);
 		if (!pipe_destroy(fd_env_err.fd))
-			return ((long)error(err, ERRNO, NULL, NULL));
+			return ((long)error(err, ERR_NO, NULL, NULL));
 		return (FAILURE);
 	}
+	if (!redir_destroy(IN, &(fd_env_err.fd->redirs)))
+			return (FAILURE);
+	if (!redir_destroy(OUT, &(fd_env_err.fd->redirs)))
+		return (FAILURE);
 	if (!pipe_destroy(fd_env_err.fd))
-		return ((long)error(err, ERRNO, NULL, NULL));
+		return ((long)error(err, ERR_NO, NULL, NULL));
 	// btree_apply_prefix(tree, &token_print);
+
 
 	btree_apply_prefix(tree, &token_destroy);
 	btree_free(&tree);

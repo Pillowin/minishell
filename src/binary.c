@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/27 18:42:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/09 17:19:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/10 17:555:52 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*binary_relative_path(t_token *token, t_err *err)
 	
 	path = getcwd(NULL, 0);
 	if (!path)
-		return (error(err, ERRNO, NULL, NULL));
+		return (error(err, ERR_NO, NULL, NULL));
 	tmp = ft_strjoin(path, "/");
 	ft_free((void **)&path);
 	if (!tmp)
@@ -62,10 +62,7 @@ char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
 	
 	tmp = ft_list_find(env, (void *)"PATH", &is_var);
 	if (!tmp)
-	{
-		fprintf(stderr, "Not found error\n");
 		return (error(err, NOT_FOUND, NULL, NULL));
-	}
 	tmp = ((t_var *)((t_list *)tmp)->data)->value;
 	paths = ft_split(tmp, ':');	// 
 	if (!paths)
@@ -88,7 +85,8 @@ char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
 	}
 	if (!paths[i])
 	{
-		fprintf(stderr, "Not found error\n");
+		// waitpid(-1, NULL, 0);
+		// fprintf(stderr, "Not found error 2\n");
 		return (error(err, NOT_FOUND, (void **)paths, &ft_free_tab));
 	}
 	path = ft_strdup(path);
@@ -113,7 +111,7 @@ char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env, t_err *err)
 
 	if (stat(path, &buf) != 0)
 	{
-		fprintf(stderr, "No such file error\n");
+		// fprintf(stderr, "No such file error\n");
 		return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
 	}
 	if (buf.st_mode & S_IFDIR)
