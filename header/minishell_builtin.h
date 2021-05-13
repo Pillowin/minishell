@@ -38,10 +38,10 @@ char	is_builtin(t_token *token, t_fd *fd, t_list *env, t_err *err);
 **	var.c
 */
 
-t_var	*var_init(char *name, char *equal, char *value);
-void	var_destroy(void *data);
-char	*get_var_name(char *var);
-char	*get_var_equal(char *var);
-char	*get_var_value(char *var);
+t_var	*var_init(char *name, char *equal, char *value, t_list **gc);
+void	var_destroy(void *data, t_list **gc);
+char	*get_var_name(char *var, t_list **gc);
+char	*get_var_equal(char *var, t_list **gc);
+char	*get_var_value(char *var, t_list **gc);
 
 #endif

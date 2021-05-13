@@ -85,21 +85,21 @@ unsigned char	builtin_export(t_token *cmd, t_list **env, t_err *err)
 			i++;
 			continue ;
 		}
-		var = var_init(NULL, NULL, NULL);
+		var = var_init(NULL, NULL, NULL, err->gc);
 		if (!var)
 			return (FAILURE);
-		var->name = get_var_name(cmd->data[i]);
+		var->name = get_var_name(cmd->data[i], err->gc);
 		if (!(var->name))
 		{
-			var_destroy(var);
+			var_destroy(var, err->gc);
 			return (FAILURE);
 		}
 		list = ft_list_find(*env, var, &cmp);
 		if (!list)
-			insert_env(env, get_var_name(cmd->data[i]), get_var_equal(cmd->data[i]), get_var_value(cmd->data[i]));
+			insert_env(env, (t_var){get_var_name(cmd->data[i], err->gc), get_var_equal(cmd->data[i], err->gc), get_var_value(cmd->data[i], err->gc)}, err->gc);
 		else
-			update_env(env, ((t_var *)list->data)->name, get_var_value(cmd->data[i]));
-		var_destroy(var);
+			update_env(env, ((t_var *)list->data)->name, get_var_value(cmd->data[i], err->gc), err->gc);
+		var_destroy(var, err->gc);
 		i++;
 	}
 	return (SUCCESS);

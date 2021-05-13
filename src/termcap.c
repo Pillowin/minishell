@@ -13,6 +13,21 @@
 #include "minishell.h"
 
 /*
+**
+*/
+t_tc_cmds *tc_cmds_init(t_list **gc)
+{
+	t_tc_cmds	*tc_cmds;
+
+	tc_cmds = (t_tc_cmds *)gc_calloc(gc, 1, sizeof(*tc_cmds));
+	if (!tc_cmds)
+		return (NULL);
+	tc_cmds->cmds = NULL;
+	tc_cmds->cpy = NULL;
+	return(tc_cmds);
+}
+
+/*
 **	Retrieve term type in env and disable canonic mode
 */
 
@@ -40,36 +55,37 @@ char	tc_destroy(t_termios *termios)
 {
 	termios->c_lflag |= (ICANON ^ ECHO);
 	if (tcsetattr(STDIN_FILENO, 0, termios) == -1)
-		return (-2);
-	return (-1);
+		return (ERRNO_ERR);
+	return (CTRL_D);
 }
 
 /*
 **	Init input read
 */
 
-char	*tc_read_init(t_dlist **cmds, t_dlist **cpy, t_dlist **curr,
-						t_dlist **curr_cpy)
+char	*tc_read_init(t_tc_cmds *tc_cmds, t_dlist **curr, t_dlist **curr_cpy, t_list **gc)
 {
 	char	*buf;
 	char	*empty;
 
-	buf = (char *)ft_calloc(BUF_SIZE + 3 + 1, sizeof(*buf));
+	buf = (char *)gc_calloc(gc, BUF_SIZE + 3 + 1, sizeof(*buf));
 	if (!buf)
 		return (NULL);
-	(*curr) = dlst_last(*cmds);
+	*curr = dlst_last(tc_cmds->cmds);
 	if (!(*curr) || ((char *)((*curr)->data))[0])
 	{
 		empty = ft_strdup("");
 		if (!empty)
 			return (NULL);
-		ft_dlist_push_back(cpy, empty);
+		gc_register(gc, empty);
+		gc_dlist_push_back(gc, &(tc_cmds->cpy), empty);
 		empty = ft_strdup("");
 		if (!empty)
 			return (NULL);
-		ft_dlist_push_back(cmds, empty);
+		gc_register(gc, empty);
+		gc_dlist_push_back(gc, &(tc_cmds->cmds), empty);
 	}
-	*curr_cpy = dlst_last(*cpy);
+	*curr_cpy = dlst_last(tc_cmds->cpy);
 	return (buf);
 }
 
@@ -77,9 +93,13 @@ char	*tc_read_init(t_dlist **cmds, t_dlist **cpy, t_dlist **curr,
 **	Add buff to list and go to parser
 */
 
-char	tc_read_destroy(t_dlist *cmds, t_dlist *cpy, char **buf
-							, unsigned int index)
+char	tc_read_destroy(t_tc_cmds *tc_cmds, char **buf, unsigned int index, t_list **gc)
 {
+	t_dlist	*cmds;
+	t_dlist	*cpy;
+
+	cmds = tc_cmds->cmds;
+	cpy = tc_cmds->cpy;
 	while (index)
 	{
 		if (cmds->next)
@@ -88,20 +108,23 @@ char	tc_read_destroy(t_dlist *cmds, t_dlist *cpy, char **buf
 			cpy = cpy->next;
 		index--;
 	}
-	ft_free((void **)&(cpy->data));
+	gc_free(gc, (void **)&(cpy->data));
 	cpy->data = ft_strdup(cmds->data);
 	if (!(cpy->data))
 		return (FAILURE);
+	gc_register(gc, cpy->data);
 	cmds = dlst_last(cmds);
-	ft_free((void **)&(cmds->data));
+	gc_free(gc, (void **)&(cmds->data));
 	cmds->data = ft_strdup(*buf);
 	if (!(cmds->data))
 		return (FAILURE);
+	gc_register(gc, cmds->data);
 	cpy = dlst_last(cpy);
-	ft_free((void **)&(cpy->data));
+	gc_free(gc, (void **)&(cpy->data));
 	cpy->data = ft_strdup(cmds->data);
 	if (!(cpy->data))
 		return (FAILURE);
+	gc_register(gc, cpy->data);
 	return (SUCCESS);
 }
 
@@ -109,7 +132,7 @@ char	tc_read_destroy(t_dlist *cmds, t_dlist *cpy, char **buf
 **	Read input from STDIN
 */
 
-int		tc_read(t_dlist **cmds, t_dlist **cpy, char **buf, t_list **env)
+int		tc_read(t_tc_cmds *tc_cmds, char **buf, t_list **gc)
 {
 	t_termios		termios;
 	t_dlist			*curr;
@@ -118,13 +141,13 @@ int		tc_read(t_dlist **cmds, t_dlist **cpy, char **buf, t_list **env)
 	int				index;
 
 	if (!tc_init(&termios))
-		return (-2);
-	*buf = tc_read_init(cmds, cpy, &curr, &curr_cpy);
+		return (ERRNO_ERR);
+	*buf = tc_read_init(tc_cmds, &curr, &curr_cpy, gc);
 	if (!(*buf))
-		return (-2);
+		return (ERRNO_ERR);
 	index = -1;
 	i = 0;
-	while (i < BUF_SIZE && read(STDIN_FILENO, &((*buf)[i]), BUF_SIZE))
+	while (i < BUF_SIZE && read(STDIN_FILENO, &((*buf)[i]), BUF_SIZE - i))
 	{
 		if (g_exit_status & 0xFF00)
 		{
@@ -146,13 +169,13 @@ int		tc_read(t_dlist **cmds, t_dlist **cpy, char **buf, t_list **env)
 		}
 		if ((*buf)[i] == EOT && !i)
 			return (tc_destroy(&termios));
-		index = tc_dispatch(&curr_cpy, buf, env, &i);
+		index = tc_dispatch(&curr_cpy, buf, &i, gc);
 		if (index == ARROW)
-			return (-2);
+			return (ERRNO_ERR);
 		else if (index != -1)
 			break ;
 	}
-	if (!tc_read_destroy(*cmds, *cpy, buf, index) || !tc_destroy(&termios))
-		return (-2);
+	if (!tc_read_destroy(tc_cmds, buf, index, gc) || !tc_destroy(&termios))
+		return (ERRNO_ERR);
 	return (i);
 }

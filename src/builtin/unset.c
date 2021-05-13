@@ -12,15 +12,15 @@
 
 #include "minishell.h"
 
-/*
-**
-*/
-static int	cmp(void *data, void *ref)
-{
-	if (!ft_strcmp(((t_var *)data)->name, ref))
-		return (0);
-	return (1);
-}
+// /*
+// **
+// */
+// static int	cmp(void *data, void *ref)
+// {
+// 	if (!ft_strcmp(((t_var *)data)->name, ref))
+// 		return (0);
+// 	return (1);
+// }
 
 /*
 **	
@@ -46,17 +46,17 @@ unsigned char	builtin_unset(t_token *cmd, t_list **env, t_err *err)
 			i++;
 			continue ;
 		}
-		var = var_init(NULL, NULL, NULL);
+		var = var_init(NULL, NULL, NULL, err->gc);
 		if (!var)
 			return (FAILURE);
-		var->name = get_var_name(cmd->data[i]);
+		var->name = get_var_name(cmd->data[i], err->gc);
 		if (!(var->name))
 		{
-			var_destroy(var);
+			var_destroy(var, err->gc);
 			return (FAILURE);
 		}
-		ft_list_remove_if(env, (void *)var->name, &cmp, &var_destroy);
-		var_destroy(var);
+		gc_list_remove_var(env, (void *)var->name, err->gc);
+		var_destroy(var, err->gc);
 		i++;
 	}
 	return (SUCCESS);

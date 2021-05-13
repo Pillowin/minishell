@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ggieteer <ggieteer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ggeeteer <ggeeteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 19:08:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/12 15:13:454 byggtiteerr         ###   ########.fr       */
+/*   Updated: 2021/04/12 15:13:454 byggieteerr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,13 @@
 # define EOT			4
 # define KEY_UP			"\x1B[A"
 # define KEY_DOWN		"\x1B[B"
+
 # define ARROW			-2
 # define REAL			2
+
+# define ERRNO_ERR		-2
+# define CTRL_D			-1
+
 enum
 {
 	IN = 0,
@@ -88,7 +93,7 @@ typedef enum e_err_code
 
 typedef struct	s_err
 {
-	t_list			*gc;
+	t_list			**gc;
 	char			**message;
 	unsigned char	code;
 	char			*cmd_name;
@@ -117,6 +122,12 @@ typedef struct	s_sig_param
 	t_err	*err;
 }				t_sig_param;
 
+typedef struct	s_tc_cmds
+{
+	t_dlist		*cmds;
+	t_dlist		*cpy;
+}				t_tc_cmds;
+
 # include "minishell_lexer.h"
 # include "minishell_parser.h"
 # include "minishell_expansion.h"
@@ -125,6 +136,13 @@ typedef struct	s_sig_param
 unsigned short int	g_exit_status;
 
 void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **));
+
+/*
+**	gc_utils.c
+*/
+void	gc_list_push_back(t_list **begin_list, void *data, t_list **gc);
+void	gc_list_clear(t_list *begin_list, void (*free_fct)(void **), t_list **gc);
+void	gc_list_remove_var(t_list **begin_list, void *data_ref, t_list **gc);
 
 /*
 **	utils.c
@@ -139,14 +157,12 @@ size_t	ft_strslen(char **strs);
 // char	**ft_strsdup(char **source);
 int		is_var(void *data, void *ref);
 char	is_name(char *word, char delimiter);
-t_dlist	*ft_create_delem(void *data);
-void	ft_dlist_push_back(t_dlist **begin_list, void *data);
+t_dlist	*gc_create_delem(t_list **gc, void *data);
+void	gc_dlist_push_back(t_list **gc, t_dlist **begin_list, void *data);
 int		ft_putchar(int c);
 t_dlist	*dlst_last(t_dlist *dlist);
 void	waitall();
-char	tab_init(char **s1, char **s2, char **s3);
-t_list	*update_env(t_list **env, char *name, char *value);
-t_list	*insert_env(t_list **env, char *name, char *equal, char *value);
+char	tab_init(char **s1, char **s2, char **s3, t_list **gc);
 
 
 /*
@@ -167,7 +183,9 @@ void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **));
 **	env.c
 */
 
-t_list	*env_init(char **envp);
+t_list	*insert_env(t_list **env, t_var v, t_list **gc);
+t_list	*update_env(t_list **env, char *name, char *value, t_list **gc);
+t_list	*env_init(char **envp, t_list **gc);
 char	**env_to_tab(t_list *env);
 
 /*
@@ -188,7 +206,9 @@ char	pipe_destroy(t_fd *fd);
 **	prompt.c
 */
 
-char	prompt(t_list **env);
+// char	prompt(t_list **env, t_list **gc);
+void	prompt(void);
+
 
 /*
 **	binary.c
@@ -210,7 +230,7 @@ char	exec(t_btree *tree, t_list *env, t_err *err);
 **	signal.c
 */
 
-void	signal_init();
+void	signal_init(void);
 
 /*
 **	main.c
@@ -222,15 +242,16 @@ void	minishell(t_list *env, t_err *err);
 **	termcap
 */
 
+t_tc_cmds 		*tc_cmds_init(t_list **gc);
 char			tc_init(t_termios *termios);
 char			tc_destroy(t_termios *termios);
-int				tc_read(t_dlist **cmds, t_dlist **cpy, char **buf, t_list **env);
+int				tc_read(t_tc_cmds *tc_cmds, char **buf, t_list **gc);
 
-char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env);
-char			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **env);
+char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **gc);
+char			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **gc);
 void			tc_del(char **buf, unsigned int *i);
 unsigned int	tc_eol(t_dlist **curr_cpy, char **buf, unsigned int *i);
-int				tc_dispatch(t_dlist **curr_cpy, char **buf, t_list **env, unsigned int *i);
+int				tc_dispatch(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **gc);
 
 /*
 **	minishell.c

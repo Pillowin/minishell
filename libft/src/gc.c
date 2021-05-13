@@ -38,7 +38,7 @@ void	*gc_calloc(t_list **gc, size_t count, size_t size)
 **	Register ptr to list gc.
 */
 
-void	gc_set(t_list **gc, void *ptr)
+void	gc_register(t_list **gc, void *ptr)
 {
 	ft_list_push_back(gc, ptr);
 }
@@ -60,6 +60,8 @@ static int	cmp(void *data, void *ref)
 
 void	gc_free(t_list **gc, void **ptr)
 {
+	if (!ptr || !(*ptr))
+		return ;
 	ft_list_remove_if(gc, *ptr, &cmp, &free);
 	*ptr = NULL;
 }

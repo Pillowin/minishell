@@ -64,7 +64,7 @@ static void	sigint(int signal)
 **
 */
 
-void	signal_init()
+void	signal_init(void)
 {
 	if (signal(SIGINT, &sigint) == SIG_ERR)
 	{

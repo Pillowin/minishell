@@ -42,10 +42,10 @@ unsigned char	builtin_cd(t_token *cmd, t_list **env, t_err *err)
 			if (chdir((((t_var *)lst->data)->value)) == -1)
 				return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
 			oldpwd = getcwd(NULL, 0);
-			if (!update_env(env, "OLDPWD", oldpwd))
+			if (!update_env(env, "OLDPWD", oldpwd, err->gc))
 				return (FAILURE);
 			pwd = ft_strdup((((t_var *)lst->data)->value));
-			if (!pwd || !update_env(env, "PWD", pwd))
+			if (!pwd || !update_env(env, "PWD", pwd, err->gc))
 				return (FAILURE);
 			return (SUCCESS);
 		}
@@ -68,10 +68,10 @@ unsigned char	builtin_cd(t_token *cmd, t_list **env, t_err *err)
 		if (chdir(oldpwd) == -1)
 			return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
 		// update PWD
-		if (!update_env(env, "PWD", oldpwd))
+		if (!update_env(env, "PWD", oldpwd, err->gc))
 			return (FAILURE);
 		// update OLDPWD
-		if (!update_env(env, "OLDPWD", pwd))
+		if (!update_env(env, "OLDPWD", pwd, err->gc))
 			return (FAILURE);
 	}
 	else	// cas standard
@@ -86,10 +86,10 @@ unsigned char	builtin_cd(t_token *cmd, t_list **env, t_err *err)
 		if (!pwd)
 			return (FAILURE);
 		// update PWD
-		if (!update_env(env, "PWD", pwd))
+		if (!update_env(env, "PWD", pwd, err->gc))
 			return (FAILURE);
 		// update OLDPWD
-		if (!update_env(env, "OLDPWD", oldpwd))
+		if (!update_env(env, "OLDPWD", oldpwd, err->gc))
 			return (FAILURE);
 	}
 	return (SUCCESS);

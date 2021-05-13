@@ -18,14 +18,20 @@
 **	Print pretty prompt and set PS1if needed.
 */
 
-char	prompt(t_list **env)
-{
-	t_list	*prompt;
+// char	prompt(t_list **env, t_list **gc)
+// {
+// 	t_list	*prompt;
 
-	prompt = ft_list_find(*env, (void *)"PS1", &is_var);
-	if (!prompt || !((((t_var *)prompt->data)->value)))
-		prompt = update_env(env, "PS1", DEFAULT_PROMPT);
-	// printf("%d ", g_exit_status & 0x00FF);	fflush(stdout);	// TODO: REMOVE 
-	ft_putstr_fd(((t_var *)prompt->data)->value, STDOUT_FILENO);
-	return (SUCCESS);
+// 	prompt = ft_list_find(*env, (void *)"PS1", &is_var);
+// 	if (!prompt || !((((t_var *)prompt->data)->value)))
+// 		prompt = update_env(env, "PS1", DEFAULT_PROMPT, gc);
+// 	// printf("%d ", g_exit_status & 0x00FF);	fflush(stdout);	// TODO: REMOVE 
+// 	ft_putstr_fd(((t_var *)prompt->data)->value, STDOUT_FILENO);
+// 	return (SUCCESS);
+// }
+
+
+void	prompt(void)
+{
+	ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);
 }

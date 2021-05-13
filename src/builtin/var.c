@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-t_var	*var_init(char *name, char *equal, char *value)
+t_var	*var_init(char *name, char *equal, char *value, t_list **gc)
 {
 	t_var	*var;
 
-	var = (t_var *)ft_calloc(1, sizeof(*var));
+	var = (t_var *)gc_calloc(gc, 1, sizeof(*var));
 	if (!var)
 		return (NULL);
 	var->name = name;
@@ -25,23 +25,23 @@ t_var	*var_init(char *name, char *equal, char *value)
 	return (var);
 }
 
-void	var_destroy(void *data)
+void	var_destroy(void *data, t_list **gc)
 {
 	t_var	*var;
 
 	if (!data)
 		return ;
 	var = (t_var *)data;
-	ft_free((void **)&(var->name));
-	ft_free((void **)&(var->equal));
-	ft_free((void **)&(var->value));
-	ft_free((void **)&(var));
+	gc_free(gc, (void **)&(var->name));
+	gc_free(gc, (void **)&(var->equal));
+	gc_free(gc, (void **)&(var->value));
+	gc_free(gc, (void **)&(var));
 }
 
 /*
 **
 */
-char	*get_var_name(char *var)
+char	*get_var_name(char *var, t_list **gc)
 {
 	unsigned int	i;
 	char			*value;
@@ -53,40 +53,34 @@ char	*get_var_name(char *var)
 	{
 		i = value - var + 1;
 		name = ft_substr(var, 0, i - 1);
-		if (!name)
-			return (NULL);
-		return (name);
 	}
-	name = ft_strdup(var);
+	else
+		name = ft_strdup(var);
 	if (!name)
 		return (NULL);
+	gc_register(gc, name);
 	return (name);
 }
 
-char	*get_var_equal(char *var)
+char	*get_var_equal(char *var, t_list **gc)
 {
 	char	*equal;
 
 	equal = NULL;
 	if (ft_strchr(var, '='))
-	{
 		equal = ft_strdup("=");
-		if (!equal)
-			return (FAILURE);
-	}
 	else
-	{
 		equal = ft_strdup("");
-		if (!equal)
-			return (FAILURE);
-	}
+	if (!equal)
+		return (NULL);
+	gc_register(gc, equal);
 	return (equal);
 }
 
 /*
 **	
 */
-char	*get_var_value(char *var)
+char	*get_var_value(char *var, t_list **gc)
 {
 	unsigned int	i;
 	char			*value;
@@ -96,14 +90,11 @@ char	*get_var_value(char *var)
 	{
 		i = value - var + 1;
 		value = ft_substr(var, i, ft_strlen(var) - i);
-		if (!value)
-			return (FAILURE);
 	}
 	else
-	{
 		value = ft_strdup("");
-		if (!value)
-			return (FAILURE);
-	}
+	if (!value)
+		return (NULL);
+	gc_register(gc, value);
 	return (value);
 }

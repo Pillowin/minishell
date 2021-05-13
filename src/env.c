@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/22 12:16:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/25 00:51:42 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/13 20:27:09 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 **	Create a list from main envp
 */
-t_list	*env_init(char **envp)
+t_list	*env_init(char **envp, t_list **gc)
 {
 	unsigned int	i;
 	t_list			*env;
@@ -25,10 +25,10 @@ t_list	*env_init(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		var = var_init(get_var_name(envp[i]), get_var_equal(envp[i]), get_var_value(envp[i]));
+		var = var_init(get_var_name(envp[i], gc), get_var_equal(envp[i], gc), get_var_value(envp[i], gc), gc);
 		if (!var)
 			return (NULL);
-		ft_list_push_back(&env, var);
+		gc_list_push_back(&env, var, gc);
 		i++;
 	}
 	return (env);
@@ -68,4 +68,52 @@ char	**env_to_tab(t_list *env)
 		i++;
 	}
 	return (envp);
+}
+
+/*
+**
+*/
+
+t_list	*update_env(t_list **env, char *name, char *value, t_list **gc)
+{
+	t_list	*env_var;
+	t_var	init;
+	t_var	*var;
+
+	env_var = ft_list_find(*env, (void *)name, &is_var);
+	if (!env_var || !((t_var *)env_var->data)->value)
+	{
+		init.name = name;
+		init.equal = "=";
+		if (env_var && ((t_var *)env_var->data)->name)
+			init.name = ((t_var *)env_var->data)->name;
+		if (env_var && ((t_var *)env_var->data)->equal)
+			init.equal = ((t_var *)env_var->data)->equal;
+		init.value = value;
+		if (!tab_init(&(init.name), &(init.equal), &(init.value), gc))
+			return (NULL);
+		var = var_init(init.name, init.equal, init.value, gc);
+		if (!var)
+			return (NULL);
+		gc_list_push_back(env, var, gc);
+		return(ft_lstlast(*env));
+	}
+	gc_free(gc, (void **)&((t_var *)env_var->data)->value);
+	((t_var *)env_var->data)->value = value;
+	return (env_var);
+}
+
+/*
+**
+*/
+
+t_list	*insert_env(t_list **env, t_var v, t_list **gc)
+{
+	t_var	*var;
+	
+	var = var_init(v.name, v.equal, v.value, gc);
+	if (!var)
+		return (NULL);
+	ft_list_push_back(env, var);
+	return(ft_lstlast(*env));
 }

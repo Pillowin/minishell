@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguiteer <gguiteer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 22:59:09 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/11 18:39:556 by agautier         ###   ########.fr       */
+/*   Updated: 2021/04/11 18:39:566 byagattierr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,11 +170,11 @@ char	is_name(char *word, char delimiter)
 ** create new double list
 */
 
-t_dlist	*ft_create_delem(void *data)
+t_dlist	*gc_create_delem(t_list **gc, void *data)
 {
 	t_dlist	*list;
 
-	list = (t_dlist *)malloc(sizeof(*list));
+	list = (t_dlist *)gc_calloc(gc, 1, sizeof(*list));
 	if (!list)
 		return (NULL);
 	list->data = data;
@@ -187,19 +187,19 @@ t_dlist	*ft_create_delem(void *data)
 **	push back new double list
 */
 
-void	ft_dlist_push_back(t_dlist **begin_list, void *data)
+void	gc_dlist_push_back(t_list **gc, t_dlist **begin_list, void *data)
 {
 	t_dlist	*curr;
 
 	if (*begin_list == NULL)
 	{
-		*begin_list = ft_create_delem(data);
+		*begin_list = gc_create_delem(gc, data);
 		return ;
 	}
 	curr = *begin_list;
 	while (curr->next)
 		curr = curr->next;
-	curr->next = ft_create_delem(data);
+	curr->next = gc_create_delem(gc, data);
 	curr->next->prev = curr;
 }
 
@@ -244,71 +244,26 @@ void	waitall()
 **	Create t to create a new var.
 */
 
-char	tab_init(char **s1, char **s2, char **s3)
+char	tab_init(char **s1, char **s2, char **s3, t_list **gc)
 {
 	*s1 = ft_strdup(*s1);
 	if (!*s1)
 		return (FAILURE);
+	gc_register(gc, *s1);	
 	*s2 = ft_strdup(*s2);
 	if (!*s2)
 	{
-		ft_free((void **)s1);
+		gc_free(gc, (void **)s1);
 		return (FAILURE);
 	}
+	gc_register(gc, *s2);
 	*s3 = ft_strdup(*s3);
 	if (!*s3)
 	{
-		ft_free((void **)s1);
-		ft_free((void **)s2);
+		gc_free(gc, (void **)s1);
+		gc_free(gc, (void **)s2);
 		return (FAILURE);
 	}
+	gc_register(gc, *s3);	
 	return (SUCCESS);
-}
-
-/*
-**
-*/
-
-t_list	*update_env(t_list **env, char *name, char *value)
-{
-	t_list	*env_var;
-	t_var	init;
-	t_var	*var;
-
-	env_var = ft_list_find(*env, (void *)name, &is_var);
-	if (!env_var || !((t_var *)env_var->data)->value)
-	{
-		init.name = name;
-		init.equal = "=";
-		if (env_var && ((t_var *)env_var->data)->name)
-			init.name = ((t_var *)env_var->data)->name;
-		if (env_var && ((t_var *)env_var->data)->equal)
-			init.equal = ((t_var *)env_var->data)->equal;
-		init.value = value;
-		if (!tab_init(&(init.name), &(init.equal), &(init.value)))
-			return (NULL);
-		var = var_init(init.name, init.equal, init.value);
-		if (!var)
-			return (NULL);
-		ft_list_push_back(env, var);
-		return(ft_lstlast(*env));
-	}
-	ft_free((void **)&((t_var *)env_var->data)->value);
-	((t_var *)env_var->data)->value = value;
-	return (env_var);
-}
-/*
-**
-*/
-
-t_list	*insert_env(t_list **env, char *name, char *equal, char *value)
-{
-	t_var	*var;
-
-	
-	var = var_init(name, equal, value);
-	if (!var)
-		return (NULL);
-	ft_list_push_back(env, var);
-	return(ft_lstlast(*env));
 }
