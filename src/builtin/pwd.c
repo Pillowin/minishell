@@ -22,11 +22,11 @@ unsigned char	builtin_pwd(t_token *cmd, t_list **env, t_err *err)
 
 	(void)cmd;
 	(void)env;
-	(void)err;
 	buf = getcwd(NULL, 0);
 	if (!buf)
-		return (FAILURE);
+		return ((long)error(err, FATAL, NULL, NULL));
+	gc_register(err->gc, buf);
 	ft_putendl_fd(buf, STDOUT_FILENO);
-	ft_free((void **)&buf);
+	gc_free(err->gc, (void **)&buf);
 	return (SUCCESS);
 }

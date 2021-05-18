@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/29 23:43:14 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/18 19:15:58 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,19 @@ static int	expand_clean(t_list **tokens, t_err *err)
 			&& ((t_token *)(curr->next->data))->type == TOK_WORD)
 		{
 			tmp = *((t_token *)(curr->data))->data;
-			*((t_token *)(curr->data))->data = ft_strjoin(tmp,
-					*((t_token *)(curr->next->data))->data);
-			ft_free((void **)&(tmp));
+			*((t_token *)(curr->data))->data = ft_strjoin(tmp, *((t_token *)(curr->next->data))->data);
+			gc_free(err->gc, (void **)&(tmp));
 			if (!(*((t_token *)(curr->data))->data))
-				return ((long)error(err, MALLOC, (void **)tokens, &ft_lstdel));
+				return ((long)error(err, FATAL, NULL, NULL));
+			gc_register(err->gc, *((t_token *)(curr->data))->data);
 			tmp = curr->next->next;
-			ft_lstdelone(curr->next, &token_destroy);
+			gc_lstdelone(curr->next, &token_destroy, err->gc);
 			curr->next = tmp;
 			continue ;
 		}
 		curr = curr->next;
 	}
-	ft_list_remove_if(tokens, (void *)TOK_SPACE, &is_tok_type, &token_destroy);
+	gc_list_rm_tok_if(tokens, (void *)TOK_SPACE, &is_tok_type, err->gc);
 	return (SUCCESS);
 }
 
@@ -48,7 +48,7 @@ static int	expand_clean(t_list **tokens, t_err *err)
 **	Expand quotes double quotes and backslash
 */
 
-int	expand(t_list **done, t_list **tokens, t_list *env, t_err *err)
+char	expand(t_list **done, t_list **tokens, t_list *env, t_err *err)
 {
 	t_list	*prev;
 	t_list	*curr;

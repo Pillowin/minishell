@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:56:21 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/30 18:16:09 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/14 17:08:527 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,36 +23,45 @@ static int	cmp(t_token *lstdata, int *data)
 	return (EXIT_FAILURE);
 }
 
-static t_token	*tokendup(t_token *data)
+static t_token	*tokendup(t_token *data, t_list **gc)
 {
 	t_token 		*dest;
 	unsigned int	i;
 
 	i = 0;
-	dest = (t_token *)ft_calloc(1, sizeof(*dest));
+	dest = (t_token *)gc_calloc(gc, 1, sizeof(*dest));
 	if (!dest)
 		return (NULL);
 	dest->type = data->type;
 	while (data->data[i])
 		i++;
-	dest->data = (char **)ft_calloc(i + 1, sizeof(*(dest->data)));
+	dest->data = (char **)gc_calloc(gc, i + 1, sizeof(*(dest->data)));
+	if (!(dest->data))
+		return (NULL);
 	i = 0;
 	while (data->data[i])
 	{
 		dest->data[i] = ft_strdup(data->data[i]);
+		if (!(dest->data[i]))
+			return (NULL);
+		gc_register(gc, dest->data[i]);
 		i++;
 	}
 	return (dest);
 }
 
-static t_list	*lstcpy(t_list *lst)
+static t_list	*lstcpy(t_list *lst, t_list **gc)
 {
 	t_list	*dest;
+	t_token	*token;
 
 	dest = NULL;
 	while (lst)
 	{
-		ft_list_push_back(&dest, tokendup(lst->data));
+		token = tokendup(lst->data, gc);
+		if (!token)
+			return (NULL);
+		gc_list_push_back(&dest, token, gc);
 		lst = lst->next;
 	}
 	return (dest);
@@ -61,7 +70,7 @@ static t_list	*lstcpy(t_list *lst)
 /*
 **	Syntax check for each token.
 */
-int	check_tokens(t_list *tokens, t_err *err)
+char	check_tokens(t_list *tokens, t_err *err)
 {
 	unsigned int	i;
 	unsigned int	j;
@@ -69,11 +78,13 @@ int	check_tokens(t_list *tokens, t_err *err)
 	t_list			*toks;
 	const int		prios[5] = {
 		TOK_SEMI, TOK_PIPE, TOK_DGREAT, TOK_GREAT, TOK_LESS};
-	int (* const check_f[5])(t_list *, unsigned int, t_err *) = {
+	char (* const check_f[5])(t_list *, unsigned int, t_err *) = {
 		check_semi, check_pipe, check_dgreat, check_great, check_less};
 	
-	toks = lstcpy(tokens);
-	ft_list_remove_if(&toks, (void *)TOK_SPACE, &is_tok_type, &token_destroy);
+	toks = lstcpy(tokens, err->gc);
+	if (!toks)
+		return ((long)error(err, FATAL, NULL, NULL));
+	gc_list_rm_tok_if(&toks, (void *)TOK_SPACE, &is_tok_type, err->gc);
 	i = 0;
 	while (i < 5)
 	{
@@ -96,26 +107,25 @@ int	check_tokens(t_list *tokens, t_err *err)
 **	Entry point for parser.
 */
 
-int	parser(t_list **tokens, t_err *err, t_list *env)
+char	parser(t_list **tokens, t_err *err, t_list **env)
 {
 	t_list	*done;
 
 	if (!dgreat_merge(tokens, err))
-		return (FAILURE);
+		return ((long)error(err, FATAL, NULL, NULL));
 	if (!check_tokens(*tokens, err))
 		return (FAILURE);
 	done = NULL;
 	while (*tokens) // tant que le dernier token est pas \n
 	{
-		if (!expand(&done, tokens, env, err))
+		if (!expand(&done, tokens, *env, err))
 			return (FAILURE);
 		if (!redir_merge(&done, err))
-			return (FAILURE);
+			return ((long)error(err, FATAL, NULL, NULL));
 		if (!command_merge(&done, err))
-			return (FAILURE);
-		ft_list_remove_if(&done, (void *)TOK_NEWLINE, &is_tok_type,
-			&token_destroy);
-		if (*tokens && ((t_token *)(*tokens)->data)->data[0][0] == ';')	//  && !(done->next)	// TODO:
+			return ((long)error(err, FATAL, NULL, NULL));
+		gc_list_rm_tok_if(&done, (void *)TOK_NEWLINE, &is_tok_type, err->gc);
+		if (*tokens && ((t_token *)(*tokens)->data)->data[0][0] == ';')
 			return ((long)error(err, SYNTAX_SEMI, NULL, NULL));
 		if (!create_tree(done, env, err))
 			return (FAILURE);

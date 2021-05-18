@@ -55,58 +55,10 @@ int	is_tok_type(t_token *data, void *type)
 }
 
 /*
-**	
-*/
-int	my_strdup(char ***strs, size_t size, char *str)
-{
-	*strs = (char **)ft_calloc(size + 1, sizeof(**strs));
-	if (!(*strs))
-		return (FAILURE);
-	*strs[0] = ft_strdup(str);
-	if (!(*strs[0]))
-	{
-		ft_free((void **)&(*strs));
-		return (FAILURE);
-	}
-	return (SUCCESS);
-}
-
-// /*
-// **	Duplicate source but malloc'ed
-// */
-// char	**ft_strsdup(char **source)
-// {
-// 	unsigned int	i;
-// 	char			**str;
-
-// 	str = (char **)ft_calloc(ft_strslen(source) + 1, sizeof(*source));
-// 	if (!str)
-// 		return (NULL);
-// 	i = 0;
-// 	while (source[i])
-// 	{
-// 		str[i] = ft_strdup(source[i]);
-// 		if (!str[i])
-// 		{
-// 			i--;
-// 			while (i)
-// 			{
-// 				ft_free((void **)&str[i]);
-// 				i--;
-// 			}
-// 			ft_free((void **)str);
-// 			return (NULL);
-// 		}
-// 		i++;
-// 	}
-// 	return (str);
-// }
-
-/*
 **
 */
 
-int	my_calloc(size_t count, size_t size, void **ptr)
+int	my_calloc(size_t count, size_t size, void **ptr, t_list **gc)
 {
 	size_t	i;
 
@@ -114,6 +66,7 @@ int	my_calloc(size_t count, size_t size, void **ptr)
 	*ptr = malloc(count * size);
 	if (!*ptr)
 		return (FAILURE);
+	gc_register(gc, *ptr);
 	i = 0;
 	while (i < size * count)
 	{
@@ -227,7 +180,7 @@ t_dlist	*dlst_last(t_dlist *dlist)
 **	Wait until all child are DEAD :3
 */
 
-void	waitall()
+void	waitall(void)
 {
 
 	int ret;
@@ -267,3 +220,12 @@ char	tab_init(char **s1, char **s2, char **s3, t_list **gc)
 	gc_register(gc, *s3);	
 	return (SUCCESS);
 }
+
+// // TODO: delete
+// void	var_print(void *data)
+// {
+// 	t_var	*var;
+
+// 	var = (t_var *)data;
+// 	fprintf(stderr, "var = {%s %s %s}\n", var->name, var->equal, var->value);
+// }

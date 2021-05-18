@@ -15,7 +15,7 @@
 /*
 **	print var
 */
-void	print_var(void *data)
+void	print_var(void *data)	// TODO: remove ?
 {
 	t_var	*var;
 
@@ -30,7 +30,7 @@ void	print_var(void *data)
 **
 */
 
-char	is_builtin(t_token *token, t_fd *fd, t_list *env, t_err *err)
+char	is_builtin(t_token *token, t_fd *fd, t_list **env, t_err *err)
 {
 	unsigned int	i;
 	const char		*builtin_names[7] = {"echo", "cd", "pwd", "export", "unset", "env", "exit"};
@@ -42,25 +42,22 @@ char	is_builtin(t_token *token, t_fd *fd, t_list *env, t_err *err)
 	{
 		if (!ft_strcmp(token->data[0], (char *)builtin_names[i]))
 		{
-			if (!builtins[i](token, &env, err))
+			if (!builtins[i](token, env, err))	// TODO: set error in each builtin
 			{
-				// TODO: retrieve value from builtin error
 				if (fd->is_child)
 				{
-					exit(EXIT_FAILURE);	// TODO: what value ?
+					gc_clean(err->gc);
+					exit(g_exit_status & 0x00FF);
 				}
 				return (FAILURE);
 			}
 			if (fd->is_child)
 			{
 				if (close(fd->pipes[OUT]) == -1) //OUT redevenir STD_OUT
-				{
-					// TODO:
-					(void)err;
-					return (FAILURE);
-				}
+					return ((long)error(err, FATAL, NULL, NULL));
 				fd->pipes[OUT] = STDOUT_FILENO;
-				exit(EXIT_SUCCESS);	// TODO: what value ?
+				gc_clean(err->gc);
+				exit(g_exit_status & 0x00FF);
 			}
 			return (DONE);
 		}

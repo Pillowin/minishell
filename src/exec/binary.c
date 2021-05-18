@@ -22,7 +22,8 @@ char	*binary_absolute_path(t_token *token, t_err *err)
 	
 	path = ft_strdup(token->data[0]);
 	if (!path)
-		return (error(err, MALLOC, NULL, NULL));	// TODO: error ?
+		return (NULL);
+	gc_register(err->gc, path);
 	return (path);
 }
 
@@ -37,15 +38,18 @@ char	*binary_relative_path(t_token *token, t_err *err)
 	
 	path = getcwd(NULL, 0);
 	if (!path)
-		return (error(err, ERR_NO, NULL, NULL));
+		return (NULL);
+	gc_register(err->gc, path);
 	tmp = ft_strjoin(path, "/");
-	ft_free((void **)&path);
+	gc_free(err->gc, (void **)&path);
 	if (!tmp)
-		return (error(err, MALLOC, NULL, NULL));// TODO: free path
+		return (NULL);
+	gc_register(err->gc, tmp);
 	path = ft_strjoin(tmp, token->data[0]);
-	ft_free((void **)&tmp);
+	gc_free(err->gc, (void **)&tmp);
 	if (!path)
-		return (error(err, MALLOC, NULL, NULL)); // TODO: free path et tmp
+		return (NULL);
+	gc_register(err->gc, path);
 	return (path);
 }
 
@@ -60,39 +64,46 @@ char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
 	char			*path;
 	void			*tmp;
 	
-	tmp = ft_list_find(env, (void *)"PATH", &is_var);
+	tmp = ft_list_find(env, "PATH", &is_var);
 	if (!tmp)
 		return (error(err, NOT_FOUND, NULL, NULL));
 	tmp = ((t_var *)((t_list *)tmp)->data)->value;
-	paths = ft_split(tmp, ':');	// 
+	paths = ft_split(tmp, ':');
 	if (!paths)
-		return (error(err, MALLOC, NULL, NULL));
+		return (error(err, FATAL, NULL, NULL));
+	gc_register(err->gc, paths);
+	i = 0;
+	while (paths[i])
+	{
+		gc_register(err->gc, paths[i]);
+		i++;
+	}
+	
 	i = 0;
 	while (paths[i])
 	{
 		path = paths[i];
 		tmp = ft_strjoin(path, "/");
 		if (!tmp)
-			return (error(err, MALLOC, (void **)paths, &ft_free_tab));
+			return (error(err, FATAL, NULL, NULL));
+		gc_register(err->gc, tmp);
 		path = ft_strjoin(tmp, token->data[0]);
-		ft_free((void **)&tmp);
+		gc_free(err->gc, (void **)&tmp);
 		if (!path)
-			return (error(err, MALLOC, NULL, NULL));
-		if (stat(path, buf) == 0)	// TODO: verif stat ?
+			return (error(err, FATAL, NULL, NULL));
+		gc_register(err->gc, path);
+		if (stat(path, buf) == 0)
 			break;
-		ft_free((void **)&path);
+		gc_free(err->gc, (void **)&path);
 		i++;
 	}
 	if (!paths[i])
-	{
-		// waitpid(-1, NULL, 0);
-		// fprintf(stderr, "Not found error 2\n");
-		return (error(err, NOT_FOUND, (void **)paths, &ft_free_tab));
-	}
+		return (error(err, NOT_FOUND, (void **)paths, &gc_free_tab));
 	path = ft_strdup(path);
 	if (!path)
-		return (error(err, MALLOC, NULL, NULL));
-	ft_free_tab((void **)paths);
+		return (error(err, FATAL, NULL, NULL));
+	gc_register(err->gc, path);
+	gc_free_tab((void **)paths, err->gc);
 	return (path);
 }
 
@@ -100,37 +111,30 @@ char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
 **
 */
 
-char	binary_exec(t_token *token, char *path, t_fd *fd, t_list *env, t_err *err)
+char	binary_exec(t_token *token, char *path, t_fd_env_err *fee)
 {
 	char	**envp;
 	int		status;
 	t_stat	buf;
 	t_pid	pid;
 
-
-
 	if (stat(path, &buf) != 0)
-	{
-		// fprintf(stderr, "No such file error\n");
-		return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
-	}
+		return ((long)error(fee->err, NO_SUCH_FILE, NULL, NULL));
 	if (buf.st_mode & S_IFDIR)
-		return ((long)error(err, IS_A_DIR, NULL, NULL));
+		return ((long)error(fee->err, IS_A_DIR, NULL, NULL));
 	else if (!(buf.st_mode & S_IXUSR))
-		return ((long)error(err, PERM, NULL, NULL));
-	envp = env_to_tab(env);
+		return ((long)error(fee->err, PERM, NULL, NULL));
+	envp = env_to_tab(*(fee->env), fee->err->gc);
 	if (!envp)
-		return (FAILURE);
-	if (!(fd->is_forked) || !(fd->is_child))
+		return ((long)error(fee->err, FATAL, NULL, NULL));
+	if (!(fee->fd->is_forked) || !(fee->fd->is_child))
 	{
 		pid = fork();
 		if (pid == -1)
-			return (FAILURE);
-		else if (!pid)	// si pid = 0 ca veut dire qu'on est dans l'enfant
-		{
+			return ((long)error(fee->err, FATAL, NULL, NULL));
+		else if (!pid)
 			if (execve(path, token->data, envp) == -1)
-				return (FAILURE);
-		}
+				return ((long)error(fee->err, FATAL, NULL, NULL));
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status) && WEXITSTATUS(status))
 		{

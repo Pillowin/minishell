@@ -6,14 +6,14 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:46:45 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/12 13:23:55 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/17 14:37:50 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**	Print strings in fd
+**
 */
 
 static int	is_flag(char *str)
@@ -33,6 +33,10 @@ static int	is_flag(char *str)
 	}
 	return (SUCCESS);
 }
+
+/*
+**	Print strings in fd
+*/
 
 unsigned char	builtin_echo(t_token *cmd, t_list **env, t_err *err)
 {

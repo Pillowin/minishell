@@ -12,21 +12,23 @@
 
 #include "minishell.h"
 
-void	ft_free_tab(void **data)
+// TODO: remove both ?
+
+void	gc_free_tab(void **data, t_list **gc)
 {
 	unsigned int	i;
 
 	i = 0;
 	while ((char **)(data)[i])
 	{
-		ft_free((void **)&(data[i]));
+		gc_free(gc, (void **)&(data[i]));
 		i++;
 	}
-	ft_free((void **)&data);
+	gc_free(gc, (void **)&data);
 }
 
-void	ft_lstdel(void **list)
+void	gc_lstdel(void **list, t_list **gc)
 {
-	ft_list_foreach(*(t_list **)list, &token_destroy);
-	ft_list_clear(*(t_list **)list, &ft_free);
+	gc_list_foreach(*(t_list **)list, &token_destroy, gc);
+	gc_list_clear(*(t_list **)list, gc);
 }

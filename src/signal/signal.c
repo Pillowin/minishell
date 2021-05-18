@@ -64,16 +64,18 @@ static void	sigint(int signal)
 **
 */
 
-void	signal_init(void)
+void	signal_init(t_list **gc)
 {
 	if (signal(SIGINT, &sigint) == SIG_ERR)
 	{
-		// TODO: error
-		printf("err signal\n");
+		print_err_msg(NULL, NULL, strerror(errno), gc);
+		gc_clean(gc);
+		exit(EXIT_FAILURE);
 	}
 	if (signal(SIGQUIT, &sigquit) == SIG_ERR)
 	{
-		// TODO: error
-		printf("err signal\n");
+		print_err_msg(NULL, NULL, strerror(errno), gc);
+		gc_clean(gc);
+		exit(EXIT_FAILURE);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 13:15:19 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/13 16:14:16 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/17 15:28:30 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,8 @@ char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
 int		ft_isprint(int c);
 void	ft_bzero(void *s, size_t n);
+char	*ft_itoa(int n);
+int		ft_atoi(const char *str);
+int		ft_isdigit(int c);
 
 #endif

@@ -6,14 +6,14 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/08 17:59:51 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/08 20:50:12 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/17 13:28:01 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
-**	Libère la mémoire de l’élément passé en argumenten utilisant la fonction
+**	Libère la mémoire de l’élément passé en argument en utilisant la fonction
 **	del puis avec free(3).
 **	La mémoire de next n'est pas free.
 */

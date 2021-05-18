@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 23:01:19 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/14 23:24:19 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/18 20:38:55 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,33 @@
 **	Ignore TOK_REDIR when creating commands
 */
 
-static int	ignore_redir(t_list **curr, t_list **redirs, t_list **tmp)
+static int	ignore_redir(t_list **curr, t_list **redirs, t_list **tmp, t_list **gc)
 {
+	t_list	*last;
+
 	if (((t_token *)((*curr)->data))->type == TOK_REDIR)
 	{
 		if (!(*redirs))
+		{
 			*redirs = ft_lstnew((*curr)->data);
+			if (!*redirs)
+				return (-1);
+			gc_register(gc, *redirs);
+		}
 		else
-			ft_lstlast(*redirs)->next = ft_lstnew((*curr)->data);
+		{
+			last = ft_lstlast(*redirs);
+			if (last)
+			{
+				gc_register(gc, last);
+				last->next = ft_lstnew((*curr)->data);
+				if (!last->next)
+					return (-1);
+				gc_register(gc, last->next);
+			}
+		}
 		*tmp = (*curr)->next;
-		ft_lstdelone((*curr), NULL);
+		gc_lstdelone((*curr), NULL, gc);
 		*curr = *tmp;
 		return (1);
 	}
@@ -55,28 +72,30 @@ static unsigned int	count_words(t_list *tokens)
 **	Merge TOK_WORDS into a TOK_COMMAND
 */
 
-static int	create_command(t_list **curr, t_list **redirs, char ***str)
+static int	create_command(t_list **curr, t_list **redirs, char ***str, t_list **gc)
 {
 	unsigned int	i;
 	t_list			*tmp;
+	int				ret;
 
 	i = 0;
-	*str = (char **)ft_calloc(count_words(*curr) + 1, sizeof(*str));
+	*str = (char **)gc_calloc(gc, count_words(*curr) + 1, sizeof(*str));
 	if (!(*str))
 		return (FAILURE);
 	while (((t_token *)((*curr)->data))->type == TOK_WORD
 				|| ((t_token *)((*curr)->data))->type == TOK_REDIR)
 	{
-		if (ignore_redir(curr, redirs, &tmp))
+		ret = ignore_redir(curr, redirs, &tmp, gc);
+		if (ret == -1)
+			return (FAILURE);
+		else if (ret)
 			continue ;
 		(*str)[i] = ft_strdup(*(((t_token *)((*curr)->data))->data));
 		if (!(*str)[i])
-		{
-			ft_free((void **)&(**str));
 			return (FAILURE);
-		}
+		gc_register(gc, (*str)[i]);
 		tmp = (*curr)->next;
-		ft_lstdelone((*curr), &token_destroy);
+		gc_lstdelone((*curr), &token_destroy, gc);
 		(*curr) = tmp;
 		i++;
 	}
@@ -93,20 +112,22 @@ static int	add_cmd_to_lst(t_list **tokens, t_list **prev, t_list **curr,
 	t_list	*new;
 	t_list	*redirs;
 	char	**str;
+	t_list	*last;
 
 	redirs = NULL;
-	if (!create_command(curr, &redirs, &str))
-		return ((long)error(err, MALLOC, NULL, NULL));
-	if (!new_lstok(TOK_COMMAND, str, &new))
-	{
-		ft_free_tab((void **)str);
-		return ((long)error(err, MALLOC, (void **)tokens, &ft_lstdel));
-	}
+	if (!create_command(curr, &redirs, &str, err->gc))
+		return (FAILURE);
+	if (!new_lstok(TOK_COMMAND, str, &new, err->gc))
+		return (FAILURE);
 	new->next = *curr;
 	if (redirs)
 	{
 		new->next = redirs;
-		ft_lstlast(redirs)->next = *curr;
+		last = ft_lstlast(redirs);
+		if (!last)
+			return (FAILURE);
+		gc_register(err->gc, last);
+		last->next = *curr;
 	}
 	if (!(*prev))
 		*tokens = new;
@@ -119,7 +140,7 @@ static int	add_cmd_to_lst(t_list **tokens, t_list **prev, t_list **curr,
 **	Merge all TOK_WORD qui se suivent
 */
 
-int	command_merge(t_list **tokens, t_err *err)
+char	command_merge(t_list **tokens, t_err *err)
 {
 	t_list	*curr;
 	t_list	*prev;

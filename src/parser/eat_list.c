@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 16:46:34 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/23 16:58:16 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/18 20:38:41 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static t_list	*ft_list_find_prev(t_list *list, void *data_ref, int (*cmp)())
 /*
 **	Trouve le token suivant dans la liste par ordre de priorité
 */
-//TODO: make prettier
 static t_list	*find_next(t_list *tokens)
 {
 	t_list	*ret;
@@ -56,13 +55,14 @@ static t_list	*find_next(t_list *tokens)
 static int	create_node_no_prio(t_list *list, t_btree **node, t_child *child)
 {
 	*node = btree_create_node(((t_token *)(list->data)));
+	gc_register(child->gc, *node);
 	if (!(*node))
 		return (FAILURE);
 	if (list->next && ((t_token *)(list->data))->type == TOK_REDIR)
 		child->left = list->next;
 	else if (list->next && ((t_token *)(list->data))->type == TOK_COMMAND)
 		child->right = list->next;
-	ft_free((void **)&(list));
+	gc_free(child->gc, (void **)&(list));
 	return (SUCCESS);
 }
 
@@ -86,7 +86,8 @@ static int	create_node_prio(t_list *list, t_list *prev, t_btree **node,
 	*node = btree_create_node(((t_token *)(prev->next->data)));
 	if (!(*node))
 		return (FAILURE);
-	ft_free((void **)&(prev->next));
+	gc_register(child->gc, *node);
+	gc_free(child->gc, (void **)&(prev->next));
 	return (SUCCESS);
 }
 
@@ -95,13 +96,12 @@ static int	create_node_prio(t_list *list, t_list *prev, t_btree **node,
 **	On créé un arbre à partir d'une liste
 */
 
-int	eat_list(t_list *list, t_btree **node)
+char	eat_list(t_list *list, t_btree **node, t_list **gc)
 {
 	t_child	child;
 	t_list	*prev;
 
-	child.left = NULL;
-	child.right = NULL;
+	child = (t_child){NULL, NULL, gc};
 	prev = find_next(list);
 	if (!prev)
 		if (!create_node_no_prio(list, node, &child))
@@ -110,10 +110,10 @@ int	eat_list(t_list *list, t_btree **node)
 		if (!create_node_prio(list, prev, node, &child))
 			return (FAILURE);
 	if (child.left)
-		if (!eat_list(child.left, &((*node)->left)))
+		if (!eat_list(child.left, &((*node)->left), gc))
 			return (FAILURE);
 	if (child.right)
-		if (!eat_list(child.right, &((*node)->right)))
+		if (!eat_list(child.right, &((*node)->right), gc))
 			return (FAILURE);
 	return (SUCCESS);
 }

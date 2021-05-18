@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:36:47 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/29 23:11:02 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/18 13:12:43 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ typedef struct s_lexer
 	unsigned int	str_len;
 	char			c;
 	unsigned int	i;
-}				t_lexer;
+}	t_lexer;
 
 typedef enum e_tok_type
 {
@@ -49,15 +49,13 @@ typedef struct s_token
 /*
 **	lexer.c
 */
-
-int		lexer(char *input, t_err *err, t_list *env);
-int		lexer_init(char *str, t_lexer **lexer);
+int		lexer(char *input, t_err *err, t_list **env);
+t_lexer	*lexer_init(char *str, t_list **gc);
 t_token	*lexer_get_token(t_lexer *lexer, t_err *err);
 
 /*
 **	lexer_advance.c
 */
-
 void	lexer_advance(t_lexer *lexer, unsigned int len);
 t_token	*lexer_advance_word(t_lexer *lexer, t_err *err);
 t_token	*lexer_advance_current(t_lexer *lexer, t_tok_type type, t_err *err);
@@ -65,15 +63,13 @@ t_token	*lexer_advance_current(t_lexer *lexer, t_tok_type type, t_err *err);
 /*
 **	token.c
 */
-
-int		token_init(t_tok_type type, char **data, t_token **token);
-int		new_lstok(t_tok_type type, char **str, t_list **new);
-void	token_destroy(void *ptr);
+int		token_init(t_tok_type type, char **data, t_token **token, t_list **gc);
+int		new_lstok(t_tok_type type, char **str, t_list **new, t_list **gc);
+void	token_destroy(void *ptr, t_list **gc);
 
 /*
-**	debug.c
+**	debug.c	// TODO: remove
 */
-
 char	*token_type_to_str(int type);
 void	token_print(void *token);
 

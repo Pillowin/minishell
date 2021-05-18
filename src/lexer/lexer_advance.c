@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:06:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/23 19:47:11 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/18 13:03:37 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ t_token	*lexer_advance_word(t_lexer *lexer, t_err *err)
 	unsigned int	i;
 	t_token			*token;
 
-	if (!my_calloc(1, sizeof(*data), (void **)&data))
-		return (error(err, MALLOC, NULL, NULL));
+	if (!my_calloc(1, sizeof(*data), (void **)&data, err->gc))
+		return (NULL);
 	str_len = 0;
 	while (!ft_is_end_word(lexer->str[lexer->i + str_len])
 		&& !ft_is_token(lexer->str[lexer->i + str_len]))
 		str_len++;
-	if (!my_calloc(str_len, sizeof(**data), (void **)data))
-		return (error(err, MALLOC, (void **)&data, &ft_free));
+	if (!my_calloc(str_len, sizeof(**data), (void **)data, err->gc))
+		return (NULL);
 	i = 0;
 	while (i < str_len)
 	{
@@ -56,8 +56,8 @@ t_token	*lexer_advance_word(t_lexer *lexer, t_err *err)
 		i++;
 	}
 	lexer_advance(lexer, str_len);
-	if (!token_init(TOK_WORD, data, &token))
-		return (error(err, MALLOC, (void **)data, &ft_free_tab));
+	if (!token_init(TOK_WORD, data, &token, err->gc))
+		return (NULL);
 	return (token);
 }
 
@@ -71,10 +71,10 @@ t_token	*lexer_advance_current(t_lexer *lexer, t_tok_type type, t_err *err)
 	char	**data;
 	t_token	*token;
 
-	if (!my_strdup(&data, 1, &(lexer->c)))
-		return (error(err, MALLOC, NULL, NULL));
+	if (!gc_strsdup(&data, 1, &(lexer->c), err->gc))
+		return (NULL);
 	lexer_advance(lexer, 1);
-	if (!token_init(type, data, &token))
-		return (error(err, MALLOC, (void **)data, &ft_free_tab));
+	if (!token_init(type, data, &token, err->gc))
+		return (NULL);
 	return (token);
 }

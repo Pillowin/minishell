@@ -12,16 +12,6 @@
 
 #include "minishell.h"
 
-// /*
-// **
-// */
-// static int	cmp(void *data, void *ref)
-// {
-// 	if (!ft_strcmp(((t_var *)data)->name, ref))
-// 		return (0);
-// 	return (1);
-// }
-
 /*
 **	
 */
@@ -29,9 +19,7 @@ unsigned char	builtin_unset(t_token *cmd, t_list **env, t_err *err)
 {
 	unsigned int	i;
 	t_var			*var;
-	int				tmp;
 
-	(void)err;
 	i = 1;
 	if (!(cmd->data[i]))
 		return (SUCCESS);
@@ -39,22 +27,16 @@ unsigned char	builtin_unset(t_token *cmd, t_list **env, t_err *err)
 	{
 		if (!is_name(cmd->data[i], '='))
 		{
-			tmp = dup(STDOUT_FILENO);
-			dup2(STDERR_FILENO, STDOUT_FILENO);			// TODO: message pour cd et export avec les « toto+toto=tonton »
-			printf("minishell: :%s: « %s » : %s\n", cmd->data[0], cmd->data[1], err->message[EXPORT]);
-			dup2(tmp, STDOUT_FILENO);
+			print_err_msg(cmd->data[0], cmd->data[1], err->message[EXPORT], err->gc);
 			i++;
 			continue ;
 		}
 		var = var_init(NULL, NULL, NULL, err->gc);
 		if (!var)
-			return (FAILURE);
+			return ((long)error(err, FATAL, NULL, NULL));
 		var->name = get_var_name(cmd->data[i], err->gc);
 		if (!(var->name))
-		{
-			var_destroy(var, err->gc);
-			return (FAILURE);
-		}
+			return ((long)error(err, FATAL, NULL, NULL));
 		gc_list_remove_var(env, (void *)var->name, err->gc);
 		var_destroy(var, err->gc);
 		i++;

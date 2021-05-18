@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 22:42:57 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/25 19:05:41 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/14 17:58:58:48 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 /*
 **	Return an error if this is multiline.
 */
-int	check_pair(t_list **tokens, t_list *curr, t_tok_type type, t_err *err)
+
+int	check_pair(t_list *curr, t_tok_type type)
 {
 	while (((t_token *)(curr->data))->type != type)
 	{
 		if (((t_token *)(curr->data))->type == TOK_NEWLINE)
-			return ((long)error(err, MULTILINE_QUOTE,
-					(void **)tokens, &ft_lstdel));
+			return (FAILURE);
 		curr = curr->next;
 	}
 	return (SUCCESS);
@@ -32,14 +32,14 @@ int	check_pair(t_list **tokens, t_list *curr, t_tok_type type, t_err *err)
 **	quote expansion.
 */
 
-t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr)
+t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr, t_list **gc)
 {
 	t_list	*tmp;
 
 	if (!prev)
 	{
 		tmp = curr->next;
-		ft_lstdelone(curr, &token_destroy);
+		gc_lstdelone(curr, &token_destroy, gc);
 		((t_token *)((*tokens)->data))->type = TOK_SPACE;
 		**((t_token *)((*tokens)->data))->data = ' ';
 		(*tokens)->next = tmp;
@@ -47,8 +47,8 @@ t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr)
 	}
 	tmp = prev->next;
 	prev->next = curr->next;
-	ft_lstdelone(curr, &token_destroy);
-	ft_lstdelone(tmp, &token_destroy);
+	gc_lstdelone(curr, &token_destroy, gc);
+	gc_lstdelone(tmp, &token_destroy, gc);
 	return (prev);
 }
 
@@ -56,52 +56,55 @@ t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr)
 **	Create a new char * with all data between TOK_QUOTE.
 */
 
-int	fetch_data(t_list **prev, t_list **curr, char ***str, t_tok_type type)
+char	**fetch_data(t_list **prev, t_list *curr, t_tok_type type, t_list **gc)
 {
+	char	**str;
 	void	*tmp;
 
-	(*str) = (char **)ft_calloc(1 + 1, sizeof(*(*str)));
-	if (!(*str))
+	str = (char **)gc_calloc(gc, 1 + 1, sizeof(*str));
+	if (!str)
 		return (FAILURE);
-	while (((t_token *)((*curr)->data))->type != type)
+	while (((t_token *)(curr->data))->type != type)
 	{
-		tmp = *(*str);
-		*(*str) = ft_strjoin(tmp, *(((t_token *)((*curr)->data))->data));
-		ft_free((void **)&(tmp));
-		if (!(*(*str)))
-		{
-			ft_free((void **)&(*str));
+		tmp = *str;
+		*str = ft_strjoin(tmp, *(((t_token *)(curr->data))->data));
+		gc_register(gc, *str);
+		gc_free(gc, (void **)&(tmp));
+		if (!(*str))
 			return (FAILURE);
-		}
-		tmp = (*curr)->next;
-		ft_lstdelone(*curr, &token_destroy);
-		*curr = tmp;
+		tmp = curr->next;
+		gc_lstdelone(curr, &token_destroy, gc);
+		curr = tmp;
 	}
-	(*prev)->next = *curr;
-	return (SUCCESS);
+	(*prev)->next = curr;
+	return (str);
 }
 
 /*
 **	Remove useless TOK_QUOTE, and add new t_list* TOK_WORD to main list.
 */
 
-t_list	*update_list(t_list **tokens, t_list **prev, t_list *curr, t_list *new)
+t_list	*update_list(t_list **tokens, t_list **prev, t_list *new, t_list **gc)
 {
 	t_list	*next;
+	t_list	*curr;
 	void	*tmp;
 
+	curr = *tokens;
+	if (*prev)
+		curr = (*prev)->next;
 	next = curr->next;
 	tmp = next->next;
-	ft_lstdelone(next, &token_destroy);
+	gc_lstdelone(next, &token_destroy, gc);
 	new->next = tmp;
 	if (!(*prev))
 	{
-		ft_lstdelone((*tokens), &token_destroy);
-		(*tokens) = new;
+		gc_lstdelone((*tokens), &token_destroy, gc);
+		*tokens = new;
 	}
 	else
 	{
-		ft_lstdelone((*prev)->next, &token_destroy);
+		gc_lstdelone((*prev)->next, &token_destroy, gc);
 		(*prev)->next = new;
 	}
 	return (new);
@@ -123,13 +126,14 @@ t_list	*expand_quote(t_list **tokens, t_list **prev, t_tok_type t, t_err *err)
 	if (*prev)
 		curr = (*prev)->next;
 	next = curr->next;
-	if (!check_pair(tokens, next, t, err))
-		return (NULL);
+	if (!check_pair(next, t))
+		return (error(err, MULTILINE_QUOTE, (void **)tokens, &gc_lstdel));
 	if (((t_token *)(next->data))->type == t)
-		return (case_neighbour(tokens, *prev, next));
-	if (!fetch_data(&curr, &next, &str, t))
-		return (error(err, MALLOC, (void **)tokens, &ft_lstdel));
-	if (!new_lstok(TOK_WORD, str, &new))
-		return (error(err, MALLOC, (void **)tokens, &ft_lstdel));
-	return (update_list(tokens, prev, curr, new));
+		return (case_neighbour(tokens, *prev, next, err->gc));
+	str = fetch_data(&curr, next, t, err->gc);
+	if (!str)
+		return (error(err, FATAL, NULL, NULL));
+	if (!new_lstok(TOK_WORD, str, &new, err->gc))
+		return (error(err, FATAL, NULL, NULL));
+	return (update_list(tokens, prev, new, err->gc));
 }

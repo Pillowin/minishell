@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:00:48 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/25 18:57:37 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/14 18:57:559 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **	push a new TOK_BSLASH to list.
 */
 
-static int	push_bslash(t_list **toks, t_list **curr, t_list *next, t_err *err)
+static int	push_bslash(t_list **curr, t_list *next, t_err *err)
 {
 	t_list	*new;
 	char	**str;
@@ -26,13 +26,10 @@ static int	push_bslash(t_list **toks, t_list **curr, t_list *next, t_err *err)
 		&& (((t_token *)(next->next->data))->type != TOK_DQUOTE)
 		&& (((t_token *)(next->next->data))->type != TOK_BSLASH))
 	{
-		if (!my_strdup(&str, 1, "\\"))
-			return ((long)error(err, MALLOC, (void **)toks, &ft_lstdel));
-		if (!new_lstok(TOK_WORD, str, &new))
-		{
-			ft_free_tab((void **)str);
-			return ((long)error(err, MALLOC, (void **)toks, &ft_lstdel));
-		}
+		if (!gc_strsdup(&str, 1, "\\", err->gc))
+			return (FAILURE);
+		if (!new_lstok(TOK_WORD, str, &new, err->gc))
+			return (FAILURE);
 		new->next = next;
 		(*curr)->next = new;
 		(*curr) = (*curr)->next;
@@ -59,8 +56,8 @@ static int	expand_dquote_bslash(t_list **tokens, t_list **prev, t_err *err)
 	{
 		if (((t_token *)(next->data))->type == TOK_BSLASH)
 		{
-			if (!push_bslash(tokens, &curr, next, err))
-				return (FAILURE);
+			if (!push_bslash(&curr, next, err))
+				return ((long)error(err, FATAL, NULL, NULL));
 			next = expand_bslash(tokens, &curr, next->next, err);
 			if (!next)
 				return (FAILURE);
@@ -89,7 +86,11 @@ static int	expand_dquote_dollar(t_list **tokens, t_list **prev, t_list *env, t_e
 		&& ((t_token *)(next->data))->type != TOK_NEWLINE)
 	{
 		if (((t_token *)(next->data))->type == TOK_DOLLAR)
+		{
 			curr = expand_dollar(tokens, &curr, env, err);
+			if (!curr)
+				return (FAILURE);
+		}
 		curr = curr->next;
 		next = curr->next;
 	}

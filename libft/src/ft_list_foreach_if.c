@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gc.h                                               :+:      :+:    :+:   */
+/*   ft_list_foreach_if.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 14:32:56 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/17 14:23:04 by agautier         ###   ########.fr       */
+/*   Created: 2021/03/01 17:11:07 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/05/14 14:16:28 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GC_H
-# define GC_H
+#include "ft_list.h"
 
-# include <stdlib.h>
-# include "ft_list.h"
+/*
+**	Applique une fonction donnée en paramètre à la valeur contenue dans
+**	certains éléments de la liste.
+*/
 
-void	*gc_calloc(t_list **gc, size_t count, size_t size);
-void	gc_register(t_list **gc, void *ptr);
-void	gc_unregister(t_list **gc, void *ptr);
-void	gc_free(t_list **gc, void **ptr);
-void	gc_clean(t_list **gc);
-
-#endif
+void	ft_list_foreach_if(t_list *begin_list, void (*f)(void *),
+							void *data_ref, int (*cmp)())
+{
+	while (begin_list)
+	{
+		if (!cmp(begin_list->data, data_ref))
+			(*f)(begin_list->data);
+		begin_list = begin_list->next;
+	}
+}

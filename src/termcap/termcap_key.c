@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 21:58:24 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/13 21:58:28 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/18 11:45:00 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i
 		*curr_cpy = (*curr_cpy)->prev;
 		tputs(tgetstr("dl", NULL), 1, &ft_putchar);
 		ft_strncpy(*buf, (*curr_cpy)->data, BUF_SIZE);
-		prompt();
+		;ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);
 		write(STDIN_FILENO, (*buf), ft_strlen(*buf));
 		*i = ft_strlen(*buf);
 	}
@@ -56,7 +56,7 @@ char			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i
 		*curr_cpy = (*curr_cpy)->next;
 		tputs(tgetstr("dl", NULL), 1, &ft_putchar);
 		ft_strncpy(*buf, (*curr_cpy)->data, BUF_SIZE);
-		prompt();
+		ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);
 		write(STDIN_FILENO, (*buf), ft_strlen(*buf));
 		*i = ft_strlen(*buf);
 	}

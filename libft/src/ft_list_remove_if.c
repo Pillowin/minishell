@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 20:55:08 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/08 21:08:35 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/14 17:16:14 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	ft_list_remove_if(t_list **begin_list, void *data_ref,
 				prev->next = list_ptr->next;
 			else
 				*begin_list = (*begin_list)->next;
-			(*free_fct)(list_ptr->data);
+			if (free_fct && *free_fct)
+				(*free_fct)(list_ptr->data);
 			ft_free((void **)&list_ptr);
 			if (!prev)
 				list_ptr = (*begin_list);

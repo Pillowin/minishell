@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 22:20:19 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/04/18 21:22:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/14 17:0051 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,14 @@ static t_list	*create_redir(t_list **tokens, t_list **prev, char ***data,
 	curr = *tokens;
 	if (*prev)
 		curr = (*prev)->next;
-	if (!my_strdup(data, 2, *(((t_token *)(curr->data))->data)))
-		return (error(err, MALLOC, (void **)tokens, &ft_lstdel));
+	if (!gc_strsdup(data, 2, *(((t_token *)(curr->data))->data), err->gc))
+		return (NULL);
 	(*data)[1] = ft_strdup(*(((t_token *)((curr->next)->data))->data));
 	if (!((*data)[1]))
-	{
-		ft_free_tab((void **)(*data));
-		return (error(err, MALLOC, (void **)tokens, &ft_lstdel));
-	}
-	if (!new_lstok(TOK_REDIR, (*data), &redir))
-	{
-		ft_free_tab((void **)(*data));
-		return (error(err, MALLOC, (void **)tokens, &ft_lstdel));
-	}
+		return (NULL);
+	if (!new_lstok(TOK_REDIR, (*data), &redir, err->gc))
+		return (NULL);
+	gc_register(err->gc, (*data)[1]);
 	redir->next = curr->next->next;
 	if ((*prev))
 		(*prev)->next = redir;
@@ -50,7 +45,7 @@ static t_list	*create_redir(t_list **tokens, t_list **prev, char ***data,
 **	Merge TOK_[LESS | GREAT | DGREAT] and TOK_WORD to TOK_REDIR
 */
 
-int	redir_merge(t_list **tokens, t_err *err)
+char	redir_merge(t_list **tokens, t_err *err)
 {
 	t_list	*curr;
 	t_list	*redir;
@@ -68,8 +63,8 @@ int	redir_merge(t_list **tokens, t_err *err)
 			redir = create_redir(tokens, &prev, &data, err);
 			if (!redir)
 				return (FAILURE);
-			ft_lstdelone(curr->next, token_destroy);
-			ft_lstdelone(curr, token_destroy);
+			gc_lstdelone(curr->next, token_destroy, err->gc);
+			gc_lstdelone(curr, token_destroy, err->gc);
 			curr = redir;
 		}
 		if (curr->next)
@@ -83,7 +78,7 @@ int	redir_merge(t_list **tokens, t_err *err)
 **	Merge pairs of TOK_GREAT to a single TOK_DGREAT
 */
 
-int	dgreat_merge(t_list **tokens, t_err *err)
+char	dgreat_merge(t_list **tokens, t_err *err)
 {
 	t_list	*curr;
 	void	*tmp;
@@ -96,12 +91,13 @@ int	dgreat_merge(t_list **tokens, t_err *err)
 				&& ((t_token *)(curr->next->data))->type == TOK_GREAT)
 		{
 			tmp = curr->next->next;
-			ft_lstdelone(curr->next, token_destroy);
+			gc_lstdelone(curr->next, token_destroy, err->gc);
 			curr->next = tmp;
 			data = ft_strdup(">>");
 			if (!data)
-				return ((long)error(err, MALLOC, (void **)tokens, &ft_lstdel));
-			ft_free((void **)&(*((t_token *)(curr->data))->data));
+				return (FAILURE);
+			gc_register(err->gc, data);
+			gc_free(err->gc, (void **)&(*((t_token *)(curr->data))->data));
 			*((t_token *)(curr->data))->data = data;
 			((t_token *)(curr->data))->type = TOK_DGREAT;
 		}

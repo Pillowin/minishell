@@ -60,16 +60,39 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 ## TODO
 
 - Remove useless libft file
-- remove fsanitize
+- remove fsanitize (in libft too)
 - explicit files (remove wildcard) in makefile
-- leaks
 - norm
 - clean files
-- exit status
-- error messages
-- segv quand entree > BUF_SIZE
+- func to print err message
 - exit
+- leaks
+- si errno == errmalloc => gc_clean + exit	|||| => FATAL ERR
+- differencer dans error errno qui relance un prompt et errno qui quitte tout
+<!-- - add gc_clean before each exit et toujours exit(g_exit_status & 0x00FF); -->
 
+``echo toto | sdf ;f`` => manque le 2e command not found
+
+<!-- - error messages -->
+<!-- - exit status -->
+
+<!-- - segv quand entree > BUF_SIZE -->
+<!-- ```
+env -i ./minishell
+cd ..
+env	=> pas OLDPWD	=> update env claqué
+``` -->
+
+<!-- ```cd Makefile => not a directory error``` -->
+
+<!-- ```
+export	coucou ca va
+export	=> doit pas afficher =""
+``` -->
+
+<!-- ```not such file doit pas renvoyer 127``` -->
+
+<!-- ```< plop | ls | echo``` -->
 
 <!-- ```verif l'ordre d'execution du path``` -->
 

@@ -55,15 +55,25 @@ static int	cmp(void *data, void *ref)
 }
 
 /*
-**	Free a ptr assign it to NULL and remove it from list gc.
+**
 */
 
+void	gc_unregister(t_list **gc, void *ptr)
+{
+	if (!ptr)
+		return ;
+	ft_list_remove_if(gc, ptr, &cmp, NULL);
+}
+
+/*
+**	Free a ptr assign it to NULL and remove it from list gc.
+*/
 void	gc_free(t_list **gc, void **ptr)
 {
-	if (!ptr || !(*ptr))
+	if (!ptr || !*ptr)
 		return ;
-	ft_list_remove_if(gc, *ptr, &cmp, &free);
-	*ptr = NULL;
+	gc_unregister(gc, *ptr);
+	ft_free(ptr);
 }
 
 /*
@@ -72,7 +82,18 @@ void	gc_free(t_list **gc, void **ptr)
 
 void	gc_clean(t_list **gc)
 {
-	ft_list_foreach(*gc, &free);
-	ft_list_clear(*gc, &ft_free);
+	t_list	*curr;
+	t_list	*next;
+
+	curr = *gc;
+	while (curr)
+	{
+		next = NULL;
+		if (curr->next)
+			next = curr->next;
+		ft_free((void **)&(curr->data));
+		ft_free((void **)&curr);
+		curr = next;
+	}
 	*gc = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 20:48:33 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/18 21:22:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/14 19:04:1 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **	Simple case when next has already a literral value
 */
 
-static t_list	*simple_case(t_list **tokens, t_list **prev, t_list *next)
+static t_list	*simple_case(t_list **tokens, t_list **prev, t_list *next, t_list **gc)
 {
 	void	*tmp;
 
@@ -27,10 +27,10 @@ static t_list	*simple_case(t_list **tokens, t_list **prev, t_list *next)
 		{
 			tmp = *tokens;
 			*tokens = (*tokens)->next;
-			ft_lstdelone(tmp, &token_destroy);
+			gc_lstdelone(tmp, &token_destroy, gc);
 			return (*tokens);
 		}
-		ft_lstdelone((*prev)->next, &token_destroy);
+		gc_lstdelone((*prev)->next, &token_destroy, gc);
 		(*prev)->next = next;
 		return ((*prev)->next);
 	}
@@ -48,24 +48,24 @@ t_list	*expand_bslash(t_list **toks, t_list **prev, t_list *next, t_err *err)
 	char	**str;
 	void	*tmp;
 
-	tmp = simple_case(toks, prev, next);
+	tmp = simple_case(toks, prev, next, err->gc);
 	if (tmp)
 		return (tmp);
-	if (!my_strdup(&str, 1, *(((t_token *)(next->data))->data)))
-		return (error(err, MALLOC, (void **)toks, &ft_lstdel));
-	if (!new_lstok(TOK_WORD, str, &new))
-		return (error(err, MALLOC, (void **)toks, &ft_lstdel));
+	if (!gc_strsdup(&str, 1, *(((t_token *)(next->data))->data), err->gc))
+		return (error(err, FATAL, NULL, NULL));
+	if (!new_lstok(TOK_WORD, str, &new, err->gc))
+		return (error(err, FATAL, NULL, NULL));
 	tmp = next->next;
-	ft_lstdelone(next, &token_destroy);
+	gc_lstdelone(next, &token_destroy, err->gc);
 	new->next = tmp;
 	if (!(*prev))
 	{
-		ft_lstdelone(*toks, &token_destroy);
+		gc_lstdelone(*toks, &token_destroy, err->gc);
 		*toks = new;
 	}
 	else
 	{
-		ft_lstdelone((*prev)->next, &token_destroy);
+		gc_lstdelone((*prev)->next, &token_destroy, err->gc);
 		(*prev)->next = new;
 	}
 	return (new);
