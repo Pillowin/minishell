@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 22:01:31 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 20:27:15 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/19 14:07:29 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ unsigned char	builtin_exit(t_token *cmd, t_list **env, t_err *err)
 	// TODO: pas toujours ecrire exit - pas toujours exit en fonction du nombre d'argument / type d'arg
 	(void)env;
 	ft_putstr_fd("exit\n", STDERR_FILENO);
-	if (cmd->data[2])
+	if (cmd->data[1] && cmd->data[2])
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		g_exit_status = EXIT_FAILURE;

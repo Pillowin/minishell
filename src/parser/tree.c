@@ -25,7 +25,7 @@ char	create_tree(t_list *tokens, t_list **env, t_err *err)
 		return (SUCCESS);
 	if (!eat_list(tokens, &tree, err->gc))
 		return ((long)error(err, FATAL, NULL, NULL));
-	btree_apply_prefix(tree, &token_print);
+	// btree_apply_prefix(tree, &token_print);
 	g_exit_status = 0;
 	ret = SUCCESS;
 	if (!exec(tree, env, err))

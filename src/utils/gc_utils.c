@@ -104,7 +104,7 @@ void	gc_list_remove_var(t_list **begin_list, void *data_ref, t_list **gc)
 			else
 				*begin_list = (*begin_list)->next;
 			var_destroy(list_ptr->data, gc);
-			ft_free((void **)&list_ptr);
+			gc_free(gc, (void **)&list_ptr);
 			if (!prev)
 				list_ptr = (*begin_list);
 			else

@@ -37,7 +37,7 @@ unsigned char	builtin_unset(t_token *cmd, t_list **env, t_err *err)
 		var->name = get_var_name(cmd->data[i], err->gc);
 		if (!(var->name))
 			return ((long)error(err, FATAL, NULL, NULL));
-		gc_list_remove_var(env, (void *)var->name, err->gc);
+		gc_list_remove_var(env, var->name, err->gc);
 		var_destroy(var, err->gc);
 		i++;
 	}

@@ -69,9 +69,29 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 - leaks
 - si errno == errmalloc => gc_clean + exit	|||| => FATAL ERR
 - differencer dans error errno qui relance un prompt et errno qui quitte tout
+- test export env unset
+- verif exit value des messages d'err
 <!-- - add gc_clean before each exit et toujours exit(g_exit_status & 0x00FF); -->
 
 ``echo toto | sdf ;f`` => manque le 2e command not found
+``exit`` => renvoie pas la bonne valeur, devrait renvoyer le retour de la derniere commande si pas d'argument
+``minishell>export nouvelle=new`` => SEGV
+
+```
+minishell>cd trucquiexit pas
+minishell: cd: too many arguments
+minishell>cd trucquiexit
+minishell: cd: trucquiexit: No such file or directory
+minishell>echo $?
+0
+```
+=> pas le bon exit_value
+
+```
+minishell>echo toto < tata
+minishell: tata: Bad file descriptor
+user42@salty-VirtualBox:~/42/minishell$
+```	=> mettre err en ERR_NO pour pas exit
 
 <!-- - error messages -->
 <!-- - exit status -->

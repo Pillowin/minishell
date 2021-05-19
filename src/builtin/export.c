@@ -74,7 +74,7 @@ unsigned char	builtin_export(t_token *cmd, t_list **env, t_err *err)
 	if (!(cmd->data[i]))	// si juste export
 	{
 		env_tmp = lstdup(*env, err->gc);
-		ft_list_sort(env, &cmp);
+		ft_list_sort(&env_tmp, &cmp);
 		ft_list_foreach(env_tmp, &print_env);
 		gc_list_clear(env_tmp, err->gc);
 		return (SUCCESS);
@@ -94,7 +94,7 @@ unsigned char	builtin_export(t_token *cmd, t_list **env, t_err *err)
 		if (!(var->name))
 			return ((long)error(err, FATAL, NULL, NULL));
 		list = ft_list_find(*env, var, &cmp);
-		var_destroy(var, err->gc);
+		// var_destroy(var, err->gc);
 		if (!list)
 		{
 			var->name = get_var_name(cmd->data[i], err->gc);
@@ -108,7 +108,7 @@ unsigned char	builtin_export(t_token *cmd, t_list **env, t_err *err)
 				return ((long)error(err, FATAL, NULL, NULL));
 			if (!insert_env(env, *var, err->gc))
 				return ((long)error(err, FATAL, NULL, NULL));
-			var_destroy(var, err->gc);
+			// var_destroy(var, err->gc);
 		}
 		else
 		{
