@@ -26,7 +26,7 @@ void	minishell(t_list **env, t_err *err)
 	tc_cmds = tc_cmds_init(err->gc);
 	if (!tc_cmds)
 	{
-		print_err_msg(NULL, NULL, strerror(errno), err->gc);
+		perr_msg(NULL, NULL, strerror(errno), err->gc);
 		gc_clean(err->gc);
 		exit(EXIT_FAILURE);
 	}
@@ -44,7 +44,7 @@ void	minishell(t_list **env, t_err *err)
 		else if (len == ERRNO_ERR)
 		{
 			ft_putchar_fd('\n', STDOUT_FILENO);
-			print_err_msg(NULL, NULL, strerror(errno), err->gc);
+			perr_msg(NULL, NULL, strerror(errno), err->gc);
 		}
 		else
 		{
@@ -55,9 +55,9 @@ void	minishell(t_list **env, t_err *err)
 			if(!(lexer(buf, err, env)))	// SI ERR_NO && errno == ERR malloc gc_clean ;exit
 			{
 				if (err->code == ERR_NO || err->code == FATAL)
-					print_err_msg(err->cmd_name, NULL, strerror(errno), err->gc);
-				else
-					print_err_msg(err->cmd_name, NULL, err->message[err->code], err->gc);
+					perr_msg(err->cmd_name, NULL, strerror(errno), err->gc);
+				else if (err->code != NONE)
+					perr_msg(err->cmd_name, NULL, err->message[err->code], err->gc);
 				if (err->code == FATAL)
 					break ;
 				// ft_putendl_fd(err->message[err->code], STDERR_FILENO);	// TODO: ?! pas de minishell: ?

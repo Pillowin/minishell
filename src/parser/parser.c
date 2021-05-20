@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/14 18:56:21 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/14 17:08:527 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 19:53:56 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/05/20 19:55:56 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 /*
 **	Comparer l'enum avec les éléments (token) du tableau.
 */
-
 static int	cmp(t_token *lstdata, int *data)
 {
 	if ((int)(lstdata->type) == *data)
@@ -25,7 +24,7 @@ static int	cmp(t_token *lstdata, int *data)
 
 static t_token	*tokendup(t_token *data, t_list **gc)
 {
-	t_token 		*dest;
+	t_token			*dest;
 	unsigned int	i;
 
 	i = 0;
@@ -80,7 +79,7 @@ char	check_tokens(t_list *tokens, t_err *err)
 		TOK_SEMI, TOK_PIPE, TOK_DGREAT, TOK_GREAT, TOK_LESS};
 	char (* const check_f[5])(t_list *, unsigned int, t_err *) = {
 		check_semi, check_pipe, check_dgreat, check_great, check_less};
-	
+
 	toks = lstcpy(tokens, err->gc);
 	if (!toks)
 		return ((long)error(err, FATAL, NULL, NULL));
@@ -106,7 +105,6 @@ char	check_tokens(t_list *tokens, t_err *err)
 /*
 **	Entry point for parser.
 */
-
 char	parser(t_list **tokens, t_err *err, t_list **env)
 {
 	t_list	*done;
@@ -116,7 +114,7 @@ char	parser(t_list **tokens, t_err *err, t_list **env)
 	if (!check_tokens(*tokens, err))
 		return (FAILURE);
 	done = NULL;
-	while (*tokens) // tant que le dernier token est pas \n
+	while (*tokens)
 	{
 		if (!expand(&done, tokens, *env, err))
 			return (FAILURE);

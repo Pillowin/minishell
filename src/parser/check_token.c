@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/16 18:06:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/14 21:4300 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 19:35:33 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/05/20 19:40:52 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ char	check_semi(t_list *tokens, unsigned int i, t_err *err)
 		return ((long)error(err, SYNTAX_SEMI, (void **)tokens, &gc_lstdel));
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if ((prev->type != TOK_WORD && prev->type != TOK_QUOTE && prev->type != TOK_DQUOTE)
-		|| next->type == TOK_PIPE || next->type == TOK_SEMI)
+	if ((prev->type != TOK_WORD && prev->type != TOK_QUOTE
+			&& prev->type != TOK_DQUOTE) || next->type == TOK_PIPE
+		|| next->type == TOK_SEMI)
 		return ((long)error(err, SYNTAX_SEMI, (void **)&tokens, &gc_lstdel));
 	return (SUCCESS);
 }
@@ -52,8 +53,9 @@ char	check_pipe(t_list *tokens, unsigned int i, t_err *err)
 		return ((long)error(err, SYNTAX_PIPE, (void **)tokens, &gc_lstdel));
 	prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if ((prev->type != TOK_WORD && prev->type != TOK_QUOTE && prev->type != TOK_DQUOTE)
-		|| next->type == TOK_PIPE || next->type == TOK_NEWLINE)
+	if ((prev->type != TOK_WORD && prev->type != TOK_QUOTE
+			&& prev->type != TOK_DQUOTE) || next->type == TOK_PIPE
+		|| next->type == TOK_NEWLINE)
 		return ((long)error(err, SYNTAX_PIPE, (void **)&tokens, &gc_lstdel));
 	return (SUCCESS);
 }
@@ -74,8 +76,10 @@ char	check_dgreat(t_list *tokens, unsigned int i, t_err *err)
 	if (i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
-			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE && next->type != TOK_DOLLAR))
+	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT
+				|| prev->type == TOK_LESS)) || (next->type != TOK_WORD
+			&& next->type != TOK_QUOTE && next->type != TOK_DQUOTE
+			&& next->type != TOK_DOLLAR))
 		return ((long)error(err, SYNTAX_DGREAT, (void **)&tokens, &gc_lstdel));
 	return (SUCCESS);
 }
@@ -96,8 +100,10 @@ char	check_great(t_list *tokens, unsigned int i, t_err *err)
 	if (i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
-			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE && next->type != TOK_DOLLAR))
+	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT
+				|| prev->type == TOK_LESS)) || (next->type != TOK_WORD
+			&& next->type != TOK_QUOTE && next->type != TOK_DQUOTE
+			&& next->type != TOK_DOLLAR))
 		return ((long)error(err, SYNTAX_GREAT, (void **)&tokens, &gc_lstdel));
 	return (SUCCESS);
 }
@@ -118,8 +124,10 @@ char	check_less(t_list *tokens, unsigned int i, t_err *err)
 	if (i)
 		prev = (t_token *)(ft_list_at(tokens, i - 1)->data);
 	next = (t_token *)(ft_list_at(tokens, i + 1)->data);
-	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT || prev->type == TOK_LESS))
-			|| (next->type != TOK_WORD && next->type != TOK_QUOTE && next->type != TOK_DQUOTE && next->type != TOK_DOLLAR))
+	if ((prev && (prev->type == TOK_GREAT || prev->type == TOK_DGREAT
+				|| prev->type == TOK_LESS)) || (next->type != TOK_WORD
+			&& next->type != TOK_QUOTE && next->type != TOK_DQUOTE
+			&& next->type != TOK_DOLLAR))
 		return ((long)error(err, SYNTAX_LESS, (void **)&tokens, &gc_lstdel));
 	return (SUCCESS);
 }

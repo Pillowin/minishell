@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/18 19:15:58 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 21:54:55 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static int	expand_clean(t_list **tokens, t_err *err)
 			&& ((t_token *)(curr->next->data))->type == TOK_WORD)
 		{
 			tmp = *((t_token *)(curr->data))->data;
-			*((t_token *)(curr->data))->data = ft_strjoin(tmp, *((t_token *)(curr->next->data))->data);
+			*((t_token *)(curr->data))->data = gc_strjoin(tmp,
+					*((t_token *)(curr->next->data))->data, err->gc);
 			gc_free(err->gc, (void **)&(tmp));
 			if (!(*((t_token *)(curr->data))->data))
 				return ((long)error(err, FATAL, NULL, NULL));

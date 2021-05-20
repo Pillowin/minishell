@@ -3,28 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguiteer <gguiteer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/18 18:59:17 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/18 19:19:341 byagattierr         ###   ########.fr       */
+/*   Created: 2021/05/20 14:13:10 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/20 15:41:54 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**	
+**	Print environnement variables.
 */
-
-unsigned char	builtin_env(t_token *cmd, t_list **env, t_err *err)
+char	builtin_env(t_token *cmd, t_list **env, t_err *err)
 {
 	t_list	*curr;
 
 	if (cmd->data[1])
 	{
+		perr_msg("env", cmd->data[1], err->message[NO_SUCH_FILE], err->gc);
 		g_exit_status = 127;
-		print_err_msg("env", cmd->data[1], "No such file or directory", err->gc);
-		return (SUCCESS);
+		return ((long)error(err, NONE, NULL, NULL));
 	}
 	curr = *env;
 	while (curr)

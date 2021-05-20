@@ -1,21 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: agiutier <agiatier@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/18 19:26:07 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/19 16:111:12 by atgutier         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 /*
-**
+**	Compare var name.
 */
-
 static int	cmp(void *data, void *ref)
 {
 	if (!data || !ref || !(((t_var *)data)->name) || !(((t_var *)ref)->name))
@@ -24,25 +11,7 @@ static int	cmp(void *data, void *ref)
 }
 
 /*
-**	Add new var to envp
-**	TODO: verif var name
-*/
-
-static t_list	*lstdup(t_list *lst, t_list **gc)
-{
-	t_list	*begin;
-
-	begin = NULL;
-	while (lst)
-	{
-		gc_list_push_back(&begin, lst->data, gc);
-		lst = lst->next;
-	}
-	return (begin);
-}
-
-/*
-**	
+**	Print environnement variables with "declare -x".
 */
 static void	print_env(void *data)
 {
@@ -59,66 +28,44 @@ static void	print_env(void *data)
 }
 
 /*
-** cmd[0] = export
-** cmd[1] = name=value
+**	export
+**	Print ASCII ordered environment.
 */
+static char	export_no_arg(t_list **env, t_err *err)
+{
+	t_list	*env_tmp;
 
-unsigned char	builtin_export(t_token *cmd, t_list **env, t_err *err)
+	env_tmp = lstdup(*env, err->gc);
+	ft_list_sort(&env_tmp, &cmp);
+	ft_list_foreach(env_tmp, &print_env);
+	gc_list_clear(env_tmp, err->gc);
+	return (SUCCESS);
+}
+
+/*
+**	If no arg, print environment.
+**	Else add variable to environment.
+*/
+char	builtin_export(t_token *cmd, t_list **env, t_err *err)
 {
 	unsigned int	i;
-	t_list			*list;
 	t_var			*var;
-	t_list			*env_tmp;
 
+	if (!(cmd->data[1]))
+		return (export_no_arg(env, err));
 	i = 1;
-	if (!(cmd->data[i]))	// si juste export
-	{
-		env_tmp = lstdup(*env, err->gc);
-		ft_list_sort(&env_tmp, &cmp);
-		ft_list_foreach(env_tmp, &print_env);
-		gc_list_clear(env_tmp, err->gc);
-		return (SUCCESS);
-	}
-	while (cmd->data[i])	// s'il y a des arguments
+	while (cmd->data[i])
 	{
 		if (!is_name(cmd->data[i], '='))
 		{
-			print_err_msg(cmd->data[0], cmd->data[1], err->message[EXPORT], err->gc);
+			perr_msg(cmd->data[0], cmd->data[1], err->message[EXPORT], err->gc);
 			i++;
 			continue ;
 		}
-		var = var_init(NULL, NULL, NULL, err->gc);
+		var = var_init(cmd->data[i], err->gc);
 		if (!var)
 			return ((long)error(err, FATAL, NULL, NULL));
-		var->name = get_var_name(cmd->data[i], err->gc);
-		if (!(var->name))
-			return ((long)error(err, FATAL, NULL, NULL));
-		list = ft_list_find(*env, var, &cmp);
-		// var_destroy(var, err->gc);
-		if (!list)
-		{
-			var->name = get_var_name(cmd->data[i], err->gc);
-			if (!var->name)
-				return ((long)error(err, FATAL, NULL, NULL));
-			var->equal = get_var_equal(cmd->data[i], err->gc);
-			if (!var->equal)
-				return ((long)error(err, FATAL, NULL, NULL));
-			var->value = get_var_value(cmd->data[i], err->gc);
-			if (!var->value)
-				return ((long)error(err, FATAL, NULL, NULL));
-			if (!insert_env(env, *var, err->gc))
-				return ((long)error(err, FATAL, NULL, NULL));
-			// var_destroy(var, err->gc);
-		}
-		else
-		{
-			var->value = get_var_value(cmd->data[i], err->gc);
-			if (!var->value)
-				return ((long)error(err, FATAL, NULL, NULL));
-			if (!update_env(env, ((t_var *)list->data)->name, var->value, err->gc))
-				return ((long)error(err, FATAL, NULL, NULL));
-			gc_free(err->gc, (void **)&(var->value));
-		}
+		env_update(env, var, err->gc);
 		i++;
 	}
 	return (SUCCESS);

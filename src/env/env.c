@@ -5,57 +5,69 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/22 12:16:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 20:03:39 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 18:18:33 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/20 18:34:20 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**	Create a list from main envp
+**	Increment SHLVL in environment.
 */
+static char	increment_shlvl(t_list *env_var, t_list **env, t_list **gc)
+{
+	char	*shlvl_value;
+	char	*shlvl;
+	t_var	*var;
 
+	if (!env_var)
+	{
+		var = var_init("SHLVL=1", gc);
+		if (!var)
+			return (FAILURE);
+		gc_list_push_back(env, var, gc);
+		return (SUCCESS);
+	}
+	shlvl_value = ft_itoa(ft_atoi(((t_var *)env_var->data)->value) + 1);
+	if (!shlvl_value)
+		return (FAILURE);
+	gc_register(gc, shlvl_value);
+	shlvl = gc_strjoin("SHLVL=", shlvl_value, gc);
+	gc_free(gc, (void **)&shlvl_value);
+	var = var_init(shlvl, gc);
+	if (!shlvl || !var)
+		return (FAILURE);
+	env_update(env, var, gc);
+	gc_free(gc, (void **)&shlvl);
+	return (SUCCESS);
+}
+
+/*
+**	Create a list env from main envp tab.
+*/
 t_list	*env_init(char **envp, t_list **gc)
 {
 	unsigned int	i;
 	t_list			*env;
 	t_var			*var;
-	t_var			v;
-	t_list			*lst;
-	char			*shlvl_value;
+	t_list			*env_var;
 
 	env = NULL;
 	i = 0;
 	while (envp[i])
 	{
-		var = var_init(get_var_name(envp[i], gc), get_var_equal(envp[i], gc), get_var_value(envp[i], gc), gc);	// TODO: verif
-		if (!var)
+		var = var_init(envp[i], gc);
+		if (!var || !var->value)
 			return (NULL);
 		gc_list_push_back(&env, var, gc);
 		i++;
 	}
-	lst = NULL;
-	if (env)
-		lst = ft_list_find(env, "SHLVL", &is_var);
-	if (!env || !lst)
-	{
-		v = (t_var){"SHLVL", "=", "1"};
-		tab_init(&(v.name), &(v.equal), &(v.value), gc);
-		var = var_init(v.name, v.equal, v.value, gc);
-		gc_list_push_back(&env, var, gc);
-	}
-	else
-	{
-		i = ft_atoi(((t_var *)lst->data)->value);
-		i += 1;
-		shlvl_value = ft_itoa(i);
-		if (!shlvl_value)
-			return (NULL);
-		gc_register(gc, shlvl_value);
-		if (!update_env(&env, "SHLVL", shlvl_value, gc))
-			return (NULL);
-	}
+	if (!env)
+		return (NULL);
+	env_var = ft_list_find(env, "SHLVL", &is_var);
+	if (!increment_shlvl(env_var, &env, gc))
+		return (NULL);
 	return (env);
 }
 
@@ -76,15 +88,14 @@ char	**env_to_tab(t_list *env, t_list **gc)
 	i = 0;
 	while (env)
 	{
-		tmp = ft_strjoin(((t_var *)env->data)->name, ((t_var *)env->data)->equal);
+		tmp = gc_strjoin(((t_var *)env->data)->name,
+				((t_var *)env->data)->equal, gc);
 		if (!tmp)
 			return (NULL);
-		gc_register(gc, tmp);
-		envp[i] = ft_strjoin(tmp, ((t_var *)env->data)->value);
+		envp[i] = gc_strjoin(tmp, ((t_var *)env->data)->value, gc);
 		gc_free(gc, (void **)&tmp);
 		if (!envp[i])
 			return (NULL);
-		gc_register(gc, envp[i]);
 		env = env->next;
 		i++;
 	}
@@ -92,51 +103,20 @@ char	**env_to_tab(t_list *env, t_list **gc)
 }
 
 /*
-**
+**	Update a variable in environment.
 */
-
-t_list	*update_env(t_list **env, char *name, char *value, t_list **gc)
+void	env_update(t_list **env, t_var *var, t_list **gc)
 {
 	t_list	*env_var;
-	t_var	init;
-	t_var	*var;
 
-
-	env_var = ft_list_find(*env, name, &is_var);
-	if (!env_var || !(((t_var *)env_var->data)->value))
-	{
-		init.name = name;
-		init.equal = "=";		// TODO: leak name ?
-		// if (env_var && ((t_var *)env_var->data)->name)
-		// 	init.name = ((t_var *)env_var->data)->name;
-		// if (env_var && ((t_var *)env_var->data)->equal)
-		// 	init.equal = ((t_var *)env_var->data)->equal;
-		init.value = value;
-
-		if (!tab_init(&(init.name), &(init.equal), &(init.value), gc))
-			return (NULL);
-		var = var_init(init.name, init.equal, init.value, gc);
-		if (!var)
-			return (NULL);
+	env_var = ft_list_find(*env, var->name, &is_var);
+	if (!env_var)
 		gc_list_push_back(env, var, gc);
-		return(ft_lstlast(*env));
+	else if (*(var->equal))
+	{
+		gc_free(gc, (void **)&((t_var *)env_var->data)->equal);
+		((t_var *)env_var->data)->equal = var->equal;
+		gc_free(gc, (void **)&((t_var *)env_var->data)->value);
+		((t_var *)env_var->data)->value = var->value;
 	}
-	gc_free(gc, (void **)&((t_var *)env_var->data)->value);
-	((t_var *)env_var->data)->value = value;
-	return (env_var);
-}
-
-/*
-**
-*/
-
-t_list	*insert_env(t_list **env, t_var v, t_list **gc)
-{
-	t_var	*var;
-	
-	var = var_init(v.name, v.equal, v.value, gc);
-	if (!var)
-		return (NULL);
-	gc_list_push_back(env, var, gc);
-	return(ft_lstlast(*env));
 }

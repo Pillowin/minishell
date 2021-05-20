@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:51:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 12:09:24 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:41:04 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_err
 **	error.c
 */
 void	err_init(char **err_msg);
-void	print_err_msg(char *cmd_name, char *arg, char *msg, t_list **gc);
+void	perr_msg(char *cmd_name, char *arg, char *msg, t_list **gc);
 void	*error(t_err *err, t_err_code code, void **ptr,
 			void (*free_fct)(void **, t_list **));
 

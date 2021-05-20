@@ -14,7 +14,8 @@
 # TODO: remove fsanitize
 
 NAME		=	minishell
-SRC			=	$(wildcard $(addprefix src/, $(addsuffix .c, */*))) \
+SRC			=	$(wildcard $(addprefix src/, $(addsuffix .c, */*/*))) \
+				$(wildcard $(addprefix src/, $(addsuffix .c, */*))) \
 				$(wildcard $(addprefix src/, $(addsuffix .c, *)))
 OBJ			=	$(SRC:.c=.o)
 CC			=	gcc

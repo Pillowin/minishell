@@ -16,7 +16,8 @@
 **	Simple case when next has already a literral value
 */
 
-static t_list	*simple_case(t_list **tokens, t_list **prev, t_list *next, t_list **gc)
+static t_list	*simple_case(t_list **tokens, t_list **prev, t_list *next,
+								t_list **gc)
 {
 	void	*tmp;
 

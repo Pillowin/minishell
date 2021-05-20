@@ -149,7 +149,7 @@ int		tc_read(t_tc_cmds *tc_cmds, char **buf, t_list **gc)
 	i = 0;
 	while (i < BUF_SIZE && read(STDIN_FILENO, &((*buf)[i]), BUF_SIZE - i))
 	{
-		if (g_exit_status & 0xFF00)
+		if (g_exit_status & 0x0F00)
 		{
 			i = (*buf)[i];
 			ft_strncpy(*buf, "", BUF_SIZE);

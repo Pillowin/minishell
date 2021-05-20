@@ -6,12 +6,15 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 15:48:33 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/08 17:13:45 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 21:43:34 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+**
+*/
 char	pipe_init(t_fd *fd)
 {
 	if (pipe(fd->pipes) == -1)
@@ -32,42 +35,38 @@ char	pipe_init(t_fd *fd)
 	fd->pid = fork();
 	if (fd->pid == -1)
 		return (FAILURE);
-	else if (!(fd->pid))	// MIOCHE (cmd gauche)
+	else if (!(fd->pid))
 	{
-		// fprintf(stderr, "enfant 1\n");
-		if (dup2(fd->pipes[OUT], STDOUT_FILENO) == -1)//STDOUT n'est plus STANDARD
+		if (dup2(fd->pipes[OUT], STDOUT_FILENO) == -1)
 			return (FAILURE);
-		// fprintf(stderr, "enfant 2\n");
 		fd->is_child = 1;
 		if (close(fd->pipes[IN]) == -1)
 			return (FAILURE);
-		fd->pipes[IN] = STDIN_FILENO;//STDIN devient STANDARD
+		fd->pipes[IN] = STDIN_FILENO;
 	}
-	else	// PAPA (droite)
+	else
 	{
-		// fprintf(stderr, "papa 1 \n");
-		if (dup2(fd->pipes[IN], STDIN_FILENO) == -1) //STDIN n'est plus STANDARD
+		if (dup2(fd->pipes[IN], STDIN_FILENO) == -1)
 			return (FAILURE);
-		// fprintf(stderr, "papa 2\n");
 		fd->is_child = 0;
 		if (close(fd->pipes[OUT]) == -1)
 			return (FAILURE);
-		fd->pipes[OUT] = STDOUT_FILENO;//STDOUT devient STANDARD
+		fd->pipes[OUT] = STDOUT_FILENO;
 	}
-	// fprintf(stderr, "enfant 3\n\n");
-	// fprintf(stderr, "papa 3\n\n");
-
 	return (SUCCESS);
 }
 
+/*
+**
+*/
 char	pipe_destroy(t_fd *fd)
 {
 	waitpid(-1, NULL, 0);
-	if (fd->pipes[IN] != STDIN_FILENO) // Si IN n'est pas standard
+	if (fd->pipes[IN] != STDIN_FILENO)
 	{
 		if (close(fd->pipes[IN]) == -1)
 			return (FAILURE);
-		fd->pipes[IN] = STDIN_FILENO;//STDIN devient STANDARD
+		fd->pipes[IN] = STDIN_FILENO;
 	}
 	if (fd->pipes[REAL_IN] != -1)
 	{
@@ -75,11 +74,11 @@ char	pipe_destroy(t_fd *fd)
 			return (FAILURE);
 		fd->pipes[REAL_IN] = -1;
 	}
-	if (fd->pipes[OUT] != STDOUT_FILENO) // Si OUT n'est pas standard
+	if (fd->pipes[OUT] != STDOUT_FILENO)
 	{
 		if (close(fd->pipes[OUT]) == -1)
 			return (FAILURE);
-		fd->pipes[OUT] = STDOUT_FILENO;//TODO:STDOUT devient STANDARD
+		fd->pipes[OUT] = STDOUT_FILENO;
 	}
 	if (fd->pipes[REAL_OUT] != -1)
 	{

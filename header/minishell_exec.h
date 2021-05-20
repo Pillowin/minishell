@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:51:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 12:18:48 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 21:43:39 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,21 @@ char	binary_exec(t_token *token, char *path, t_fd_env_err *fee);
 /*
 **	exec.c
 */
-char	exec(t_btree *tree, t_list **env, t_err *err);
+char	exec_cmd(t_token *token, t_fd *fd, t_list **env, t_err *err);
+
+/*
+**	tree_browse.c
+*/
+char	tree_browse(t_btree *tree, t_list **env, t_err *err);
+
+/*
+**	builtin.c
+*/
+char	is_builtin(t_token *token, t_fd *fd, t_list **env, t_err *err);
+
+/*
+**	dispatch.c
+*/
+char	dispatch(void *item, t_fd_env_err *fee);
 
 #endif

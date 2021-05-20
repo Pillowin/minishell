@@ -15,11 +15,10 @@
 /*
 **	Alloc, init and return a new t_lexer.
 */
-
-t_lexer *lexer_init(char *str, t_list **gc)
+t_lexer	*lexer_init(char *str, t_list **gc)
 {
 	t_lexer	*lexer;
-	
+
 	lexer = gc_calloc(gc, 1, sizeof(*lexer));
 	if (!lexer)
 		return (NULL);
@@ -33,7 +32,6 @@ t_lexer *lexer_init(char *str, t_list **gc)
 /*
 **	Create and return t_token from next token found after cursor.
 */
-
 t_token	*lexer_get_token(t_lexer *lexer, t_err *err)
 {
 	unsigned int		i;
@@ -56,7 +54,6 @@ t_token	*lexer_get_token(t_lexer *lexer, t_err *err)
 /*
 **	Entry point for parsing.
 */
-
 int	lexer(char *input, t_err *err, t_list **env)
 {
 	t_lexer	*lexer;

@@ -6,19 +6,18 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:46:45 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/17 14:37:50 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 14:42:53 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**
+**	Check if str is flag -n.
 */
-
 static int	is_flag(char *str)
 {
-	int i;
+	int	i;
 
 	if (!str)
 		return (FAILURE);
@@ -35,10 +34,9 @@ static int	is_flag(char *str)
 }
 
 /*
-**	Print strings in fd
+**	Print strings in fd.
 */
-
-unsigned char	builtin_echo(t_token *cmd, t_list **env, t_err *err)
+char	builtin_echo(t_token *cmd, t_list **env, t_err *err)
 {
 	unsigned int	i;
 

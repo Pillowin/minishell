@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:06:55 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 13:03:37 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 21:50:18 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 /*
 **	Advance cursor of len.
 */
-
 void	lexer_advance(t_lexer *lexer, unsigned int len)
 {
 	while (len)
@@ -33,7 +32,6 @@ void	lexer_advance(t_lexer *lexer, unsigned int len)
 **	Create and return t_token from next TOKEN_WORD after cursor,
 **	then position the cursor after the word.
 */
-
 t_token	*lexer_advance_word(t_lexer *lexer, t_err *err)
 {
 	char			**data;
@@ -41,13 +39,15 @@ t_token	*lexer_advance_word(t_lexer *lexer, t_err *err)
 	unsigned int	i;
 	t_token			*token;
 
-	if (!my_calloc(1, sizeof(*data), (void **)&data, err->gc))
+	data = (char **)gc_calloc(err->gc, 1 + 1, sizeof(*data));
+	if (!data)
 		return (NULL);
 	str_len = 0;
 	while (!ft_is_end_word(lexer->str[lexer->i + str_len])
 		&& !ft_is_token(lexer->str[lexer->i + str_len]))
 		str_len++;
-	if (!my_calloc(str_len, sizeof(**data), (void **)data, err->gc))
+	*data = (char *)gc_calloc(err->gc, str_len + 1, sizeof(**data));
+	if (!(*data))
 		return (NULL);
 	i = 0;
 	while (i < str_len)
@@ -65,7 +65,6 @@ t_token	*lexer_advance_word(t_lexer *lexer, t_err *err)
 **	Create and return t_token from next TOKEN after cursor,
 **	then position the cursor after the token.
 */
-
 t_token	*lexer_advance_current(t_lexer *lexer, t_tok_type type, t_err *err)
 {
 	char	**data;

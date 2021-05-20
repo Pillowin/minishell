@@ -1,34 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/13 15:45:33 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/18 21:41:552 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 17:52:14 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/05/20 18:52:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: remove both ?
-
-void	gc_free_tab(void **data, t_list **gc)
+/*
+**	Renvoi le nombre de caractère écrit.
+*/
+int	ft_putchar(int c)
 {
-	unsigned int	i;
-
-	i = 0;
-	while ((char **)(data)[i])
-	{
-		gc_free(gc, (void **)&(data[i]));
-		i++;
-	}
-	gc_free(gc, (void **)&data);
-}
-
-void	gc_lstdel(void **list, t_list **gc)
-{
-	gc_list_foreach(*(t_list **)list, &token_destroy, gc);
-	gc_list_clear(*(t_list **)list, gc);
+	return (write(STDOUT_FILENO, &c, 1));
 }

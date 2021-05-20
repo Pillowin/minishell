@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 16:46:34 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 20:38:41 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 19:44:03 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 **	Renvoie l’adresse de l'élément précedent le premier élément
 **	dont la donnée comparée renvoie 0.
 */
-
 static t_list	*ft_list_find_prev(t_list *list, void *data_ref, int (*cmp)())
 {
 	t_list	*prev;
@@ -51,7 +50,6 @@ static t_list	*find_next(t_list *tokens)
 /*
 **	
 */
-
 static int	create_node_no_prio(t_list *list, t_btree **node, t_child *child)
 {
 	*node = btree_create_node(((t_token *)(list->data)));
@@ -69,7 +67,6 @@ static int	create_node_no_prio(t_list *list, t_btree **node, t_child *child)
 /*
 **
 */
-
 static int	create_node_prio(t_list *list, t_list *prev, t_btree **node,
 								t_child *child)
 {
@@ -95,7 +92,6 @@ static int	create_node_prio(t_list *list, t_list *prev, t_btree **node,
 **	Fonction récursive
 **	On créé un arbre à partir d'une liste
 */
-
 char	eat_list(t_list *list, t_btree **node, t_list **gc)
 {
 	t_child	child;

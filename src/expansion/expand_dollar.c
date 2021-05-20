@@ -15,7 +15,6 @@
 /*
 **	Handle $?
 */
-
 static t_list	*question_mark(t_list **curr, t_list **next, t_err *err)
 {
 	char	**next_data_data;
@@ -54,7 +53,8 @@ static t_list	*question_mark(t_list **curr, t_list **next, t_err *err)
 /*
 **	Handle specific case for (d)quotes and special char
 */
-static t_list	*specific_case(t_list **prev, t_list *curr, t_list *next, t_list **gc)
+static t_list	*specific_case(t_list **prev, t_list *curr, t_list *next,
+								t_list **gc)
 {
 	if (((t_token *)next->data)->type != TOK_WORD
 		|| !is_name(*(((t_token *)(next->data))->data), '\n'))
@@ -85,10 +85,9 @@ static t_list	*specific_case(t_list **prev, t_list *curr, t_list *next, t_list *
 **	Fetch var name
 **	Fetch var value
 */
-
 static t_list	*get_var(t_list *next, char **name, t_list *env, t_err *err)
 {
-	t_list *new;
+	t_list	*new;
 
 	if (is_name(*(((t_token *)next->data)->data), '\n'))
 		*name = *((t_token *)next->data)->data;

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/13 22:42:57 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/14 17:58:58:48 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 21:53:00 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/20 21:53:09 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int	check_pair(t_list *curr, t_tok_type type)
 **	quote expansion.
 */
 
-t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr, t_list **gc)
+t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr,
+						t_list **gc)
 {
 	t_list	*tmp;
 
@@ -67,8 +68,7 @@ char	**fetch_data(t_list **prev, t_list *curr, t_tok_type type, t_list **gc)
 	while (((t_token *)(curr->data))->type != type)
 	{
 		tmp = *str;
-		*str = ft_strjoin(tmp, *(((t_token *)(curr->data))->data));
-		gc_register(gc, *str);
+		*str = gc_strjoin(tmp, *(((t_token *)(curr->data))->data), gc);
 		gc_free(gc, (void **)&(tmp));
 		if (!(*str))
 			return (FAILURE);

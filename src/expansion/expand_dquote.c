@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/14 18:00:48 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/14 18:57:559 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 21:53:38 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/20 21:53:38 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ static int	expand_dquote_bslash(t_list **tokens, t_list **prev, t_err *err)
 /*
 **	Expand TOK_DOLLAR between double quotes.
 */
-// TODO: test a liiiiiitle more
-static int	expand_dquote_dollar(t_list **tokens, t_list **prev, t_list *env, t_err *err)
+static int	expand_dquote_dollar(t_list **tokens, t_list **prev, t_list *env,
+									t_err *err)
 {
 	t_list	*curr;
 	t_list	*next;

@@ -3,6 +3,7 @@
 		"limits": "c",
 		"term.h": "c",
 		"ncurses_dll.h": "c",
-		"termios.h": "c"
+		"termios.h": "c",
+		"minishell.h": "c"
 	}
 }

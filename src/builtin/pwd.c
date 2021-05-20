@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguiteer <gguiteer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/18 18:19:33 by agautier          #+#    #+#             */
-/*   Updated: 2021/04/18 18:333:04 byagattierr         ###   ########.fr       */
+/*   Created: 2021/05/20 15:39:37 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/20 15:39:47 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 /*
 **	Print current working directory.
 */
-
-unsigned char	builtin_pwd(t_token *cmd, t_list **env, t_err *err)
+char	builtin_pwd(t_token *cmd, t_list **env, t_err *err)
 {
-	char *buf;
+	char	*buf;
 
 	(void)cmd;
 	(void)env;

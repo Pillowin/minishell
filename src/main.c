@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:36:46 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 11:10:46 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 15:41:04 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(int argc, char **argv, char **envp)
 	env = env_init(envp, err.gc);
 	if (!env)
 	{
-		print_err_msg(NULL, NULL, strerror(errno), err.gc);
+		perr_msg(NULL, NULL, strerror(errno), err.gc);
 		gc_clean(err.gc);
 		exit(EXIT_FAILURE);
 	}

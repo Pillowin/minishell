@@ -61,6 +61,7 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 
 - Remove useless libft file
 - remove fsanitize (in libft too)
+- check TODO:
 - explicit files (remove wildcard) in makefile
 - norm
 - clean files
@@ -71,27 +72,45 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 - differencer dans error errno qui relance un prompt et errno qui quitte tout
 - test export env unset
 - verif exit value des messages d'err
-<!-- - add gc_clean before each exit et toujours exit(g_exit_status & 0x00FF); -->
+- comment all func
 
-``echo toto | sdf ;f`` => manque le 2e command not found
-``exit`` => renvoie pas la bonne valeur, devrait renvoyer le retour de la derniere commande si pas d'argument
-``minishell>export nouvelle=new`` => SEGV
+
+<!-- ``echo toto | cat -e > toto ; < toto cat | cat -e | wc -c`` -->
+
+<!-- ```
+export toto=toto
+export toto
+env | grep toto => toto should not be there
+```
 
 ```
+user42@salty-VirtualBox:~/42/minishell$ env | grep toto
+toto=toto
+user42@salty-VirtualBox:~/42/minishell$ export toto
+user42@salty-VirtualBox:~/42/minishell$ env | grep toto
+toto=toto
+user42@salty-VirtualBox:~/42/minishell$ 
+``` -->
+
+<!-- - add gc_clean before each exit et toujours exit(g_exit_status & 0x00FF); -->
+
+<!-- ``echo toto | sdf ;f`` => manque le 2e command not found -->
+<!-- ``minishell>export nouvelle=new`` => SEGV
+``export toto=`` => doit s'afficher dans export avec toto="" -->
+
+<!-- ```
 minishell>cd trucquiexit pas
 minishell: cd: too many arguments
 minishell>cd trucquiexit
 minishell: cd: trucquiexit: No such file or directory
 minishell>echo $?
 0
-```
-=> pas le bon exit_value
-
-```
+``` -->
+<!-- ```
 minishell>echo toto < tata
 minishell: tata: Bad file descriptor
 user42@salty-VirtualBox:~/42/minishell$
-```	=> mettre err en ERR_NO pour pas exit
+```	=> mettre err en ERR_NO pour pas exit -->
 
 <!-- - error messages -->
 <!-- - exit status -->

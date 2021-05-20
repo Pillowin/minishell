@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaquig <mamaquig@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/28 15:04:10 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/11 15:03:466 by mamaquig         ###   ########.fr       */
+/*   Created: 2021/05/20 22:00:53 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/20 22:01:03 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 /*
 **	Ctrl + \
 */
-
 static void	sigquit(int signal)
 {
 	int	stat_loc;
@@ -24,57 +23,48 @@ static void	sigquit(int signal)
 	{
 		if (waitpid(-1, &stat_loc, 0) != -1)
 		{
-			// printf("es = %d\n", g_exit_status);
 			if (WIFSIGNALED(stat_loc))
-			{
-			// printf("es = %d\n", g_exit_status);
 				g_exit_status = WEXITSTATUS(stat_loc);
-			}
 			ft_putstr_fd("Quit (core dumped)\n", STDOUT_FILENO);
-			// printf("es = %d\n", g_exit_status);
-			g_exit_status = 128 + signal;	// TODO:
-			// printf("es = %d\n", g_exit_status);
+			g_exit_status = 128 + signal;
+			g_exit_status |= 0x1000;
 		}
 	}
 }
 
 /*
 **	Ctrl + C
-**	TODO: clean tc buf
 */
-
 static void	sigint(int signal)
 {
-	if (signal == SIGINT)	// TODO: == et pas !=
+	if (signal == SIGINT)
 	{
 		if (waitpid(-1, NULL, 0) == -1 && errno == ECHILD)
 		{
-			ft_putstr_fd("^C\n", STDOUT_FILENO);		// TODO: reactivate
-			ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);	// TODO: Pose probleme des fois
+			ft_putstr_fd("^C\n", STDOUT_FILENO);
+			ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);
 		}
 		else
-			ft_putchar_fd('\n', STDOUT_FILENO);		// TODO: reactivate
+			ft_putchar_fd('\n', STDOUT_FILENO);
 		g_exit_status = 128 + signal;
 		g_exit_status |= 0x0100;
-		// ft_putchar_fd('\n', STDIN_FILENO);
 	}
 }
 
 /*
 **
 */
-
 void	signal_init(t_list **gc)
 {
 	if (signal(SIGINT, &sigint) == SIG_ERR)
 	{
-		print_err_msg(NULL, NULL, strerror(errno), gc);
+		perr_msg(NULL, NULL, strerror(errno), gc);
 		gc_clean(gc);
 		exit(EXIT_FAILURE);
 	}
 	if (signal(SIGQUIT, &sigquit) == SIG_ERR)
 	{
-		print_err_msg(NULL, NULL, strerror(errno), gc);
+		perr_msg(NULL, NULL, strerror(errno), gc);
 		gc_clean(gc);
 		exit(EXIT_FAILURE);
 	}

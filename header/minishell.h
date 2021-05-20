@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 13:09:27 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 13:12:06 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 19:05:12 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,6 @@ typedef struct s_dlist
 # include "minishell_exec.h"
 # include "minishell_builtin.h"
 # include "minishell_utils.h"
-
-/*
-**	free.c	// TODO: remove
-*/
-void	gc_free_tab(void **data, t_list **gc);
-void	gc_lstdel(void **list, t_list **gc);
 
 /*
 **	minishell.c

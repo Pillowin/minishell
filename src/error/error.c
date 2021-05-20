@@ -5,22 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/22 12:17:44 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/12 14:11:224 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 18:38:30 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/20 18:40:09 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**
+**	Init error messages.
 */
-
 void	err_init(char **err_msg)
 {
 	err_msg[NONE] = "No error.";
 	err_msg[MULTILINE_QUOTE] = "Undefined case multiline quote command.";
-	err_msg[MULTILINE_DQUOTE] = "Undefined case multiline double quote command.";
+	err_msg[MULTILINE_DQUOTE]
+		= "Undefined case multiline double quote command.";
 	err_msg[MULTILINE_BSLASH] = "Undefined case multiline back slash command.";
 	err_msg[SYNTAX_SEMI] = "syntax error near unexpected token `;'";
 	err_msg[SYNTAX_PIPE] = "syntax error near unexpected token `|'";
@@ -38,9 +38,8 @@ void	err_init(char **err_msg)
 }
 
 /*
-**
+**	Guess and set g_exit_status from error code.
 */
-
 static void	set_exit_status(t_err_code code)
 {
 	if (!code || code == NONE)
@@ -56,26 +55,25 @@ static void	set_exit_status(t_err_code code)
 }
 
 /*
-**
+**	Set error code and call free functions.
 */
-
-void	*error(t_err *err, t_err_code code, void **ptr, void (*free_fct)(void **, t_list **))
+void	*error(t_err *err, t_err_code code, void **ptr,
+	void (*free_fct)(void **, t_list **))
 {
 	if (free_fct && ptr)
 		free_fct(ptr, err->gc);
 	err->code = code;
 	if (code)
 		set_exit_status(code);
-	return(NULL);
+	return (NULL);
 }
 
 /*
-**
+**	Print error message to STDERR_FILENO.
 */
-
-void	print_err_msg(char *cmd_name, char *arg, char *msg, t_list **gc)
+void	perr_msg(char *cmd_name, char *arg, char *msg, t_list **gc)
 {
-	int fd;
+	int	fd;
 
 	fd = dup(STDOUT_FILENO);
 	if (fd == -1 || dup2(STDERR_FILENO, STDOUT_FILENO) == -1)

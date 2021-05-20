@@ -6,17 +6,15 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 21:58:24 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 11:45:00 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/20 22:01:47 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
 /*
 **	Select previous command in history
 */
-
 char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i
 						, t_list **gc)
 {
@@ -31,7 +29,7 @@ char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i
 		*curr_cpy = (*curr_cpy)->prev;
 		tputs(tgetstr("dl", NULL), 1, &ft_putchar);
 		ft_strncpy(*buf, (*curr_cpy)->data, BUF_SIZE);
-		;ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);
+		ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);
 		write(STDIN_FILENO, (*buf), ft_strlen(*buf));
 		*i = ft_strlen(*buf);
 	}
@@ -41,7 +39,6 @@ char			tc_up(t_dlist **curr_cpy, char **buf, unsigned int *i
 /*
 **	Select next command in history
 */
-
 char			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i
 						, t_list **gc)
 {
@@ -66,7 +63,6 @@ char			tc_down(t_dlist **curr_cpy, char **buf, unsigned int *i
 /*
 **	Remove prev printed char
 */
-
 void			tc_del(char **buf, unsigned int *i)
 {
 	if (!(*i))
@@ -81,7 +77,6 @@ void			tc_del(char **buf, unsigned int *i)
 /*
 **	Add buf to lists and go to parser
 */
-
 unsigned int	tc_eol(t_dlist **curr_cpy, char **buf, unsigned int *i)
 {
 	unsigned int	index;
@@ -99,7 +94,6 @@ unsigned int	tc_eol(t_dlist **curr_cpy, char **buf, unsigned int *i)
 /*
 **	Interpret key pressed
 */
-
 int				tc_dispatch(t_dlist **curr_cpy, char **buf, unsigned int *i, t_list **gc)
 {
 	if (!ft_strncmp(&((*buf)[*i]), KEY_UP, 3))
