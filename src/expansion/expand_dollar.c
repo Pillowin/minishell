@@ -13,27 +13,14 @@
 #include "minishell.h"
 
 /*
-**	Handle $?
+**	$?
 */
-static t_list	*question_mark(t_list **curr, t_list **next, t_err *err)
+static t_list	*is_next_data(char **next_data_data, t_list **curr
+								, t_list **next, t_err *err)
 {
-	char	**next_data_data;
-	char	*new_str;
-	char	*str;
 	void	*tmp;
-	t_token	*curr_data;
+	char	*str;
 
-	curr_data = (t_token *)((*curr)->data);
-	next_data_data = (((t_token *)((*next)->data))->data);
-	if ((*next_data_data)[0] != '?')
-		return (NULL);
-	curr_data->type = TOK_WORD;
-	gc_free(err->gc, (void **)(curr_data->data));
-	new_str = ft_itoa(g_exit_status & 0x00FF);
-	if (!new_str)
-		return (error(err, FATAL, NULL, NULL));
-	gc_register(err->gc, new_str);
-	*(curr_data->data) = new_str;
 	if ((*next_data_data)[1])
 	{
 		str = ft_substr(*next_data_data, 1, ft_strlen(*next_data_data) - 1);
@@ -48,6 +35,29 @@ static t_list	*question_mark(t_list **curr, t_list **next, t_err *err)
 	gc_lstdelone((*next), &token_destroy, err->gc);
 	(*curr)->next = tmp;
 	return (*curr);
+}
+
+/*
+**	Handle $?
+*/
+static t_list	*question_mark(t_list **curr, t_list **next, t_err *err)
+{
+	char	**next_data_data;
+	char	*new_str;
+	t_token	*curr_data;
+
+	curr_data = (t_token *)((*curr)->data);
+	next_data_data = (((t_token *)((*next)->data))->data);
+	if ((*next_data_data)[0] != '?')
+		return (NULL);
+	curr_data->type = TOK_WORD;
+	gc_free(err->gc, (void **)(curr_data->data));
+	new_str = ft_itoa(g_exit_status & 0x00FF);
+	if (!new_str)
+		return (error(err, FATAL, NULL, NULL));
+	gc_register(err->gc, new_str);
+	*(curr_data->data) = new_str;
+	return (is_next_data(next_data_data, curr, next, err));
 }
 
 /*
@@ -109,31 +119,28 @@ static t_list	*get_var(t_list *next, char **name, t_list *env, t_err *err)
 t_list	*expand_dollar(t_list **toks, t_list **prev, t_list *env, t_err *err)
 {
 	t_list	*curr;
-	t_list	*next;
 	t_list	*new;
 	char	*name;
 
 	curr = *toks;
 	if (*prev)
 		curr = (*prev)->next;
-	next = curr->next;
-	new = question_mark(&curr, &next, err);
+	new = question_mark(&curr, &(curr->next), err);
 	if (new)
 		return (new);
-	new = specific_case(prev, curr, next, err->gc);
+	new = specific_case(prev, curr, curr->next, err->gc);
 	if (new)
 		return (new);
-	new = get_var(next, &name, env, err);
+	new = get_var(curr->next, &name, env, err);
 	if (!new)
 		return (error(err, FATAL, NULL, NULL));
-	if (!ft_strcmp(name, *(((t_token *)(next->data))->data)))
-		gc_lstdelone(next, &token_destroy, err->gc);
+	if (!ft_strcmp(name, *(((t_token *)(curr->next->data))->data)))
+		gc_lstdelone(curr->next, &token_destroy, err->gc);
 	gc_lstdelone(curr, &token_destroy, err->gc);
 	if (*prev)
-	{
 		(*prev)->next = new;
+	if (*prev)
 		return (*prev);
-	}
 	*toks = new;
 	return (*toks);
 }

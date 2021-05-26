@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:51:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/18 12:16:00 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 20:17:16 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@
 # define ERRNO_ERR		-2
 # define CTRL_D			-1
 
-typedef struct termios	t_termios;	// TODO:
-
 typedef struct s_tc_cmds
 {
 	t_dlist		*cmds;
@@ -36,10 +34,14 @@ typedef struct s_tc_cmds
 /*
 **	termcap.c
 */
-t_tc_cmds		*tc_cmds_init(t_list **gc);
-char			tc_init(t_termios *termios);
-char			tc_destroy(t_termios *termios);
 int				tc_read(t_tc_cmds *tc_cmds, char **buf, t_list **gc);
+
+/*
+**	termcap_utils.c
+*/
+t_tc_cmds		*tc_cmds_init(t_list **gc);
+char			tc_init(struct termios *termios, unsigned int *i, int *index);
+char			tc_destroy(struct termios *termios);
 
 /*
 **	termcap_key.c

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 19:24:50 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 19:25:33 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 19:54:49 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ int	new_lstok(t_tok_type type, char **str, t_list **new, t_list **gc)
 
 	if (!token_init(type, str, &token, gc))
 		return (FAILURE);
-	*new = ft_lstnew(token);
+	*new = gc_lstnew(token, gc);
 	if (!(*new))
 		return (FAILURE);
-	gc_register(gc, *new);
 	return (SUCCESS);
 }
 

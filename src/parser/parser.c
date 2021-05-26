@@ -5,23 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/20 19:53:56 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/20 19:55:56 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/26 17:11:01 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 17:11:02 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**	Comparer l'enum avec les éléments (token) du tableau.
+**
 */
-static int	cmp(t_token *lstdata, int *data)
-{
-	if ((int)(lstdata->type) == *data)
-		return (EXIT_SUCCESS);
-	return (EXIT_FAILURE);
-}
-
 static t_token	*tokendup(t_token *data, t_list **gc)
 {
 	t_token			*dest;
@@ -49,20 +42,32 @@ static t_token	*tokendup(t_token *data, t_list **gc)
 	return (dest);
 }
 
-static t_list	*lstcpy(t_list *lst, t_list **gc)
+/*
+**	Copy list, remove TOK_SPACE.
+**	Init check pointer function table.
+*/
+static t_list	*init_check(t_list **lst, t_list **gc,
+							char (*check_f[5])(t_list *, unsigned int, t_err *))
 {
 	t_list	*dest;
 	t_token	*token;
 
 	dest = NULL;
-	while (lst)
+	while ((*lst))
 	{
-		token = tokendup(lst->data, gc);
+		token = tokendup((*lst)->data, gc);
 		if (!token)
 			return (NULL);
 		gc_list_push_back(&dest, token, gc);
-		lst = lst->next;
+		(*lst) = (*lst)->next;
 	}
+	*lst = dest;
+	gc_list_rm_tok_if(lst, (void *)TOK_SPACE, &is_tok_type, gc);
+	check_f[0] = &check_semi;
+	check_f[1] = &check_pipe;
+	check_f[2] = &check_dgreat;
+	check_f[3] = &check_great;
+	check_f[4] = &check_less;
 	return (dest);
 }
 
@@ -74,25 +79,21 @@ char	check_tokens(t_list *tokens, t_err *err)
 	unsigned int	i;
 	unsigned int	j;
 	t_list			*list;
-	t_list			*toks;
-	const int		prios[5] = {
-		TOK_SEMI, TOK_PIPE, TOK_DGREAT, TOK_GREAT, TOK_LESS};
-	char (* const check_f[5])(t_list *, unsigned int, t_err *) = {
-		check_semi, check_pipe, check_dgreat, check_great, check_less};
+	char			(*check_f[5])(t_list *, unsigned int, t_err *);
+	const int		prios[5] = {TOK_SEMI, TOK_PIPE, TOK_DGREAT, TOK_GREAT,
+		TOK_LESS};
 
-	toks = lstcpy(tokens, err->gc);
-	if (!toks)
+	if (!init_check(&tokens, err->gc, check_f))
 		return ((long)error(err, FATAL, NULL, NULL));
-	gc_list_rm_tok_if(&toks, (void *)TOK_SPACE, &is_tok_type, err->gc);
 	i = 0;
 	while (i < 5)
 	{
-		list = toks;
+		list = tokens;
 		j = 0;
 		while (list)
 		{
-			if (!cmp(list->data, (int *)&prios[i]))
-				if (!check_f[i](toks, j, err))
+			if (!cmp_token_type(list->data, (int *)&prios[i]))
+				if (!check_f[i](tokens, j, err))
 					return (FAILURE);
 			list = list->next;
 			j++;

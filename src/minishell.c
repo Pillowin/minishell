@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgqetier <mgqitgerstudent.42.fr>          +#+  +:+       +#+        */
+/*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/06 22:03:32 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/10 17:31:17 by mgautier         ###   ########.fr       */
+/*   Created: 2021/05/26 17:25:50 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/05/26 18:25:40 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,52 @@
 /*
 **
 */
+static char	minishell_init(t_tc_cmds **tc_cmds, t_err *err)
+{
+	*tc_cmds = tc_cmds_init(err->gc);
+	if (!(*tc_cmds))
+	{
+		perr_msg(NULL, NULL, strerror(errno), err->gc);
+		gc_clean(err->gc);
+		exit(EXIT_FAILURE);
+	}
+	return (SUCCESS);
+}
 
+/*
+**
+*/
+static char	minishell_start(char *buf, int len, t_list **env, t_err *err)
+{
+	ft_putchar_fd('\n', STDOUT_FILENO);
+	if (!buf || !(*buf))
+		return (SUCCESS);
+	buf[len] = '\n';
+	if (!(lexer(buf, err, env)))
+	{
+		if (err->code == ERR_NO || err->code == FATAL)
+			perr_msg(err->cmd_name, NULL, strerror(errno), err->gc);
+		else if (err->code != NONE)
+			perr_msg(err->cmd_name, NULL, err->message[err->code], err->gc);
+		if (err->code == FATAL)
+			return (FAILURE);
+	}
+	waitall();
+	return (SUCCESS);
+}
+
+/*
+**
+*/
 void	minishell(t_list **env, t_err *err)
 {
 	t_tc_cmds	*tc_cmds;
 	char		*buf;
 	int			len;
 
+	tc_cmds = NULL;
+	minishell_init(&tc_cmds, err);
 	buf = NULL;
-	tc_cmds = tc_cmds_init(err->gc);
-	if (!tc_cmds)
-	{
-		perr_msg(NULL, NULL, strerror(errno), err->gc);
-		gc_clean(err->gc);
-		exit(EXIT_FAILURE);
-	}
 	while (1)
 	{
 		ft_putstr_fd(DEFAULT_PROMPT, STDOUT_FILENO);
@@ -42,28 +73,8 @@ void	minishell(t_list **env, t_err *err)
 			break ;
 		}
 		else if (len == ERRNO_ERR)
-		{
-			ft_putchar_fd('\n', STDOUT_FILENO);
-			perr_msg(NULL, NULL, strerror(errno), err->gc);
-		}
-		else
-		{
-			ft_putchar_fd('\n', STDOUT_FILENO);
-			if (!buf || !(*buf))
-				continue ;
-			buf[len] = '\n';
-			if(!(lexer(buf, err, env)))	// SI ERR_NO && errno == ERR malloc gc_clean ;exit
-			{
-				if (err->code == ERR_NO || err->code == FATAL)
-					perr_msg(err->cmd_name, NULL, strerror(errno), err->gc);
-				else if (err->code != NONE)
-					perr_msg(err->cmd_name, NULL, err->message[err->code], err->gc);
-				if (err->code == FATAL)
-					break ;
-				// ft_putendl_fd(err->message[err->code], STDERR_FILENO);	// TODO: ?! pas de minishell: ?
-			}
-		}
-		waitall();
+			perr_msg("\n", NULL, strerror(errno), err->gc);
+		else if (!minishell_start(buf, len, env, err))
+			break ;
 	}
-	gc_clean(err->gc);	// TODO: activate
 }

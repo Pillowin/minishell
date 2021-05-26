@@ -61,6 +61,7 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 
 - Remove useless libft file
 - remove fsanitize (in libft too)
+- norm libft
 - check TODO:
 - explicit files (remove wildcard) in makefile
 - norm

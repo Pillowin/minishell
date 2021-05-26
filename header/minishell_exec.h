@@ -6,15 +6,14 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:51:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 21:43:39 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 20:18:28 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_EXEC_H
 # define MINISHELL_EXEC_H
 
-typedef pid_t		t_pid;
-typedef struct stat	t_stat;	// TODO:
+typedef pid_t	t_pid;
 
 enum
 {
@@ -57,7 +56,7 @@ char	pipe_destroy(t_fd *fd);
 **	binary.c
 */
 char	*binary_absolute_path(t_token *token, t_err *err);
-char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env,
+char	*binary_not_a_path(t_token *token, struct stat *buf, t_list *env,
 			t_err *err);
 char	*binary_relative_path(t_token *token, t_err *err);
 char	binary_exec(t_token *token, char *path, t_fd_env_err *fee);

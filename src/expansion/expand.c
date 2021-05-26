@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 16:52:10 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/20 21:54:55 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 18:12:05 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 /*
 **	merge TOK_WORD and Remove TOK_SPACE
 */
-
 static int	expand_clean(t_list **tokens, t_err *err)
 {
 	t_list	*curr;
@@ -46,9 +45,26 @@ static int	expand_clean(t_list **tokens, t_err *err)
 }
 
 /*
+**	
+*/
+static char	clean_init(t_list **done, t_list **tokens, t_list *curr, t_err *err)
+{
+	*done = *tokens;
+	*tokens = NULL;
+	if (curr && ((t_token *)(curr->data))->type == TOK_SEMI)
+	{
+		*tokens = curr->next;
+		curr->next = NULL;
+		((t_token *)(curr->data))->type = TOK_NEWLINE;
+	}
+	if (!expand_clean(done, err))
+		return (FAILURE);
+	return (SUCCESS);
+}
+
+/*
 **	Expand quotes double quotes and backslash
 */
-
 char	expand(t_list **done, t_list **tokens, t_list *env, t_err *err)
 {
 	t_list	*prev;
@@ -72,15 +88,7 @@ char	expand(t_list **done, t_list **tokens, t_list *env, t_err *err)
 			prev = curr;
 		curr = curr->next;
 	}
-	*done = *tokens;
-	*tokens = NULL;
-	if (curr && ((t_token *)(curr->data))->type == TOK_SEMI)
-	{
-		*tokens = curr->next;
-		curr->next = NULL;
-		((t_token *)(curr->data))->type = TOK_NEWLINE;
-	}
-	if (!expand_clean(done, err))
+	if (!clean_init(done, tokens, curr, err))
 		return (FAILURE);
 	return (SUCCESS);
 }

@@ -6,20 +6,18 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:36:46 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 15:41:04 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 18:31:17 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
 /*
 **	
 */
-
 int	main(int argc, char **argv, char **envp)
 {
-	char 	*err_msg[ERR_NO];
+	char	*err_msg[ERR_NO];
 	t_err	err;
 	t_list	*env;
 	t_list	*gc;
@@ -39,5 +37,6 @@ int	main(int argc, char **argv, char **envp)
 	}
 	signal_init(err.gc);
 	minishell(&env, &err);
+	gc_clean(err.gc);
 	return (g_exit_status);
 }

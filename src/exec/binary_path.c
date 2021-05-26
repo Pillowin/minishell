@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 19:20:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 19:20:42 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 20:19:09 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ static char	**fetch_path(t_list *env, t_err *err)
 /*
 **	
 */
-static char	*check_paths(t_token *token, char **paths, t_stat *buf, t_err *err)
+static char	*check_paths(t_token *token, char **paths, struct stat *buf,
+							t_err *err)
 {
 	unsigned int	i;
 	char			*path;
@@ -109,7 +110,8 @@ static char	*check_paths(t_token *token, char **paths, t_stat *buf, t_err *err)
 /*
 **	Create path from token when PATH var is needed.
 */
-char	*binary_not_a_path(t_token *token, t_stat *buf, t_list *env, t_err *err)
+char	*binary_not_a_path(t_token *token, struct stat *buf, t_list *env,
+							t_err *err)
 {
 	char	**paths;
 	char	*path;

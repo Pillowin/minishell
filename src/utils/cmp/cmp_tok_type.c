@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gc_lstdel.c                                        :+:      :+:    :+:   */
+/*   cmp_tok_type.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/20 19:06:18 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 19:06:54 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/26 16:39:51 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 16:40:09 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**	Free an entire list and his content.
+**	Comparer l'enum avec les éléments (token) du tableau.
 */
-void	gc_lstdel(void **list, t_list **gc)
+int	cmp_token_type(t_token *lstdata, int *data)
 {
-	gc_list_foreach(*(t_list **)list, &token_destroy, gc);
-	gc_list_clear(*(t_list **)list, gc);
+	if ((int)(lstdata->type) == *data)
+		return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
