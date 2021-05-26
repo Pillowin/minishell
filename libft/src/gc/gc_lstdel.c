@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   gc_lstdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 19:06:18 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 19:01:44 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**	Free an entire list and his content.
+*/
+void	gc_lstdel(void **list, t_list **gc)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
-
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+	gc_list_foreach(*(t_list **)list, &token_destroy, gc);
+	gc_list_clear(*(t_list **)list, gc);
+}

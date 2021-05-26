@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/08 10:55:09 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 18:51:41 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**	Écrit la chaine de caractères ’s’ sur le filedescriptor donné.
+*/
+void	ft_putstr_fd(char *s, int fd)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
+	size_t	i;
 
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+	if (!s)
+		return ;
+	i = 0;
+	while (s[i])
+		i++;
+	write(fd, s, i);
+}

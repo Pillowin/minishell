@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/04 12:56:17 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 18:51:33 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**	man memcpy
+*/
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
+	char		*d;
+	const char	*s;
+	size_t		i;
 
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+	if (!dst && !src)
+		return (0);
+	d = dst;
+	s = src;
+	i = 0;
+	while (i < n)
+	{
+		d[i] = s[i];
+		i++;
+	}
+	return (dst);
+}

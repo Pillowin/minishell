@@ -1,27 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/04 14:22:55 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 18:51:51 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**	man strchr
+*/
+char	*ft_strchr(const char *s, int c)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
+	int		i;
 
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+			return ((char *)&s[i]);
+		i++;
+	}
+	if (s[i] == c)
+		return ((char *)&s[i]);
+	return (NULL);
+}

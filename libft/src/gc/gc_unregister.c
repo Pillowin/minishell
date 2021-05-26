@@ -1,27 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   gc_unregister.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/26 18:59:36 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 19:01:38 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**
+*/
+static int	cmp(void *data, void *ref)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
+	if (data == ref)
+		return (0);
+	return (1);
+}
 
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+/*
+**
+*/
+void	gc_unregister(t_list **gc, void *ptr)
+{
+	if (!ptr)
+		return ;
+	ft_list_remove_if(gc, ptr, &cmp, NULL);
+}

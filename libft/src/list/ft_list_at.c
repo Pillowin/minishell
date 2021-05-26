@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   ft_list_at.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2021/02/28 21:54:12 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/05/26 18:50:45 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**	Renvoie le n-ième élément de la liste, sachant que le premier élément est
+**	l’élément 0.
+*/
+t_list	*ft_list_at(t_list *begin_list, unsigned int nbr)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
-
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+	if (!begin_list)
+		return (NULL);
+	while (begin_list->next && nbr)
+	{
+		begin_list = begin_list->next;
+		nbr--;
+	}
+	if (nbr)
+		return (NULL);
+	return (begin_list);
+}

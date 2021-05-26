@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   gc_strsdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/20 17:40:17 by mamaquig          #+#    #+#             */
+/*   Updated: 2021/05/26 19:01:38 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**	Alloue un tableau de chaîne de caractères, puis alloue une chaîne de
+**	caractère dans ce dernier.
+*/
+int	gc_strsdup(char ***strs, size_t size, char *str, t_list **gc)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
-
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+	*strs = (char **)gc_calloc(gc, size + 1, sizeof(**strs));
+	if (!(*strs))
+		return (FAILURE);
+	*strs[0] = ft_strdup(str);
+	if (!(*strs[0]))
+		return (FAILURE);
+	gc_register(gc, **strs);
+	return (SUCCESS);
+}

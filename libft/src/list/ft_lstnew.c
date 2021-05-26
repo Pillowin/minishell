@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_btree.h                                         :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/04 21:21:15 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 19:29:34 by agautier         ###   ########.fr       */
+/*   Created: 2019/11/08 16:02:47 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/26 18:51:30 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BTREE_H
-# define FT_BTREE_H
+#include "libft.h"
 
-typedef struct s_btree
+/*
+**	Alloue (avec malloc(3)) et renvoie un nouvel élément.
+**	la variable data est initialisée à l’aide de la valeur du paramètre
+**	data.
+**	La variable ’next’ est initialisée à NULL.
+*/
+t_list	*ft_lstnew(void *data)
 {
-	struct s_btree	*left;
-	struct s_btree	*right;
-	void			*item;
-}	t_btree;
+	t_list	*list;
 
-t_btree	*btree_create_node(void *item);
-void	btree_apply_prefix(t_btree *root, void (*applyf)(void *));
-void	btree_free(t_btree **root);
-
-#endif
+	list = (t_list *)malloc((sizeof(*list)));
+	if (!list)
+		return (NULL);
+	list->data = data;
+	list->next = 0;
+	return (list);
+}

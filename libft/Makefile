@@ -6,64 +6,74 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 12:52:43 by agautier          #+#    #+#              #
-#    Updated: 2021/05/17 15:28:40 by agautier         ###   ########.fr        #
+#    Updated: 2021/05/26 20:10:39 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	libft.a
-SRC		=	$(addprefix src/, \
-				ft_isalnum.c \
-				ft_calloc.c \
-				ft_strlen.c \
-				ft_create_elem.c \
-				ft_free.c \
-				ft_strchr.c \
-				ft_strncpy.c \
-				ft_strjoin.c \
-				ft_strcpy.c \
-				ft_strcmp.c \
-				ft_strlcat.c \
-				ft_memcpy.c \
-				ft_putstr.c \
-				ft_strdup.c \
-				ft_putstr_fd.c \
-				ft_putendl_fd.c \
-				ft_strncmp.c \
-				ft_isalpha.c \
-				ft_isalnum.c \
-				ft_substr.c \
-				ft_putchar_fd.c \
-				ft_split.c \
-				ft_itoa.c	\
-				get_next_line_utils.c \
-				get_next_line.c \
-				ft_isprint.c \
-				ft_bzero.c \
-				gc.c \
-				ft_itoa.c \
-				ft_atoi.c \
-				ft_isdigit.c \
+SRC		=	$(addprefix src/, 				\
+				tree/btree_create_node.c	\
+				tree/btree_apply_prefix.c	\
+				tree/btree_free.c			\
 				\
-				ft_list_push_back.c \
-				ft_list_foreach.c \
-				ft_list_at.c \
-				ft_lstnew.c \
-				my_list_foreach_if.c \
-				ft_list_remove_if.c \
-				ft_list_find.c \
-				ft_list_clear.c \
-				ft_lstlast.c \
-				ft_lstdelone.c \
-				ft_list_push_strs.c \
-				ft_list_sort.c \
-				ft_list_size.c \
-				ft_list_foreach_if.c \
+				list/ft_create_elem.c		\
+				list/ft_list_push_back.c	\
+				list/ft_list_foreach.c		\
+				list/ft_list_at.c			\
+				list/ft_lstlast.c			\
+				list/ft_list_find.c			\
+				list/ft_list_sort.c			\
+				list/ft_list_size.c			\
+				list/ft_list_remove_if.c	\
 				\
-				btree_create_node.c \
-				btree_apply_prefix.c \
-				btree_free.c)
+				gc/gc_btree_free.c			\
+				gc/gc_calloc.c				\
+				gc/gc_clean.c				\
+				gc/gc_create_delem.c		\
+				gc/gc_dlist_push_back.c		\
+				gc/gc_free_tab.c			\
+				gc/gc_free.c				\
+				gc/gc_list_clear.c			\
+				gc/gc_list_push_back.c		\
+				gc/gc_list_remove_var.c		\
+				gc/gc_lstnew.c				\
+				gc/gc_lstdel.c				\
+				gc/gc_lstdelone.c			\
+				gc/gc_register.c			\
+				gc/gc_strdup.c				\
+				gc/gc_strjoin.c				\
+				gc/gc_strsdup.c				\
+				gc/gc_unregister.c			\
+				gc/gc_list_foreach.c		\
+				gc/gc_list_rm_tok_if.c		\
+				gc/gc_btree_apply_prefix.c	\
+				\
+				is/ft_isalnum.c				\
+				is/ft_isalpha.c				\
+				is/ft_isprint.c				\
+				\
+				memory/ft_calloc.c			\
+				memory/ft_free.c			\
+				memory/ft_memcpy.c			\
+				\
+				str/ft_atoi.c				\
+				str/ft_itoa.c				\
+				str/ft_split.c				\
+				str/ft_strchr.c				\
+				str/ft_strcmp.c				\
+				str/ft_strdup.c				\
+				str/ft_strlcat.c			\
+				str/ft_strlen.c				\
+				str/ft_strncpy.c			\
+				str/ft_strncmp.c			\
+				str/ft_substr.c				\
+				\
+				print/ft_putchar_fd.c		\
+				print/ft_putendl_fd.c		\
+				print/ft_putstr_fd.c		\
+			)
 OBJ		=	$(SRC:.c=.o)
-HEADER	=	header
+HEADER	=	-Iheader -I../header
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror
 
@@ -74,7 +84,7 @@ $(NAME): $(OBJ)
 	ranlib $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(HEADER) -c $< -o $@
+	$(CC) $(CFLAGS) $(HEADER) -c $< -o $@
 
 clean:
 	rm -f $(OBJ)
