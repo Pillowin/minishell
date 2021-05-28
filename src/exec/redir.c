@@ -34,14 +34,14 @@ static char	redir_open(t_token *token, int (*redirs)[4], int type, t_err *err)
 		if (ret != -1 && !(buf.st_mode & S_IWUSR))
 			return ((long)error(err, PERM, NULL, NULL));
 		(*redirs)[type] = open(token->data[1], O_WRONLY | O_APPEND | O_CREAT,
-				0644);
+				0664);
 	}
 	else
 	{
 		if (ret != -1 && !(buf.st_mode & S_IWUSR))
 			return ((long)error(err, PERM, NULL, NULL));
 		(*redirs)[type] = open(token->data[1], O_WRONLY | O_TRUNC | O_CREAT,
-				0644);
+				0664);
 	}
 	return (SUCCESS);
 }
