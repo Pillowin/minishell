@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 18:52:54 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 19:07:33 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 18:57:49 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static char	**check_errors(char *path, t_list **env, t_err *err)
 	struct stat	buf;
 
 	if (stat(path, &buf) != 0)
-		return (error(err, NO_SUCH_FILE, NULL, NULL));
+		return (error(err, CMD_NOT_FOUND, NULL, NULL));
 	if (buf.st_mode & S_IFDIR)
 		return (error(err, IS_A_DIR, NULL, NULL));
 	else if (!(buf.st_mode & S_IXUSR))
-		return (error(err, PERM, NULL, NULL));
+		return (error(err, CMD_PERM, NULL, NULL));
 	envp = env_to_tab(*env, err->gc);
 	if (!envp)
 		return (error(err, FATAL, NULL, NULL));

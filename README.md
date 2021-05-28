@@ -61,17 +61,19 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 
 - remove fsanitize (in libft too)
 - comment all func
-- leaks
-- exit
-- verif exit value des messages d'err
-- exit : verif si numeric en prio, numeric quitte alors que multiple non
-- exit quitte pas si multiple arg numeric
-- /bin/ls yghjk => pas le bon return val
-- awk => mauvais exit status
-- yftghjkn => mauvaise err donc mauvais exit status
-- unset PATH ; ls => SEGV 0 0x5572badd7667 in check_paths src/exec/binary_path.c:90
 - '' => should return cmd not found
+<!-- - awk => mauvais exit status -->
+<!-- - /bin/ls yghjk => pas le bon return val -->
+<!-- - yftghjkn => mauvaise err donc mauvais exit status -->
+<!-- - unset PATH ; ls => SEGV 0 0x5572badd7667 in check_paths src/exec/binary_path.c:90 -->
+<!-- - minishell>echo toto > tata => FATAL, need to stat -->
+<!-- - unset PATH ; ls => mauvaise err et surtout NOT_FOUND qui return 127.. -->
+<!-- - leaks -->
+<!-- - exit : verif si numeric en prio, numeric quitte alors que multiple non -->
+<!-- - exit quitte pas si multiple arg numeric -->
 
+<!-- - exit -->
+<!-- - verif exit value des messages d'err -->
 <!-- - check TODO: -->
 <!-- - test export env unset -->
 <!-- - explicit files (remove wildcard) in makefile -->

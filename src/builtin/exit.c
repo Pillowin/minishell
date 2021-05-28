@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 15:17:06 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 21:47:53 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 19:08:29 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,20 @@ char	builtin_exit(t_token *cmd, t_list **env, t_err *err)
 {
 	(void)env;
 	ft_putstr_fd("exit\n", STDERR_FILENO);
-	if (cmd->data[1] && cmd->data[2])
+	if (cmd->data[1])
 	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-		g_exit_status = EXIT_FAILURE;
-	}
-	else if (cmd->data[1])
-	{
-		g_exit_status = 2;
 		if (!is_valid_arg(cmd->data[1]))
+		{
 			perr_msg("exit", cmd->data[1], "numeric argument required",
 				err->gc);
+			g_exit_status = 2;
+		}
+		else if (cmd->data[1] && cmd->data[2])
+		{
+			perr_msg("minishell", "exit", "too many arguments", err->gc);
+			g_exit_status = EXIT_FAILURE;
+			return (FAILURE);
+		}
 		else
 			g_exit_status = ft_atoi(cmd->data[1]);
 	}

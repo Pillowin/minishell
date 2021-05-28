@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 19:20:16 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/26 20:19:09 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 17:38:41 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	**fetch_path(t_list *env, t_err *err)
 
 	tmp = ft_list_find(env, "PATH", &is_var);
 	if (!tmp)
-		return (error(err, NOT_FOUND, NULL, NULL));
+		return (error(err, CMD_NOT_FOUND, NULL, NULL));
 	tmp = ((t_var *)((t_list *)tmp)->data)->value;
 	paths = ft_split(tmp, ':');
 	if (!paths)
@@ -117,6 +117,8 @@ char	*binary_not_a_path(t_token *token, struct stat *buf, t_list *env,
 	char	*path;
 
 	paths = fetch_path(env, err);
+	if (!paths)
+		return (FAILURE);
 	path = check_paths(token, paths, buf, err);
 	if (!path)
 		return (FAILURE);

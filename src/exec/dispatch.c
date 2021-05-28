@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 19:29:38 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 21:43:45 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 18:57:42 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static char	dispatch_command(t_token *token, t_fd *fd, t_list **env, t_err *err)
 		if (!pipe_destroy(fd))
 			return (FAILURE);
 	if (!(g_exit_status & 0xFF00))
-		g_exit_status = 0;
+		g_exit_status &= 0x00FF;
 	fd->is_dad_pipe = 0;
 	return (SUCCESS);
 }

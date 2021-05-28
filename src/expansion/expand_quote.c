@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 21:53:00 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 21:53:09 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 19:04:07 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 /*
 **	Return an error if this is multiline.
 */
-
 int	check_pair(t_list *curr, t_tok_type type)
 {
 	while (((t_token *)(curr->data))->type != type)
@@ -31,7 +30,6 @@ int	check_pair(t_list *curr, t_tok_type type)
 **	Specific case, when TOK_QUOTES are neighbour, no need to continue
 **	quote expansion.
 */
-
 t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr,
 						t_list **gc)
 {
@@ -56,7 +54,6 @@ t_list	*case_neighbour(t_list **tokens, t_list *prev, t_list *curr,
 /*
 **	Create a new char * with all data between TOK_QUOTE.
 */
-
 char	**fetch_data(t_list **prev, t_list *curr, t_tok_type type, t_list **gc)
 {
 	char	**str;
@@ -83,7 +80,6 @@ char	**fetch_data(t_list **prev, t_list *curr, t_tok_type type, t_list **gc)
 /*
 **	Remove useless TOK_QUOTE, and add new t_list* TOK_WORD to main list.
 */
-
 t_list	*update_list(t_list **tokens, t_list **prev, t_list *new, t_list **gc)
 {
 	t_list	*next;
@@ -114,7 +110,6 @@ t_list	*update_list(t_list **tokens, t_list **prev, t_list *new, t_list **gc)
 **	Merge TOK_WORD an TOK_SPACE between quotes into a single TOK_WORD and 
 **	add it to list.
 */
-
 t_list	*expand_quote(t_list **tokens, t_list **prev, t_tok_type t, t_err *err)
 {
 	t_list	*curr;

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 18:38:30 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 18:40:09 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 18:28:41 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	err_init(char **err_msg)
 	err_msg[HOME_NOT_SET] = "« HOME » not set";
 	err_msg[OLDPWD_NOT_SET] = "« OLDPWD » not set";
 	err_msg[TOO_MANY_ARG] = "too many arguments";
+	err_msg[CMD_NOT_FOUND] = "No such file or directory";
+	err_msg[CMD_PERM] = "Permission denied";
 	err_msg[NOT_FOUND] = "command not found";
 	err_msg[NO_SUCH_FILE] = "No such file or directory";
 	err_msg[IS_A_DIR] = "is a directory";
@@ -46,12 +48,12 @@ static void	set_exit_status(t_err_code code)
 		g_exit_status = 0;
 	else if (code >= MULTILINE_QUOTE && code <= SYNTAX_LESS)
 		g_exit_status = 2;
-	else if (code == PERM || code == IS_A_DIR)
+	else if (code == CMD_PERM || code == IS_A_DIR)
 		g_exit_status = 126;
-	else if (code == NOT_FOUND)
+	else if (code == NOT_FOUND || code == CMD_NOT_FOUND)
 		g_exit_status = 127;
 	else
-		g_exit_status = EXIT_FAILURE;
+		g_exit_status = 1;
 }
 
 /*

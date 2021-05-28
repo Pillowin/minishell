@@ -13,24 +13,34 @@
 #include "minishell.h"
 
 /*
-**
+**	
 */
 static char	redir_open(t_token *token, int (*redirs)[4], int type, t_err *err)
 {
 	struct stat	buf;
 
+	if (stat(token->data[1], &buf) != 0)
+		return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
 	if (token->data[0][0] == '<')
 	{
-		if (stat(token->data[1], &buf) == -1)
-			return ((long)error(err, NO_SUCH_FILE, NULL, NULL));
+		if (!(buf.st_mode & S_IRUSR))
+			return ((long)error(err, PERM, NULL, NULL));
 		(*redirs)[type] = open(token->data[1], O_RDONLY);
 	}
 	else if (token->data[0][1] == '>')
+	{
+		if (!(buf.st_mode & S_IWUSR))
+			return ((long)error(err, PERM, NULL, NULL));
 		(*redirs)[type] = open(token->data[1], O_WRONLY | O_APPEND | O_CREAT,
 				0644);
+	}
 	else
+	{
+		if (!(buf.st_mode & S_IWUSR))
+			return ((long)error(err, PERM, NULL, NULL));
 		(*redirs)[type] = open(token->data[1], O_WRONLY | O_TRUNC | O_CREAT,
 				0644);
+	}
 	return (SUCCESS);
 }
 

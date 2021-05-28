@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 19:53:45 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 21:43:42 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 18:26:22 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ char	exec_cmd(t_token *token, t_fd *fd, t_list **env, t_err *err)
 	else if (ret == DONE)
 		return (SUCCESS);
 	path = fetch_path(token, fee->env, fee->err);
+	if (!path)
+		return (FAILURE);
 	if (!binary_exec(token, path, fee))
 	{
 		gc_free(fee->err->gc, (void **)&path);
