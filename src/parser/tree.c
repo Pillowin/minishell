@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 19:43:14 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/20 19:43:36 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 23:15:52 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	create_tree(t_list *tokens, t_list **env, t_err *err)
 		return (SUCCESS);
 	if (!eat_list(tokens, &tree, err->gc))
 		return ((long)error(err, FATAL, NULL, NULL));
+	g_exit_status = 0;
 	if (!tree_browse(tree, env, err))
 	{
 		if (err->code == FATAL)
