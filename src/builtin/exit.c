@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 15:17:06 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 15:42:20 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 21:47:53 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ static	char	is_valid_arg(char *str)
 
 /*
 **	Quit minishell and return first numeric arg if supplied or last exit status.
-**
-**	TODO: pas toujours ecrire exit - pas toujours exit en fonction du nombre
-**	d'argument ou du type d'arg
 */
 char	builtin_exit(t_token *cmd, t_list **env, t_err *err)
 {

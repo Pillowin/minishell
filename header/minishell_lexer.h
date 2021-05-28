@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 18:36:47 by mamaquig          #+#    #+#             */
-/*   Updated: 2021/05/18 13:12:43 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/26 20:30:28 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,5 @@ t_token	*lexer_advance_current(t_lexer *lexer, t_tok_type type, t_err *err);
 int		token_init(t_tok_type type, char **data, t_token **token, t_list **gc);
 int		new_lstok(t_tok_type type, char **str, t_list **new, t_list **gc);
 void	token_destroy(void *ptr, t_list **gc);
-
-/*
-**	debug.c	// TODO: remove
-*/
-char	*token_type_to_str(int type);
-void	token_print(void *token);
 
 #endif

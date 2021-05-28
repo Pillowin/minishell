@@ -59,22 +59,29 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 
 ## TODO
 
-- Remove useless libft file
 - remove fsanitize (in libft too)
-- norm libft
-- check TODO:
-- explicit files (remove wildcard) in makefile
-- norm
-- clean files
-- func to print err message
-- exit
-- leaks
-- si errno == errmalloc => gc_clean + exit	|||| => FATAL ERR
-- differencer dans error errno qui relance un prompt et errno qui quitte tout
-- test export env unset
-- verif exit value des messages d'err
 - comment all func
+- leaks
+- exit
+- verif exit value des messages d'err
+- exit : verif si numeric en prio, numeric quitte alors que multiple non
+- exit quitte pas si multiple arg numeric
+- /bin/ls yghjk => pas le bon return val
+- awk => mauvais exit status
+- yftghjkn => mauvaise err donc mauvais exit status
+- unset PATH ; ls => SEGV 0 0x5572badd7667 in check_paths src/exec/binary_path.c:90
+- '' => should return cmd not found
 
+<!-- - check TODO: -->
+<!-- - test export env unset -->
+<!-- - explicit files (remove wildcard) in makefile -->
+<!-- - ~~norm libft~~ -->
+<!-- - ~~Remove useless libft file~~ -->
+<!-- - ~~norm~~ -->
+<!-- - ~~clean files~~ -->
+<!-- - ~~func to print err message~~ -->
+<!-- - si errno == errmalloc => gc_clean + exit	|||| => FATAL ERR -->
+<!-- - differencer dans error errno qui relance un prompt et errno qui quitte tout -->
 
 <!-- ``echo toto | cat -e > toto ; < toto cat | cat -e | wc -c`` -->
 
