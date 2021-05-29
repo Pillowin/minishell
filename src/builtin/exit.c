@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/20 15:17:06 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/28 19:08:29 by agautier         ###   ########.fr       */
+/*   Created: 2021/05/29 13:52:55 by agautier          #+#    #+#             */
+/*   Updated: 2021/05/29 13:52:56 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	builtin_exit(t_token *cmd, t_list **env, t_err *err)
 	ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (cmd->data[1])
 	{
-		if (!is_valid_arg(cmd->data[1]))
+		if (!is_valid_arg(cmd->data[1]) || !ft_is_ll(cmd->data[1]))
 		{
 			perr_msg("exit", cmd->data[1], "numeric argument required",
 				err->gc);
@@ -54,7 +54,7 @@ char	builtin_exit(t_token *cmd, t_list **env, t_err *err)
 			return (FAILURE);
 		}
 		else
-			g_exit_status = ft_atoi(cmd->data[1]);
+			g_exit_status = ft_atoi(cmd->data[1]) & 0xFF;
 	}
 	gc_clean(err->gc);
 	exit(g_exit_status & 0x00FF);

@@ -10,8 +10,6 @@
 #                                                                              #
 # **************************************************************************** #
 
-# TODO: remove fsanitize
-
 NAME		=	minishell
 SRC			=	$(addprefix src/,			\
 					main.c					\
@@ -92,7 +90,7 @@ OBJ			=	$(SRC:.c=.o)
 CC			=	gcc
 HEADER		=	-Iheader -Ilibft/header
 LIB			=	-Llibft
-CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror
 
 all: $(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 18:18:33 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 18:34:20 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/29 12:10:01 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ t_list	*env_init(char **envp, t_list **gc)
 		gc_list_push_back(&env, var, gc);
 		i++;
 	}
-	if (!env)
-		return (NULL);
 	env_var = ft_list_find(env, "SHLVL", &is_var);
 	if (!increment_shlvl(env_var, &env, gc))
 		return (NULL);

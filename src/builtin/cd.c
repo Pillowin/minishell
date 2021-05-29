@@ -26,7 +26,7 @@ char	update_pwd_oldpwd(char *pwd, char *oldpwd, t_list **env, t_list **gc)
 	var = var_init(str, gc);
 	if (!var)
 		return (FAILURE);
-	gc_list_push_back(env, var, gc);
+	env_update(env, var, gc);
 	gc_free(gc, (void **)&str);
 	str = gc_strjoin("OLDPWD=", oldpwd, gc);
 	if (!str)
@@ -34,7 +34,7 @@ char	update_pwd_oldpwd(char *pwd, char *oldpwd, t_list **env, t_list **gc)
 	var = var_init(str, gc);
 	if (!var)
 		return (FAILURE);
-	gc_list_push_back(env, var, gc);
+	env_update(env, var, gc);
 	gc_free(gc, (void **)&str);
 	gc_free(gc, (void **)&pwd);
 	gc_free(gc, (void **)&oldpwd);
@@ -56,6 +56,10 @@ char	cd_no_arg(t_list **env, t_err *err)
 		return ((long)error(err, HOME_NOT_SET, NULL, NULL));
 	if (!(((t_var *)lst->data)->value))
 		return (FAILURE);
+	oldpwd = getcwd(NULL, 0);
+	if (!oldpwd)
+		return ((long)error(err, FATAL, NULL, NULL));
+	gc_register(err->gc, oldpwd);
 	if (chdir((((t_var *)lst->data)->value)) == -1)
 	{
 		perr_msg(err->cmd_name, (((t_var *)lst->data)->value),
@@ -63,10 +67,6 @@ char	cd_no_arg(t_list **env, t_err *err)
 		g_exit_status = EXIT_FAILURE;
 		return ((long)error(err, NONE, NULL, NULL));
 	}
-	oldpwd = getcwd(NULL, 0);
-	if (!oldpwd)
-		return ((long)error(err, FATAL, NULL, NULL));
-	gc_register(err->gc, oldpwd);
 	pwd = gc_strdup((((t_var *)lst->data)->value), err->gc);
 	if (!pwd || !update_pwd_oldpwd(pwd, oldpwd, env, err->gc))
 		return ((long)error(err, FATAL, NULL, NULL));
@@ -100,7 +100,7 @@ char	cd_oldpwd(t_list **env, t_err *err)
 		g_exit_status = EXIT_FAILURE;
 		return ((long)error(err, NONE, NULL, NULL));
 	}
-	if (!update_pwd_oldpwd(pwd, oldpwd, env, err->gc))
+	if (!update_pwd_oldpwd(oldpwd, pwd, env, err->gc))
 		return ((long)error(err, FATAL, NULL, NULL));
 	return (SUCCESS);
 }

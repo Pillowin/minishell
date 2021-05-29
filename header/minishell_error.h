@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:51:20 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/28 18:27:21 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/28 23:54:15 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef enum e_err_code
 	NOT_FOUND,
 	NO_SUCH_FILE,
 	IS_A_DIR,
+	REDIR_DIR,
 	PERM,
 	EXPORT,
 	ERR_NO

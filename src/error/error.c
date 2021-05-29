@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 18:38:30 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/28 18:28:41 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/29 12:22:37 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	err_init(char **err_msg)
 	err_msg[NOT_FOUND] = "command not found";
 	err_msg[NO_SUCH_FILE] = "No such file or directory";
 	err_msg[IS_A_DIR] = "is a directory";
+	err_msg[REDIR_DIR] = "is a directory";
 	err_msg[PERM] = "Permission denied";
 	err_msg[EXPORT] = "not a valid indentifier";
 }
@@ -44,7 +45,7 @@ void	err_init(char **err_msg)
 */
 static void	set_exit_status(t_err_code code)
 {
-	if (!code || code == NONE)
+	if (!code)
 		g_exit_status = 0;
 	else if (code >= MULTILINE_QUOTE && code <= SYNTAX_LESS)
 		g_exit_status = 2;
@@ -52,7 +53,7 @@ static void	set_exit_status(t_err_code code)
 		g_exit_status = 126;
 	else if (code == NOT_FOUND || code == CMD_NOT_FOUND)
 		g_exit_status = 127;
-	else
+	else if (code != NONE)
 		g_exit_status = 1;
 }
 

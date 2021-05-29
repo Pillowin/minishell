@@ -28,21 +28,18 @@ static char	redir_open(t_token *token, int (*redirs)[4], int type, t_err *err)
 		if (!(buf.st_mode & S_IRUSR))
 			return ((long)error(err, PERM, NULL, NULL));
 		(*redirs)[type] = open(token->data[1], O_RDONLY);
+		return (SUCCESS);
 	}
-	else if (token->data[0][1] == '>')
-	{
-		if (ret != -1 && !(buf.st_mode & S_IWUSR))
-			return ((long)error(err, PERM, NULL, NULL));
-		(*redirs)[type] = open(token->data[1], O_WRONLY | O_APPEND | O_CREAT,
-				0664);
-	}
+	if (ret != -1 && buf.st_mode & S_IFDIR)
+		return ((long)error(err, REDIR_DIR, NULL, NULL));
+	if (ret != -1 && !(buf.st_mode & S_IWUSR))
+		return ((long)error(err, PERM, NULL, NULL));
+	if (token->data[0][1] == '>')
+		(*redirs)[type] = open(token->data[1],
+				O_WRONLY | O_APPEND | O_CREAT, 0664);
 	else
-	{
-		if (ret != -1 && !(buf.st_mode & S_IWUSR))
-			return ((long)error(err, PERM, NULL, NULL));
-		(*redirs)[type] = open(token->data[1], O_WRONLY | O_TRUNC | O_CREAT,
-				0664);
-	}
+		(*redirs)[type] = open(token->data[1],
+				O_WRONLY | O_TRUNC | O_CREAT, 0664);
 	return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: agautier <agautier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/20 15:41:12 by agautier          #+#    #+#             */
-/*   Updated: 2021/05/20 17:23:20 by agautier         ###   ########.fr       */
+/*   Updated: 2021/05/29 12:26:24 by agautier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	builtin_unset(t_token *cmd, t_list **env, t_err *err)
 		if (!is_name(cmd->data[i], '='))
 		{
 			perr_msg(cmd->data[0], cmd->data[1], err->message[EXPORT], err->gc);
+			g_exit_status = EXIT_FAILURE;
 			i++;
 			continue ;
 		}

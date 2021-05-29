@@ -59,9 +59,34 @@ L’objectif de ce projet est de créer un simple shell. Ca sera votre propre pe
 
 ## TODO
 
-- remove fsanitize (in libft too)
 - comment all func
+
 - '' => should return cmd not found
+- echo | exit | echo => exit devrait pas s'afficher
+- cat^C => casse historique
+- cat ^C des fois affiche 2 fois ^C
+
+<!-- - remove fsanitize (in libft too) -->
+<!-- - exit avec nombre > LONG_LONG_MAX -->
+<!-- - cd .. ; echo $PWD $OLDPWD => PWD et OLDPWD pas mis a jour -->
+<!-- - env et unset si err => pas le bon exit val -->
+<!-- - echo toto > dir => si dir est un dossier err => corriger quand < -->
+<!-- - env -i ./minishell => erreur qui devrait pas -->
+<!-- ```
+user42@salty-VirtualBox:~/42/minishell$ ./minishell 
+minishell>ls hiujkl
+ls: impossible d'accéder à 'hiujkl': Aucun fichier ou dossier de ce type
+minishell>echo $?
+2
+minishell>echo $?
+2
+minishell>echo ihjklm
+ihjklm
+minishell>echo $?
+2
+minishell>
+``` -->
+<!-- echo toto > plop > plip >plap => pas les bonnes permissions -->
 <!-- - awk => mauvais exit status -->
 <!-- - /bin/ls yghjk => pas le bon return val -->
 <!-- - yftghjkn => mauvaise err donc mauvais exit status -->

@@ -59,6 +59,7 @@ char	builtin_export(t_token *cmd, t_list **env, t_err *err)
 		if (!is_name(cmd->data[i], '='))
 		{
 			perr_msg(cmd->data[0], cmd->data[1], err->message[EXPORT], err->gc);
+			g_exit_status = EXIT_FAILURE;
 			i++;
 			continue ;
 		}

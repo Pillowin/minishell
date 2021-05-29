@@ -6,7 +6,7 @@
 #    By: agautier <agautier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/05 12:52:43 by agautier          #+#    #+#              #
-#    Updated: 2021/05/26 20:10:39 by agautier         ###   ########.fr        #
+#    Updated: 2021/05/29 13:31:09 by agautier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRC		=	$(addprefix src/, 				\
 				is/ft_isalnum.c				\
 				is/ft_isalpha.c				\
 				is/ft_isprint.c				\
+				is/ft_is_ll.c				\
 				\
 				memory/ft_calloc.c			\
 				memory/ft_free.c			\
